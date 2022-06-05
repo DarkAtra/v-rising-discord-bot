@@ -1,47 +1,47 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.command.AddServerCommand
 import de.darkatra.vrising.discord.command.Command
-import de.darkatra.vrising.discord.command.ListServersCommand
-import de.darkatra.vrising.discord.command.RemoveServerCommand
-import de.darkatra.vrising.serverquery.ServerQueryClient
 import dev.kord.core.Kord
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import kotlinx.coroutines.runBlocking
+import org.springframework.boot.ApplicationArguments
+import org.springframework.boot.ApplicationRunner
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.runApplication
 
-suspend fun main(args: Array<String>) {
+@SpringBootApplication
+@EnableConfigurationProperties(BotProperties::class)
+class Bot(
+    private val botProperties: BotProperties,
+    private val commands: List<Command>,
+    private val serverStatusMonitorService: ServerStatusMonitorService
+) : ApplicationRunner {
 
-	if (args.size != 1) {
-		println("Expected exactly one argument containing the discord bot token.")
-		return
-	}
+    override fun run(args: ApplicationArguments) = runBlocking {
 
-	val kord = Kord(
-		token = args[0]
-	) {
-		enableShutdownHook = true
-	}
+        val kord = Kord(
+            token = botProperties.discordBotToken
+        ) {
+            enableShutdownHook = true
+        }
 
-	val commands: List<Command> = listOf(
-		AddServerCommand(),
-		ListServersCommand(),
-		RemoveServerCommand()
-	)
+        kord.on<ChatInputCommandInteractionCreateEvent> {
+            val command = commands.find { command -> command.isSupported(interaction) } ?: return@on
+            command.handle(interaction)
+        }
 
-	kord.on<ChatInputCommandInteractionCreateEvent> {
-		val command = commands.find { command -> command.isSupported(interaction) } ?: return@on
-		command.handle(interaction)
-	}
+        kord.on<ReadyEvent> {
+            commands.forEach { command -> command.register(kord) }
+            serverStatusMonitorService.launchServerStatusMonitor(kord)
+        }
 
-	kord.on<ReadyEvent> {
-		commands.forEach { command -> command.register(kord) }
-		ServerStatusMonitorService.launchServerStatusMonitor(kord)
-	}
-
-	kord.login()
-
-	ServerStatusMonitorService.destroy()
-	ServerQueryClient.destroy()
+        kord.login()
+    }
 }
 
+fun main(args: Array<String>) {
+    runApplication<Bot>(*args)
+}

@@ -1,15 +1,12 @@
 package de.darkatra.vrising.discord
 
-import dev.kord.common.entity.Snowflake
-import kotlinx.serialization.Serializable
-import org.kodein.db.model.Id
+import org.dizitart.no2.objects.Id
 
-@Serializable
 data class ServerStatusMonitor(
-	@Id
-	val id: String,
-	val hostName: String,
-	val queryPort: Int,
-	val discordChannelId: Snowflake,
-	var currentEmbedMessageId: Snowflake? = null
+    @Id
+    val id: String,
+    val hostName: String,
+    val queryPort: Int,
+    val discordChannelId: String,
+    var currentEmbedMessageId: String? = null
 )

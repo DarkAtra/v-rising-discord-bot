@@ -5,40 +5,44 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.string
+import org.springframework.stereotype.Component
 
+@Component
 class RemoveServerCommand(
-	private val name: String = "remove-server",
-	private val description: String = "Removes a server from the status monitor."
+    private val serverStatusMonitorService: ServerStatusMonitorService,
 ) : Command {
 
-	override fun getCommandName(): String = name
+    private val name: String = "remove-server"
+    private val description: String = "Removes a server from the status monitor."
 
-	override suspend fun register(kord: Kord) {
+    override fun getCommandName(): String = name
 
-		kord.createGlobalChatInputCommand(
-			name = name,
-			description = description
-		) {
+    override suspend fun register(kord: Kord) {
 
-			string(
-				name = "server-status-monitor-id",
-				description = "The id of the server status monitor."
-			) {
-				required = true
-			}
-		}
-	}
+        kord.createGlobalChatInputCommand(
+            name = name,
+            description = description
+        ) {
 
-	override suspend fun handle(interaction: ChatInputCommandInteraction) {
+            string(
+                name = "server-status-monitor-id",
+                description = "The id of the server status monitor."
+            ) {
+                required = true
+            }
+        }
+    }
 
-		val command = interaction.command
-		val serverStatusMonitorId = command.strings["server-status-monitor-id"]!!
+    override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-		ServerStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId)
+        val command = interaction.command
+        val serverStatusMonitorId = command.strings["server-status-monitor-id"]!!
 
-		val response = interaction.deferEphemeralResponse()
-		response.respond {
-			content = "Removed monitor with id '$serverStatusMonitorId'."
-		}
-	}
+        serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId)
+
+        val response = interaction.deferEphemeralResponse()
+        response.respond {
+            content = "Removed monitor with id '$serverStatusMonitorId'."
+        }
+    }
 }

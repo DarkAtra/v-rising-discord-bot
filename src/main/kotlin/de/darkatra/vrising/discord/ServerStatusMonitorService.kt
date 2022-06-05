@@ -1,86 +1,94 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.Disposable
-import de.darkatra.vrising.serverquery.ServerQueryClient
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
 import dev.kord.core.exception.EntityNotFoundException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.kodein.db.DB
-import org.kodein.db.asModelSequence
-import org.kodein.db.deleteById
-import org.kodein.db.impl.open
-import org.kodein.db.orm.kotlinx.KotlinxSerializer
+import org.dizitart.no2.Nitrite
+import org.dizitart.no2.objects.filters.ObjectFilters
+import org.springframework.beans.factory.DisposableBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.stereotype.Service
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.absolutePathString
 
-object ServerStatusMonitorService : CoroutineScope, Disposable {
+@Service
+@EnableConfigurationProperties(BotProperties::class)
+class ServerStatusMonitorService(
+    private val serverQueryClient: ServerQueryClient,
+    botProperties: BotProperties
+) : CoroutineScope, DisposableBean {
 
-	override val coroutineContext: CoroutineContext = Dispatchers.Default
+    override val coroutineContext: CoroutineContext = Dispatchers.Default
 
-	private val database = DB.open("./db", KotlinxSerializer {
-		ServerStatusMonitor.serializer()
-	})
+    private var database = Nitrite.builder()
+        .compressed()
+        .filePath(botProperties.databasePath.absolutePathString())
+        .openOrCreate(botProperties.databaseUsername, botProperties.databasePassword)
 
-	fun putServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
-		database.put(serverStatusMonitor)
-	}
+    private var repository = database.getRepository(ServerStatusMonitor::class.java)
 
-	fun removeServerStatusMonitor(id: String) {
-		database.deleteById<ServerStatusMonitor>(id)
-	}
+    fun putServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
+        if (repository.find(ObjectFilters.eq("id", serverStatusMonitor.id)).firstOrNull() != null) {
+            repository.update(serverStatusMonitor)
+        } else {
+            repository.insert(serverStatusMonitor)
+        }
+    }
 
-	fun getServerStatusMonitors(): List<ServerStatusMonitor> {
-		return database.find(ServerStatusMonitor::class).all().use { cursor ->
-			cursor.asModelSequence().toList()
-		}
-	}
+    fun removeServerStatusMonitor(id: String) {
+        repository.remove(ObjectFilters.eq("id", id))
+    }
 
-	fun launchServerStatusMonitor(kord: Kord) {
-		launch {
-			while (isActive) {
-				runCatching {
-					getServerStatusMonitors().forEach { serverStatusConfiguration ->
+    fun getServerStatusMonitors(): List<ServerStatusMonitor> {
+        return repository.find().toList()
+    }
 
-						val channel = kord.getChannel(serverStatusConfiguration.discordChannelId)
-						if (channel == null || channel !is MessageChannelBehavior) {
-							return@forEach
-						}
+    fun launchServerStatusMonitor(kord: Kord) {
+        launch {
+            while (isActive) {
+                runCatching {
+                    getServerStatusMonitors().forEach { serverStatusConfiguration ->
 
-						val serverInfo = ServerQueryClient.getServerInfo(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
-						val players = ServerQueryClient.getPlayerList(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
-						val rules = ServerQueryClient.getRules(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
+                        val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
+                        if (channel == null || channel !is MessageChannelBehavior) {
+                            return@forEach
+                        }
 
-						val currentEmbedMessageId = serverStatusConfiguration.currentEmbedMessageId
-						if (currentEmbedMessageId != null) {
-							try {
-								ServerStatusEmbed.update(serverInfo, players, rules, channel.getMessage(currentEmbedMessageId))
-								return@forEach
-							} catch (e: EntityNotFoundException) {
-								serverStatusConfiguration.currentEmbedMessageId = null
-							}
-						}
+                        val serverInfo = serverQueryClient.getServerInfo(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
+                        val players = serverQueryClient.getPlayerList(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
+                        val rules = serverQueryClient.getRules(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
 
-						serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(serverInfo, players, rules, channel)
-						putServerStatusMonitor(serverStatusConfiguration)
-					}
+                        val currentEmbedMessageId = serverStatusConfiguration.currentEmbedMessageId
+                        if (currentEmbedMessageId != null) {
+                            try {
+                                ServerStatusEmbed.update(serverInfo, players, rules, channel.getMessage(Snowflake(currentEmbedMessageId)))
+                                return@forEach
+                            } catch (e: EntityNotFoundException) {
+                                serverStatusConfiguration.currentEmbedMessageId = null
+                            }
+                        }
 
-					delay(Duration.ofMinutes(1).toMillis())
-				}.onFailure { throwable ->
-					println("Exception in status monitoring thread: ${throwable.message}")
-					throwable.printStackTrace()
-				}
-			}
-		}
-	}
+                        serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(serverInfo, players, rules, channel).toString()
+                        putServerStatusMonitor(serverStatusConfiguration)
+                    }
+                }.onFailure { throwable ->
+                    println("Exception in status monitoring thread: ${throwable.message}")
+                    throwable.printStackTrace()
+                }
 
-	override fun destroy() {
-		cancel()
-		database.close()
-	}
+                delay(Duration.ofMinutes(1).toMillis())
+            }
+        }
+    }
+
+    override fun destroy() {
+        database.close()
+    }
 }

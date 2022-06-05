@@ -1,0 +1,13 @@
+spring:
+  main:
+    web-application-type: none
+
+logging:
+  level:
+    root: info
+
+bot:
+  discord-bot-token: ~
+  database-path: ./bot.db
+  database-username: v-rising-discord-bot
+  database-password: ~

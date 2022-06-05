@@ -4,34 +4,38 @@ import de.darkatra.vrising.discord.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import org.springframework.stereotype.Component
 
+@Component
 class ListServersCommand(
-	private val name: String = "list-servers",
-	private val description: String = "Lists all server status monitors."
+    private val serverStatusMonitorService: ServerStatusMonitorService,
 ) : Command {
 
-	override fun getCommandName(): String = name
+    private val name: String = "list-servers"
+    private val description: String = "Lists all server status monitors."
 
-	override suspend fun register(kord: Kord) {
+    override fun getCommandName(): String = name
 
-		kord.createGlobalChatInputCommand(
-			name = name,
-			description = description
-		)
-	}
+    override suspend fun register(kord: Kord) {
 
-	override suspend fun handle(interaction: ChatInputCommandInteraction) {
+        kord.createGlobalChatInputCommand(
+            name = name,
+            description = description
+        )
+    }
 
-		val serverStatusConfigurations = ServerStatusMonitorService.getServerStatusMonitors()
+    override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-		val response = interaction.deferEphemeralResponse()
-		response.respond {
-			content = when (serverStatusConfigurations.isEmpty()) {
-				true -> "No servers found."
-				false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->
-					"${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostName}:${serverStatusConfiguration.queryPort}"
-				}
-			}
-		}
-	}
+        val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors()
+
+        val response = interaction.deferEphemeralResponse()
+        response.respond {
+            content = when (serverStatusConfigurations.isEmpty()) {
+                true -> "No servers found."
+                false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->
+                    "${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostName}:${serverStatusConfiguration.queryPort}"
+                }
+            }
+        }
+    }
 }

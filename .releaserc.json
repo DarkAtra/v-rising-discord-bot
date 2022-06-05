@@ -1,0 +1,28 @@
+{
+    "branches": [
+        "main"
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "mvn -B -ntp versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version}",
+                "publishCmd": "mvn -B -ntp -Ppublish-ghcr -DskipTests spring-boot:build-image"
+            }
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    [
+                        "**/pom.xml",
+                        "!**/target/**/*"
+                    ]
+                ]
+            }
+        ],
+        "@semantic-release/github"
+    ]
+}
