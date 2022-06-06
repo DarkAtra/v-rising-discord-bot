@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.springframework.beans.factory.DisposableBean
@@ -42,11 +43,15 @@ class ServerStatusMonitorService(
         }
     }
 
-    fun removeServerStatusMonitor(id: String) {
-        repository.remove(ObjectFilters.eq("id", id))
+    fun removeServerStatusMonitor(id: String, discordServerId: String): Boolean {
+        return repository.remove(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).affectedCount > 0
     }
 
-    fun getServerStatusMonitors(): List<ServerStatusMonitor> {
+    fun getServerStatusMonitors(discordServerId: String? = null): List<ServerStatusMonitor> {
+        if (discordServerId != null) {
+            return repository.find(ObjectFilters.eq("discordServerId", discordServerId)).toList()
+        }
+
         return repository.find().toList()
     }
 

@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import org.springframework.stereotype.Component
 
 @Component
@@ -26,7 +27,8 @@ class ListServersCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors()
+        val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
+        val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
 
         val response = interaction.deferEphemeralResponse()
         response.respond {

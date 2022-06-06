@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.string
 import org.springframework.stereotype.Component
 
@@ -37,12 +38,16 @@ class RemoveServerCommand(
 
         val command = interaction.command
         val serverStatusMonitorId = command.strings["server-status-monitor-id"]!!
+        val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId)
+        val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
 
         val response = interaction.deferEphemeralResponse()
         response.respond {
-            content = "Removed monitor with id '$serverStatusMonitorId'."
+            content = when (wasSuccessful) {
+                true -> "Removed monitor with id '$serverStatusMonitorId'."
+                false -> "No server with id '$serverStatusMonitorId' was found."
+            }
         }
     }
 }
