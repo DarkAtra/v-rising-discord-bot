@@ -37,3 +37,6 @@ services:
       - BOT_DATABASE_PASSWORD=<the-database-password>
     restart: unless-stopped
 ```
+
+Please note that the container uses user `1000:1000`, so make sure this user has permissions to read and write to the volume, `/opt/v-rising-discord-bot` in
+this case.
