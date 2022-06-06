@@ -30,8 +30,7 @@ class ListServersCommand(
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
 
-        val response = interaction.deferEphemeralResponse()
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = when (serverStatusConfigurations.isEmpty()) {
                 true -> "No servers found."
                 false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->

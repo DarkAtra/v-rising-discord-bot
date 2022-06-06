@@ -2,6 +2,7 @@ package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.command.Command
 import dev.kord.core.Kord
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
@@ -29,7 +30,15 @@ class Bot(
         }
 
         kord.on<ChatInputCommandInteractionCreateEvent> {
-            val command = commands.find { command -> command.isSupported(interaction) } ?: return@on
+
+            val command = commands.find { command -> command.isSupported(interaction) }
+            if (command == null) {
+                interaction.deferEphemeralResponse().respond {
+                    content = "This command is not supported here, please refer to the documentation."
+                }
+                return@on
+            }
+
             command.handle(interaction)
         }
 

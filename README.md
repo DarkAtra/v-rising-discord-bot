@@ -12,6 +12,8 @@ This bot allows you to display some information about your v rising server on di
 | `/list-servers`                                     | Lists all server status monitors.         |
 | `/remove-server <server-status-monitor-id>`         | Removes a server from the status monitor. |
 
+Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific.
+
 ## Configuration Properties
 
 | Property                | Type   | Description                                                                                                                      | Default value          |

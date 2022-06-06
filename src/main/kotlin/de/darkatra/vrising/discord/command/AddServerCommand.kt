@@ -60,8 +60,7 @@ class AddServerCommand(
             discordChannelId = channelId.toString()
         ))
 
-        val response = interaction.deferEphemeralResponse()
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It might take up to 1 minute for the status post to appear."
         }
     }

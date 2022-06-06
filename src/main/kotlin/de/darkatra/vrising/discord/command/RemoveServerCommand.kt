@@ -42,8 +42,7 @@ class RemoveServerCommand(
 
         val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
 
-        val response = interaction.deferEphemeralResponse()
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {
                 true -> "Removed monitor with id '$serverStatusMonitorId'."
                 false -> "No server with id '$serverStatusMonitorId' was found."
