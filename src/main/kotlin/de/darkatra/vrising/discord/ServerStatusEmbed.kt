@@ -29,17 +29,15 @@ object ServerStatusEmbed {
 
     private fun buildEmbed(serverInfo: SourceServer, players: List<SourcePlayer>, rules: Map<String, Any>, embedBuilder: EmbedBuilder) {
         embedBuilder.apply {
-            title = "Server Status"
+            title = serverInfo.name
             color = Color(
                 red = 0,
                 green = 142,
                 blue = 68
             )
 
-            field {
-                name = "Server name"
-                value = serverInfo.name
-                inline = false
+            rules["desc0"]?.let { serverDescription ->
+                description = "$serverDescription"
             }
 
             field {
@@ -50,7 +48,7 @@ object ServerStatusEmbed {
 
             field {
                 name = "Online count"
-                value = "${serverInfo.numOfPlayers}"
+                value = "${serverInfo.numOfPlayers}/${serverInfo.maxPlayers}"
                 inline = true
             }
 
@@ -62,11 +60,15 @@ object ServerStatusEmbed {
                 }
             }
 
-            field {
-                name = "Online players"
-                value = players.sortedBy { player -> player.name }.joinToString(separator = "\n") { player -> "**${player.name}** - ${player.score}" }
-                inline = false
-            }
+            players.sortedBy { player -> player.name }
+                .chunked(20)
+                .forEach { chunk ->
+                    field {
+                        name = "Online players"
+                        value = chunk.joinToString(separator = "\n") { player -> "**${player.name}** - ${player.score}" }
+                        inline = true
+                    }
+                }
         }
     }
 }
