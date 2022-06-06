@@ -38,5 +38,5 @@ services:
     restart: unless-stopped
 ```
 
-Please note that the container uses user `1000:1000`, so make sure this user has permissions to read and write to the volume, `/opt/v-rising-discord-bot` in
-this case.
+Please note that the container uses the `1000:1000` user. So make sure that this user has read and write permissions on the volume, in this
+case `/opt/v-rising-discord-bot`.
