@@ -18,5 +18,5 @@ ij_kotlin_method_annotation_wrap = split_into_lines
 ij_kotlin_parameter_annotation_wrap = split_into_lines
 ij_kotlin_variable_annotation_wrap = split_into_lines
 
-[{*.yaml, *.yml}]
+[{*.yaml, *.yml, *.md}]
 indent_size = 2
