@@ -30,7 +30,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:1.1.0
+    image: ghcr.io/darkatra/v-rising-discord-bot:1.2.1
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
@@ -42,3 +42,29 @@ services:
 
 Please note that the container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
 case `/opt/v-rising-discord-bot`.
+
+## How to run it yourself without docker
+
+1. Build the application using `mvn clean verify`
+2. Check the `target` folder and find a file called `v-rising-discord-bot:<version>.jar`
+3. Copy that file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
+   ```yaml
+   bot:
+     discord-bot-token: <your-discord-bot-token>
+     database-password: <the-database-password>
+   ```
+4. Run the application using `java -jar v-rising-discord-bot:<version>.jar`
+5. Profit
+
+If you run the application in a Linux environment, make sure that you use a separate user.
+This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
+current working directory by default.
+
+You can change the location of the database file by modifying the `application.yml` slightly:
+
+```yaml
+bot:
+  discord-bot-token: <your-discord-bot-token>
+  database-password: <the-database-password>
+  database-path: /data/bot.db
+```
