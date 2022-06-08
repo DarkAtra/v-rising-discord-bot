@@ -58,7 +58,7 @@ case `/opt/v-rising-discord-bot`.
 
 If you run the application in a Linux environment, make sure that you use a separate user.
 This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
-current working directory by default.
+applications working directory by default.
 
 You can change the location of the database file by modifying the `application.yml` slightly:
 
