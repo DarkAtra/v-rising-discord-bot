@@ -13,21 +13,39 @@ import dev.kord.rest.builder.message.modify.embed
 
 object ServerStatusEmbed {
 
-    suspend fun create(serverInfo: SourceServer, players: List<SourcePlayer>, rules: Map<String, Any>, channel: MessageChannelBehavior): Snowflake {
+    suspend fun create(
+        serverInfo: SourceServer,
+        players: List<SourcePlayer>,
+        rules: Map<String, Any>,
+        displayPlayerGearLevel: Boolean,
+        channel: MessageChannelBehavior
+    ): Snowflake {
         return channel.createEmbed {
-            buildEmbed(serverInfo, players, rules, this)
+            buildEmbed(serverInfo, players, rules, displayPlayerGearLevel, this)
         }.id
     }
 
-    suspend fun update(serverInfo: SourceServer, players: List<SourcePlayer>, rules: Map<String, Any>, message: Message): Snowflake {
+    suspend fun update(
+        serverInfo: SourceServer,
+        players: List<SourcePlayer>,
+        rules: Map<String, Any>,
+        displayPlayerGearLevel: Boolean,
+        message: Message
+    ): Snowflake {
         return message.edit {
             embed {
-                buildEmbed(serverInfo, players, rules, this)
+                buildEmbed(serverInfo, players, rules, displayPlayerGearLevel, this)
             }
         }.id
     }
 
-    private fun buildEmbed(serverInfo: SourceServer, players: List<SourcePlayer>, rules: Map<String, Any>, embedBuilder: EmbedBuilder) {
+    private fun buildEmbed(
+        serverInfo: SourceServer,
+        players: List<SourcePlayer>,
+        rules: Map<String, Any>,
+        displayPlayerGearLevel: Boolean,
+        embedBuilder: EmbedBuilder
+    ) {
         embedBuilder.apply {
             title = serverInfo.name
             color = Color(
@@ -65,7 +83,12 @@ object ServerStatusEmbed {
                 .forEach { chunk ->
                     field {
                         name = "Online players"
-                        value = chunk.joinToString(separator = "\n") { player -> "**${player.name}** - ${player.score}" }
+                        value = chunk.joinToString(separator = "\n") { player ->
+                            when (displayPlayerGearLevel) {
+                                true -> "**${player.name}** - ${player.score}"
+                                false -> "**${player.name}**"
+                            }
+                        }
                         inline = true
                     }
                 }

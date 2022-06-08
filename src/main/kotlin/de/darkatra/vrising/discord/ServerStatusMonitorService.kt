@@ -23,7 +23,7 @@ import kotlin.io.path.absolutePathString
 @EnableConfigurationProperties(BotProperties::class)
 class ServerStatusMonitorService(
     private val serverQueryClient: ServerQueryClient,
-    botProperties: BotProperties
+    private val botProperties: BotProperties
 ) : CoroutineScope, DisposableBean {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default
@@ -73,14 +73,26 @@ class ServerStatusMonitorService(
                         val currentEmbedMessageId = serverStatusConfiguration.currentEmbedMessageId
                         if (currentEmbedMessageId != null) {
                             try {
-                                ServerStatusEmbed.update(serverInfo, players, rules, channel.getMessage(Snowflake(currentEmbedMessageId)))
+                                ServerStatusEmbed.update(
+                                    serverInfo = serverInfo,
+                                    players = players,
+                                    rules = rules,
+                                    displayPlayerGearLevel = botProperties.displayPlayerGearLevel!!,
+                                    message = channel.getMessage(Snowflake(currentEmbedMessageId))
+                                )
                                 return@forEach
                             } catch (e: EntityNotFoundException) {
                                 serverStatusConfiguration.currentEmbedMessageId = null
                             }
                         }
 
-                        serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(serverInfo, players, rules, channel).toString()
+                        serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(
+                            serverInfo = serverInfo,
+                            players = players,
+                            rules = rules,
+                            displayPlayerGearLevel = botProperties.displayPlayerGearLevel!!,
+                            channel = channel
+                        ).toString()
                         putServerStatusMonitor(serverStatusConfiguration)
                     }
                 }.onFailure { throwable ->
