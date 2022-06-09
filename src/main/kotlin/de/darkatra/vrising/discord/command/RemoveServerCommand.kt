@@ -5,7 +5,6 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
-import dev.kord.rest.builder.interaction.string
 import org.springframework.stereotype.Component
 
 @Component
@@ -24,20 +23,13 @@ class RemoveServerCommand(
             name = name,
             description = description
         ) {
-
-            string(
-                name = "server-status-monitor-id",
-                description = "The id of the server status monitor."
-            ) {
-                required = true
-            }
+            addServerStatusMonitorIdParameter()
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val command = interaction.command
-        val serverStatusMonitorId = command.strings["server-status-monitor-id"]!!
+        val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())

@@ -28,6 +28,7 @@ class ListServersCommand(
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
+
         val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
 
         interaction.deferEphemeralResponse().respond {

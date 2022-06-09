@@ -12,26 +12,17 @@ import kotlinx.coroutines.launch
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.filters.ObjectFilters
-import org.springframework.beans.factory.DisposableBean
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
-import kotlin.io.path.absolutePathString
 
 @Service
-@EnableConfigurationProperties(BotProperties::class)
 class ServerStatusMonitorService(
-    private val serverQueryClient: ServerQueryClient,
-    private val botProperties: BotProperties
-) : CoroutineScope, DisposableBean {
+    database: Nitrite,
+    private val serverQueryClient: ServerQueryClient
+) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default
-
-    private var database = Nitrite.builder()
-        .compressed()
-        .filePath(botProperties.databasePath.absolutePathString())
-        .openOrCreate(botProperties.databaseUsername, botProperties.databasePassword)
 
     private var repository = database.getRepository(ServerStatusMonitor::class.java)
 
@@ -45,6 +36,10 @@ class ServerStatusMonitorService(
 
     fun removeServerStatusMonitor(id: String, discordServerId: String): Boolean {
         return repository.remove(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).affectedCount > 0
+    }
+
+    fun getServerStatusMonitor(id: String, discordServerId: String): ServerStatusMonitor? {
+        return repository.find(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).firstOrNull()
     }
 
     fun getServerStatusMonitors(discordServerId: String? = null): List<ServerStatusMonitor> {
@@ -77,7 +72,7 @@ class ServerStatusMonitorService(
                                     serverInfo = serverInfo,
                                     players = players,
                                     rules = rules,
-                                    displayPlayerGearLevel = botProperties.displayPlayerGearLevel!!,
+                                    displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
                                     message = channel.getMessage(Snowflake(currentEmbedMessageId))
                                 )
                                 return@forEach
@@ -90,7 +85,7 @@ class ServerStatusMonitorService(
                             serverInfo = serverInfo,
                             players = players,
                             rules = rules,
-                            displayPlayerGearLevel = botProperties.displayPlayerGearLevel!!,
+                            displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
                             channel = channel
                         ).toString()
                         putServerStatusMonitor(serverStatusConfiguration)
@@ -103,9 +98,5 @@ class ServerStatusMonitorService(
                 delay(Duration.ofMinutes(1).toMillis())
             }
         }
-    }
-
-    override fun destroy() {
-        database.close()
     }
 }

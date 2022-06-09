@@ -7,8 +7,6 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
-import dev.kord.rest.builder.interaction.int
-import dev.kord.rest.builder.interaction.string
 import org.springframework.stereotype.Component
 
 @Component
@@ -28,37 +26,32 @@ class AddServerCommand(
             description = description
         ) {
 
-            string(
-                name = "server-hostname",
-                description = "The hostname of the server to add a status monitor for."
-            ) {
-                required = true
-            }
+            addServerHostnameParameter()
+            addServerQueryPortParameter()
 
-            int(
-                name = "server-query-port",
-                description = "The query port of the server to add a status monitor for."
-            ) {
-                required = true
-            }
+            addDisplayPlayerGearLevelParameter(required = false)
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val command = interaction.command
-        val hostName = command.strings["server-hostname"]!!
-        val queryPort = Math.toIntExact(command.integers["server-query-port"]!!)
+        val hostName = interaction.getServerHostnameParameter()!!
+        val queryPort = interaction.getServerQueryPortParameter()!!
+        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: false
+
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
 
-        serverStatusMonitorService.putServerStatusMonitor(ServerStatusMonitor(
-            id = Generators.timeBasedGenerator().generate().toString(),
-            hostName = hostName,
-            queryPort = queryPort,
-            discordServerId = discordServerId.toString(),
-            discordChannelId = channelId.toString()
-        ))
+        serverStatusMonitorService.putServerStatusMonitor(
+            ServerStatusMonitor(
+                id = Generators.timeBasedGenerator().generate().toString(),
+                discordServerId = discordServerId.toString(),
+                discordChannelId = channelId.toString(),
+                hostName = hostName,
+                queryPort = queryPort,
+                displayPlayerGearLevel = displayPlayerGearLevel
+            )
+        )
 
         interaction.deferEphemeralResponse().respond {
             content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It might take up to 1 minute for the status post to appear."

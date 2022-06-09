@@ -23,7 +23,4 @@ class BotProperties {
 
     @field:NotBlank
     lateinit var databasePassword: String
-
-    @field:NotNull
-    var displayPlayerGearLevel: Boolean? = null
 }

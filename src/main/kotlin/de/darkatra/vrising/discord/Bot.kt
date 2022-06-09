@@ -6,7 +6,10 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
+import org.dizitart.no2.Nitrite
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -16,12 +19,16 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 @EnableConfigurationProperties(BotProperties::class)
 class Bot(
+    private val database: Nitrite,
     private val botProperties: BotProperties,
     private val commands: List<Command>,
+    private val databaseMigrationService: DatabaseMigrationService,
     private val serverStatusMonitorService: ServerStatusMonitorService
-) : ApplicationRunner {
+) : ApplicationRunner, DisposableBean {
 
     override fun run(args: ApplicationArguments) = runBlocking {
+
+        databaseMigrationService.migrateToLatestVersion()
 
         val kord = Kord(
             token = botProperties.discordBotToken
@@ -43,11 +50,17 @@ class Bot(
         }
 
         kord.on<ReadyEvent> {
+            kord.getGlobalApplicationCommands().onEach { applicationCommand -> applicationCommand.delete() }
             commands.forEach { command -> command.register(kord) }
+
             serverStatusMonitorService.launchServerStatusMonitor(kord)
         }
 
         kord.login()
+    }
+
+    override fun destroy() {
+        database.close()
     }
 }
 

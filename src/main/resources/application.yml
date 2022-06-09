@@ -6,9 +6,10 @@ logging:
   level:
     root: info
 
+version: @project.version@
+
 bot:
   discord-bot-token: ~
   database-path: ./bot.db
   database-username: v-rising-discord-bot
   database-password: ~
-  display-player-gear-level: false

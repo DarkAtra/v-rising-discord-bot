@@ -8,9 +8,50 @@ import org.dizitart.no2.objects.Index
 data class ServerStatusMonitor(
     @Id
     val id: String,
-    val hostName: String,
-    val queryPort: Int,
     val discordServerId: String,
     val discordChannelId: String,
-    var currentEmbedMessageId: String? = null
-)
+
+    val hostName: String,
+    val queryPort: Int,
+    val displayPlayerGearLevel: Boolean,
+
+    var currentEmbedMessageId: String? = null,
+) {
+
+    fun builder(): ServerStatusMonitorBuilder {
+        return ServerStatusMonitorBuilder(
+            id = id,
+            discordServerId = discordServerId,
+            discordChannelId = discordChannelId,
+            hostName = hostName,
+            queryPort = queryPort,
+            displayPlayerGearLevel = displayPlayerGearLevel,
+            currentEmbedMessageId = currentEmbedMessageId
+        )
+    }
+}
+
+class ServerStatusMonitorBuilder(
+    var id: String,
+    var discordServerId: String,
+    var discordChannelId: String,
+
+    var hostName: String,
+    var queryPort: Int,
+    var displayPlayerGearLevel: Boolean,
+
+    var currentEmbedMessageId: String? = null,
+) {
+
+    fun build(): ServerStatusMonitor {
+        return ServerStatusMonitor(
+            id = id,
+            discordServerId = discordServerId,
+            discordChannelId = discordChannelId,
+            hostName = hostName,
+            queryPort = queryPort,
+            displayPlayerGearLevel = displayPlayerGearLevel,
+            currentEmbedMessageId = currentEmbedMessageId
+        )
+    }
+}

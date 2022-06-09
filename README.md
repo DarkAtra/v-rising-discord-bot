@@ -22,7 +22,6 @@ Please note that all commands are [guild](https://discord.com/developers/docs/re
 | `bot.database-path`             | Path    | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
 | `bot.database-username`         | String  | The username for the database.                                                                                                   | `v-rising-discord-bot` |
 | `bot.database-password`         | String  | The password for the database.                                                                                                   | `null`                 |
-| `bot.display-player-gear-level` | Boolean | Whether or not to display the gear level in the player list.                                                                     | `true`                 |
 
 ## How to run it yourself using docker-compose
 
