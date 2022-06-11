@@ -3,6 +3,7 @@ package de.darkatra.vrising.discord.command
 import com.fasterxml.uuid.Generators
 import de.darkatra.vrising.discord.ServerStatusMonitor
 import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.ServerStatusMonitorStatus
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -49,12 +50,13 @@ class AddServerCommand(
                 discordChannelId = channelId.toString(),
                 hostName = hostName,
                 queryPort = queryPort,
+                status = ServerStatusMonitorStatus.ACTIVE,
                 displayPlayerGearLevel = displayPlayerGearLevel
             )
         )
 
         interaction.deferEphemeralResponse().respond {
-            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It might take up to 1 minute for the status post to appear."
+            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It may take up to 1 minute for the status message to appear."
         }
     }
 }

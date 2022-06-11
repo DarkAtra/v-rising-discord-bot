@@ -11,6 +11,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
+import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -42,19 +43,29 @@ class ServerStatusMonitorService(
         return repository.find(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).firstOrNull()
     }
 
-    fun getServerStatusMonitors(discordServerId: String? = null): List<ServerStatusMonitor> {
+    fun getServerStatusMonitors(discordServerId: String? = null, status: ServerStatusMonitorStatus? = null): List<ServerStatusMonitor> {
+
+        var objectFilter: ObjectFilter? = null
+
+        // apply filters
         if (discordServerId != null) {
-            return repository.find(ObjectFilters.eq("discordServerId", discordServerId)).toList()
+            objectFilter = ObjectFilters.eq("discordServerId", discordServerId)
+        }
+        if (status != null) {
+            objectFilter += ObjectFilters.eq("status", status)
         }
 
-        return repository.find().toList()
+        return when {
+            objectFilter != null -> repository.find(objectFilter).toList()
+            else -> repository.find().toList()
+        }
     }
 
     fun launchServerStatusMonitor(kord: Kord) {
         launch {
             while (isActive) {
                 runCatching {
-                    getServerStatusMonitors().forEach { serverStatusConfiguration ->
+                    getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusConfiguration ->
 
                         val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
                         if (channel == null || channel !is MessageChannelBehavior) {
