@@ -9,7 +9,7 @@
             "@semantic-release/exec",
             {
                 "prepareCmd": "mvn -B -ntp versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version}",
-                "publishCmd": "mvn -B -ntp -Ppublish-ghcr -DskipTests spring-boot:build-image"
+                "publishCmd": "mvn -B -ntp -Ppublish-ghcr -DskipTests package spring-boot:build-image"
             }
         ],
         [
@@ -23,6 +23,16 @@
                 ]
             }
         ],
-        "@semantic-release/github"
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        "path": "target/v-rising-discord-bot-${nextRelease.version}.jar",
+                        "label": "v-rising-discord-bot-${nextRelease.version}.jar"
+                    }
+                ]
+            }
+        ]
     ]
 }
