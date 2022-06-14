@@ -28,7 +28,9 @@ class UpdateServerCommand(
 
             addServerHostnameParameter(required = false)
             addServerQueryPortParameter(required = false)
+            addServerStatusMonitorStatusParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
+            addDisplayServerDescriptionParameter(required = false)
         }
     }
 
@@ -37,7 +39,9 @@ class UpdateServerCommand(
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val hostName = interaction.getServerHostnameParameter()
         val queryPort = interaction.getServerQueryPortParameter()
+        val status = interaction.getServerStatusMonitorStatusParameter()
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
+        val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
@@ -56,14 +60,20 @@ class UpdateServerCommand(
         if (queryPort != null) {
             serverStatusMonitorBuilder.queryPort = queryPort
         }
+        if (status != null) {
+            serverStatusMonitorBuilder.status = status
+        }
         if (displayPlayerGearLevel != null) {
             serverStatusMonitorBuilder.displayPlayerGearLevel = displayPlayerGearLevel
+        }
+        if (displayServerDescription != null) {
+            serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
         }
 
         serverStatusMonitorService.putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
         interaction.deferEphemeralResponse().respond {
-            content = "Updated server status monitor with id '${serverStatusMonitorId}'. It might take up to 1 minute for update to be visible."
+            content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take up to 1 minute before the update is visible."
         }
     }
 }

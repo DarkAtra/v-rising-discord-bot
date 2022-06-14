@@ -3,47 +3,16 @@ package de.darkatra.vrising.discord
 import com.ibasco.agql.protocols.valve.source.query.info.SourceServer
 import com.ibasco.agql.protocols.valve.source.query.players.SourcePlayer
 import dev.kord.common.Color
-import dev.kord.common.entity.Snowflake
-import dev.kord.core.behavior.channel.MessageChannelBehavior
-import dev.kord.core.behavior.channel.createEmbed
-import dev.kord.core.behavior.edit
-import dev.kord.core.entity.Message
 import dev.kord.rest.builder.message.EmbedBuilder
-import dev.kord.rest.builder.message.modify.embed
 
 object ServerStatusEmbed {
 
-    suspend fun create(
+    fun buildEmbed(
         serverInfo: SourceServer,
         players: List<SourcePlayer>,
         rules: Map<String, Any>,
         displayPlayerGearLevel: Boolean,
-        channel: MessageChannelBehavior
-    ): Snowflake {
-        return channel.createEmbed {
-            buildEmbed(serverInfo, players, rules, displayPlayerGearLevel, this)
-        }.id
-    }
-
-    suspend fun update(
-        serverInfo: SourceServer,
-        players: List<SourcePlayer>,
-        rules: Map<String, Any>,
-        displayPlayerGearLevel: Boolean,
-        message: Message
-    ): Snowflake {
-        return message.edit {
-            embed {
-                buildEmbed(serverInfo, players, rules, displayPlayerGearLevel, this)
-            }
-        }.id
-    }
-
-    private fun buildEmbed(
-        serverInfo: SourceServer,
-        players: List<SourcePlayer>,
-        rules: Map<String, Any>,
-        displayPlayerGearLevel: Boolean,
+        displayServerDescription: Boolean,
         embedBuilder: EmbedBuilder
     ) {
         embedBuilder.apply {
@@ -54,8 +23,10 @@ object ServerStatusEmbed {
                 blue = 68
             )
 
-            rules["desc0"]?.let { serverDescription ->
-                description = "$serverDescription"
+            if (displayServerDescription) {
+                rules["desc0"]?.let { serverDescription ->
+                    description = "$serverDescription"
+                }
             }
 
             field {

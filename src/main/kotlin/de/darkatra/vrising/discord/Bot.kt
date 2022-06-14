@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.command.Command
+import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent

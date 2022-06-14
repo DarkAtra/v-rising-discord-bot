@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord
+package de.darkatra.vrising.discord.migration
 
 import org.dizitart.no2.objects.Id
 
@@ -16,9 +16,3 @@ data class Schema(
         )
     }
 }
-
-data class SemanticVersion(
-    val major: Int,
-    val minor: Int,
-    val patch: Int
-)

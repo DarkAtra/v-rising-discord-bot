@@ -3,7 +3,11 @@ package de.darkatra.vrising.discord
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
+import dev.kord.core.behavior.channel.createEmbed
+import dev.kord.core.behavior.edit
 import dev.kord.core.exception.EntityNotFoundException
+import dev.kord.rest.builder.message.EmbedBuilder
+import dev.kord.rest.builder.message.modify.embed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -11,6 +15,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
+import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -42,19 +47,29 @@ class ServerStatusMonitorService(
         return repository.find(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).firstOrNull()
     }
 
-    fun getServerStatusMonitors(discordServerId: String? = null): List<ServerStatusMonitor> {
+    fun getServerStatusMonitors(discordServerId: String? = null, status: ServerStatusMonitorStatus? = null): List<ServerStatusMonitor> {
+
+        var objectFilter: ObjectFilter? = null
+
+        // apply filters
         if (discordServerId != null) {
-            return repository.find(ObjectFilters.eq("discordServerId", discordServerId)).toList()
+            objectFilter = ObjectFilters.eq("discordServerId", discordServerId)
+        }
+        if (status != null) {
+            objectFilter += ObjectFilters.eq("status", status)
         }
 
-        return repository.find().toList()
+        return when {
+            objectFilter != null -> repository.find(objectFilter).toList()
+            else -> repository.find().toList()
+        }
     }
 
     fun launchServerStatusMonitor(kord: Kord) {
         launch {
             while (isActive) {
                 runCatching {
-                    getServerStatusMonitors().forEach { serverStatusConfiguration ->
+                    getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusConfiguration ->
 
                         val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
                         if (channel == null || channel !is MessageChannelBehavior) {
@@ -65,29 +80,28 @@ class ServerStatusMonitorService(
                         val players = serverQueryClient.getPlayerList(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
                         val rules = serverQueryClient.getRules(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
 
+                        val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
+                            ServerStatusEmbed.buildEmbed(serverInfo,
+                                players,
+                                rules,
+                                serverStatusConfiguration.displayPlayerGearLevel,
+                                serverStatusConfiguration.displayServerDescription,
+                                embedBuilder
+                            )
+                        }
+
                         val currentEmbedMessageId = serverStatusConfiguration.currentEmbedMessageId
                         if (currentEmbedMessageId != null) {
                             try {
-                                ServerStatusEmbed.update(
-                                    serverInfo = serverInfo,
-                                    players = players,
-                                    rules = rules,
-                                    displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
-                                    message = channel.getMessage(Snowflake(currentEmbedMessageId))
-                                )
+                                channel.getMessage(Snowflake(currentEmbedMessageId))
+                                    .edit { embed(embedCustomizer) }
                                 return@forEach
                             } catch (e: EntityNotFoundException) {
                                 serverStatusConfiguration.currentEmbedMessageId = null
                             }
                         }
 
-                        serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(
-                            serverInfo = serverInfo,
-                            players = players,
-                            rules = rules,
-                            displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
-                            channel = channel
-                        ).toString()
+                        serverStatusConfiguration.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
                         putServerStatusMonitor(serverStatusConfiguration)
                     }
                 }.onFailure { throwable ->
