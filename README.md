@@ -46,16 +46,15 @@ case `/opt/v-rising-discord-bot`.
 
 ## How to run it yourself without docker
 
-1. Build the application using `mvn clean verify`
-2. Check the `target` folder and find a file called `v-rising-discord-bot:<version>.jar`
-3. Copy that file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
+1. Find the latest jar [here](https://github.com/DarkAtra/v-rising-discord-bot/releases) or build the application yourself using `mvn clean verify`
+2. Copy the jar file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
    ```yaml
    bot:
      discord-bot-token: <your-discord-bot-token>
      database-password: <the-database-password>
    ```
-4. Run the application using `java -jar v-rising-discord-bot:<version>.jar`
-5. Profit
+3. Run the application using `java -jar v-rising-discord-bot:<version>.jar`
+4. Profit
 
 If you run the application in a Linux environment, make sure that you use a separate user.
 This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
