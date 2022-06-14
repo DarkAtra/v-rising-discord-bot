@@ -1,16 +1,16 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.ServerStatusMonitor
 import de.darkatra.vrising.discord.ServerStatusMonitorStatus
 import org.dizitart.no2.Nitrite
+import org.dizitart.no2.util.ObjectUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class DatabaseMigrationService(
-    database: Nitrite,
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val database: Nitrite,
     @Value("\${version}")
     private val currentAppVersion: String
 ) {
@@ -21,13 +21,13 @@ class DatabaseMigrationService(
     private val migrations: List<DatabaseMigration> = listOf(
         DatabaseMigration(
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 3 },
-            action = { serverStatusMonitorBuilder -> serverStatusMonitorBuilder.displayPlayerGearLevel = true }
+            action = { document -> document["displayPlayerGearLevel"] = true }
         ),
         DatabaseMigration(
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 4 },
-            action = { serverStatusMonitorBuilder ->
-                serverStatusMonitorBuilder.status = ServerStatusMonitorStatus.ACTIVE
-                serverStatusMonitorBuilder.displayServerDescription = true
+            action = { document ->
+                document["status"] = ServerStatusMonitorStatus.ACTIVE.name
+                document["displayServerDescription"] = true
             }
         )
     )
@@ -46,10 +46,11 @@ class DatabaseMigrationService(
             val (major, minor, patch) = currentSchemaVersion
             logger.info("Will migrate from V$major.$minor.$patch to V$currentAppVersion by performing ${migrationsToPerform.size} migrations.")
 
-            serverStatusMonitorService.getServerStatusMonitors().forEach { serverStatusMonitor ->
-                val serverStatusMonitorBuilder = serverStatusMonitor.builder()
-                migrationsToPerform.forEach { migration -> migration.action(serverStatusMonitorBuilder) }
-                serverStatusMonitorService.putServerStatusMonitor(serverStatusMonitorBuilder.build())
+            val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
+
+            collection.find().forEach { document ->
+                migrationsToPerform.forEach { migration -> migration.action(document) }
+                collection.update(document)
             }
 
             repository.insert(Schema("V$currentAppVersion"))
