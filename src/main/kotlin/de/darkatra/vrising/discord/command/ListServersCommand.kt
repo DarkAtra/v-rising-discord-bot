@@ -35,7 +35,7 @@ class ListServersCommand(
             content = when (serverStatusConfigurations.isEmpty()) {
                 true -> "No servers found."
                 false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->
-                    "${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostName}:${serverStatusConfiguration.queryPort}"
+                    "${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostName}:${serverStatusConfiguration.queryPort} - ${serverStatusConfiguration.status.name}"
                 }
             }
         }
