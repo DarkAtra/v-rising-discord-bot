@@ -28,7 +28,7 @@
             {
                 "assets": [
                     {
-                        "path": "target/v-rising-discord-bot-${nextRelease.version}.jar",
+                        "path": "target/v-rising-discord-bot-*.jar",
                         "label": "v-rising-discord-bot-${nextRelease.version}.jar"
                     }
                 ]
