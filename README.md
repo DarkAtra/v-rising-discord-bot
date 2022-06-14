@@ -4,16 +4,45 @@ This bot allows you to display some information about your v rising server on di
 
 ![Preview](./docs/preview.png)
 
-## Commands
-
-| Command                                                                                                                                             | Description                               |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------|
-| `/list-servers`                                                                                                                                     | Lists all server status monitors.         |
-| `/add-server <server-hostname> <server-query-port> <display-player-gear-level> <display-server-description>`                                        | Adds a server to the status monitor.      |
-| `/update-server <server-status-monitor-id> <server-hostname> <server-query-port> <status> <display-player-gear-level> <display-server-description>` | Updates the given server status monitor.  |
-| `/remove-server <server-status-monitor-id>`                                                                                                         | Removes a server from the status monitor. |
+## Discord Commands
 
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific.
+
+### `/list-servers`
+
+Lists all server status monitors.
+
+### `/add-server`
+
+Adds a server to the status monitor.
+
+| Parameter                    | Description                                                           |
+|------------------------------|-----------------------------------------------------------------------|
+| `server-hostname`            | The hostname of the server to add a status monitor for.               |
+| `server-query-port`          | The query port of the server to add a status monitor for.             |
+| `display-player-gear-level`  | Whether or not to display the gear level in the player list.          |
+| `display-server-description` | Whether or not to display the v rising server description on discord. |
+
+### `/update-server`
+
+Updates the given server status monitor.
+
+| Parameter                    | Description                                                           |
+|------------------------------|-----------------------------------------------------------------------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                  |
+| `server-hostname`            | The hostname of the server to add a status monitor for.               |
+| `server-query-port`          | The query port of the server to add a status monitor for.             |
+| `status`                     | The status of the server status monitor. Either ACTIVE or INACTIVE.   |
+| `display-player-gear-level`  | Whether or not to display the gear level in the player list.          |
+| `display-server-description` | Whether or not to display the v rising server description on discord. |
+
+### `/remove-server`
+
+Removes a server from the status monitor.
+
+| Parameter                    | Description                                                           |
+|------------------------------|-----------------------------------------------------------------------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                  |
 
 ## Configuration Properties
 
