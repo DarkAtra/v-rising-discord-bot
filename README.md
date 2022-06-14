@@ -16,33 +16,34 @@ Lists all server status monitors.
 
 Adds a server to the status monitor.
 
-| Parameter                    | Description                                                           |
-|------------------------------|-----------------------------------------------------------------------|
-| `server-hostname`            | The hostname of the server to add a status monitor for.               |
-| `server-query-port`          | The query port of the server to add a status monitor for.             |
-| `display-player-gear-level`  | Whether or not to display the gear level in the player list.          |
-| `display-server-description` | Whether or not to display the v rising server description on discord. |
+| Parameter                    | Description                                                                                                              | Required |
+|------------------------------|--------------------------------------------------------------------------------------------------------------------------|----------|
+| `server-hostname`            | The hostname of the server to add a status monitor for.                                                                  | `true`   |
+| `server-query-port`          | The query port of the server to add a status monitor for.                                                                | `true`   |
+| `display-player-gear-level`  | Whether or not to display the gear level in the player list. Defaults to not displaying the player gear level.           | `false`  |
+| `display-server-description` | Whether or not to display the v rising server description on discord. Defaults to not displaying the server description. | `false`  |
 
 ### `/update-server`
 
-Updates the given server status monitor.
+Updates the given server status monitor. Only the parameters that were specified when the command was executed are updated. All other parameters remain
+untouched.
 
-| Parameter                    | Description                                                           |
-|------------------------------|-----------------------------------------------------------------------|
-| `server-status-monitor-id`   | The id of the server status monitor.                                  |
-| `server-hostname`            | The hostname of the server to add a status monitor for.               |
-| `server-query-port`          | The query port of the server to add a status monitor for.             |
-| `status`                     | The status of the server status monitor. Either ACTIVE or INACTIVE.   |
-| `display-player-gear-level`  | Whether or not to display the gear level in the player list.          |
-| `display-server-description` | Whether or not to display the v rising server description on discord. |
+| Parameter                    | Description                                                           | Required |
+|------------------------------|-----------------------------------------------------------------------|----------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
+| `server-hostname`            | The hostname of the server to add a status monitor for.               | `false`  |
+| `server-query-port`          | The query port of the server to add a status monitor for.             | `false`  |
+| `status`                     | The status of the server status monitor. Either ACTIVE or INACTIVE.   | `false`  |
+| `display-player-gear-level`  | Whether or not to display the gear level in the player list.          | `false`  |
+| `display-server-description` | Whether or not to display the v rising server description on discord. | `false`  |
 
 ### `/remove-server`
 
 Removes a server from the status monitor.
 
-| Parameter                    | Description                                                           |
-|------------------------------|-----------------------------------------------------------------------|
-| `server-status-monitor-id`   | The id of the server status monitor.                                  |
+| Parameter                    | Description                                                           | Required |
+|------------------------------|-----------------------------------------------------------------------|----------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
 
 ## Configuration Properties
 
