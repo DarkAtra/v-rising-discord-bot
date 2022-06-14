@@ -31,6 +31,7 @@ class AddServerCommand(
             addServerQueryPortParameter()
 
             addDisplayPlayerGearLevelParameter(required = false)
+            addDisplayServerDescriptionParameter(required = false)
         }
     }
 
@@ -39,6 +40,7 @@ class AddServerCommand(
         val hostName = interaction.getServerHostnameParameter()!!
         val queryPort = interaction.getServerQueryPortParameter()!!
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: false
+        val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: false
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
@@ -51,7 +53,8 @@ class AddServerCommand(
                 hostName = hostName,
                 queryPort = queryPort,
                 status = ServerStatusMonitorStatus.ACTIVE,
-                displayPlayerGearLevel = displayPlayerGearLevel
+                displayPlayerGearLevel = displayPlayerGearLevel,
+                displayServerDescription = displayServerDescription
             )
         )
 

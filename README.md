@@ -6,12 +6,12 @@ This bot allows you to display some information about your v rising server on di
 
 ## Commands
 
-| Command                                                                                                                | Description                               |
-|------------------------------------------------------------------------------------------------------------------------|-------------------------------------------|
-| `/list-servers`                                                                                                        | Lists all server status monitors.         |
-| `/add-server <server-hostname> <server-query-port> <display-player-gear-level>`                                        | Adds a server to the status monitor.      |
-| `/update-server <server-status-monitor-id> <server-hostname> <server-query-port> <status> <display-player-gear-level>` | Updates the given server status monitor.  |
-| `/remove-server <server-status-monitor-id>`                                                                            | Removes a server from the status monitor. |
+| Command                                                                                                                                             | Description                               |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------|
+| `/list-servers`                                                                                                                                     | Lists all server status monitors.         |
+| `/add-server <server-hostname> <server-query-port> <display-player-gear-level> <display-server-description>`                                        | Adds a server to the status monitor.      |
+| `/update-server <server-status-monitor-id> <server-hostname> <server-query-port> <status> <display-player-gear-level> <display-server-description>` | Updates the given server status monitor.  |
+| `/remove-server <server-status-monitor-id>`                                                                                                         | Removes a server from the status monitor. |
 
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific.
 
@@ -31,7 +31,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:1.4.0
+    image: ghcr.io/darkatra/v-rising-discord-bot:1.5.0
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:

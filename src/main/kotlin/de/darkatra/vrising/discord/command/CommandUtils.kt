@@ -12,6 +12,7 @@ private const val SERVER_HOSTNAME_PARAMETER_NAME = "server-hostname"
 private const val SERVER_QUERY_PORT_PARAMETER_NAME = "server-query-port"
 private const val SERVER_STATUS_MONITOR_STATUS_PARAMETER_NAME = "status"
 private const val DISPLAY_PLAYER_GEAR_LEVEL_PARAMETER_NAME = "display-player-gear-level"
+private const val DISPLAY_SERVER_DESCRIPTION_PARAMETER_NAME = "display-server-description"
 
 fun GlobalChatInputCreateBuilder.addServerStatusMonitorIdParameter() {
     string(
@@ -63,6 +64,19 @@ fun GlobalChatInputCreateBuilder.addDisplayPlayerGearLevelParameter(required: Bo
 
 fun ChatInputCommandInteraction.getDisplayPlayerGearLevelParameter(): Boolean? {
     return command.booleans[DISPLAY_PLAYER_GEAR_LEVEL_PARAMETER_NAME]
+}
+
+fun GlobalChatInputCreateBuilder.addDisplayServerDescriptionParameter(required: Boolean = true) {
+    boolean(
+        name = DISPLAY_SERVER_DESCRIPTION_PARAMETER_NAME,
+        description = "Whether or not to display the v rising server description on discord."
+    ) {
+        this.required = required
+    }
+}
+
+fun ChatInputCommandInteraction.getDisplayServerDescriptionParameter(): Boolean? {
+    return command.booleans[DISPLAY_SERVER_DESCRIPTION_PARAMETER_NAME]
 }
 
 fun GlobalChatInputCreateBuilder.addServerStatusMonitorStatusParameter(required: Boolean = true) {

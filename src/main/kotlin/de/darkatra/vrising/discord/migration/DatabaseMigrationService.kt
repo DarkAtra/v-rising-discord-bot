@@ -25,7 +25,10 @@ class DatabaseMigrationService(
         ),
         DatabaseMigration(
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 4 },
-            action = { serverStatusMonitorBuilder -> serverStatusMonitorBuilder.status = ServerStatusMonitorStatus.ACTIVE }
+            action = { serverStatusMonitorBuilder ->
+                serverStatusMonitorBuilder.status = ServerStatusMonitorStatus.ACTIVE
+                serverStatusMonitorBuilder.displayServerDescription = true
+            }
         )
     )
 

@@ -3,7 +3,11 @@ package de.darkatra.vrising.discord
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
+import dev.kord.core.behavior.channel.createEmbed
+import dev.kord.core.behavior.edit
 import dev.kord.core.exception.EntityNotFoundException
+import dev.kord.rest.builder.message.EmbedBuilder
+import dev.kord.rest.builder.message.modify.embed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -76,29 +80,28 @@ class ServerStatusMonitorService(
                         val players = serverQueryClient.getPlayerList(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
                         val rules = serverQueryClient.getRules(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
 
+                        val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
+                            ServerStatusEmbed.buildEmbed(serverInfo,
+                                players,
+                                rules,
+                                serverStatusConfiguration.displayPlayerGearLevel,
+                                serverStatusConfiguration.displayServerDescription,
+                                embedBuilder
+                            )
+                        }
+
                         val currentEmbedMessageId = serverStatusConfiguration.currentEmbedMessageId
                         if (currentEmbedMessageId != null) {
                             try {
-                                ServerStatusEmbed.update(
-                                    serverInfo = serverInfo,
-                                    players = players,
-                                    rules = rules,
-                                    displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
-                                    message = channel.getMessage(Snowflake(currentEmbedMessageId))
-                                )
+                                channel.getMessage(Snowflake(currentEmbedMessageId))
+                                    .edit { embed(embedCustomizer) }
                                 return@forEach
                             } catch (e: EntityNotFoundException) {
                                 serverStatusConfiguration.currentEmbedMessageId = null
                             }
                         }
 
-                        serverStatusConfiguration.currentEmbedMessageId = ServerStatusEmbed.create(
-                            serverInfo = serverInfo,
-                            players = players,
-                            rules = rules,
-                            displayPlayerGearLevel = serverStatusConfiguration.displayPlayerGearLevel,
-                            channel = channel
-                        ).toString()
+                        serverStatusConfiguration.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
                         putServerStatusMonitor(serverStatusConfiguration)
                     }
                 }.onFailure { throwable ->

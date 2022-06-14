@@ -30,6 +30,7 @@ class UpdateServerCommand(
             addServerQueryPortParameter(required = false)
             addServerStatusMonitorStatusParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
+            addDisplayServerDescriptionParameter(required = false)
         }
     }
 
@@ -40,6 +41,7 @@ class UpdateServerCommand(
         val queryPort = interaction.getServerQueryPortParameter()
         val status = interaction.getServerStatusMonitorStatusParameter()
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
+        val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
@@ -63,6 +65,9 @@ class UpdateServerCommand(
         }
         if (displayPlayerGearLevel != null) {
             serverStatusMonitorBuilder.displayPlayerGearLevel = displayPlayerGearLevel
+        }
+        if (displayServerDescription != null) {
+            serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
         }
 
         serverStatusMonitorService.putServerStatusMonitor(serverStatusMonitorBuilder.build())

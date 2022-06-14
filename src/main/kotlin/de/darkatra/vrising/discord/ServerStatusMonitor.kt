@@ -21,6 +21,7 @@ data class ServerStatusMonitor(
     val queryPort: Int,
     val status: ServerStatusMonitorStatus,
     val displayPlayerGearLevel: Boolean,
+    val displayServerDescription: Boolean,
 
     var currentEmbedMessageId: String? = null,
 ) {
@@ -34,6 +35,7 @@ data class ServerStatusMonitor(
             queryPort = queryPort,
             status = status,
             displayPlayerGearLevel = displayPlayerGearLevel,
+            displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId
         )
     }
@@ -48,6 +50,7 @@ class ServerStatusMonitorBuilder(
     var queryPort: Int,
     var status: ServerStatusMonitorStatus,
     var displayPlayerGearLevel: Boolean,
+    var displayServerDescription: Boolean,
 
     var currentEmbedMessageId: String? = null,
 ) {
@@ -61,6 +64,7 @@ class ServerStatusMonitorBuilder(
             queryPort = queryPort,
             status = status,
             displayPlayerGearLevel = displayPlayerGearLevel,
+            displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId
         )
     }
