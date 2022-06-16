@@ -24,8 +24,16 @@ object ServerStatusEmbed {
             )
 
             if (displayServerDescription) {
-                rules["desc0"]?.let { serverDescription ->
-                    description = "$serverDescription"
+                val description = rules.filterKeys { key -> key.startsWith("desc") }
+                    .mapKeys { (key, _) -> key.removePrefix("desc").toInt() }
+                    .toList()
+                    .sortedBy { (key, _) -> key }
+                    .map { (_, value) -> value }
+                    .joinToString(separator = "")
+                    .trim()
+
+                if (description.isNotBlank()) {
+                    this.description = description
                 }
             }
 
@@ -49,20 +57,22 @@ object ServerStatusEmbed {
                 }
             }
 
-            players.sortedBy { player -> player.name }
-                .chunked(20)
-                .forEach { chunk ->
-                    field {
-                        name = "Online players"
-                        value = chunk.joinToString(separator = "\n") { player ->
-                            when (displayPlayerGearLevel) {
-                                true -> "**${player.name}** - ${player.score}"
-                                false -> "**${player.name}**"
+            if (players.isNotEmpty()) {
+                players.sortedBy { player -> player.name }
+                    .chunked(20)
+                    .forEach { chunk ->
+                        field {
+                            name = "Online players"
+                            value = chunk.joinToString(separator = "\n") { player ->
+                                when (displayPlayerGearLevel) {
+                                    true -> "**${player.name}** - ${player.score}"
+                                    false -> "**${player.name}**"
+                                }
                             }
+                            inline = true
                         }
-                        inline = true
                     }
-                }
+            }
         }
     }
 }
