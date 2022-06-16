@@ -1,3 +1,5 @@
+[![Build](https://github.com/DarkAtra/v-rising-discord-bot/actions/workflows/build.yml/badge.svg)](https://github.com/DarkAtra/v-rising-discord-bot/actions/workflows/build.yml)
+
 # V Rising Discord Bot
 
 This bot allows you to display some information about your v rising server on discord.
