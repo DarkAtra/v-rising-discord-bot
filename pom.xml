@@ -124,7 +124,6 @@
                     </compilerPlugins>
                     <args>
                         <arg>-Xjsr305=strict</arg>
-                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
                     </args>
                 </configuration>
                 <dependencies>
