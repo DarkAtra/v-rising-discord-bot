@@ -1,6 +1,18 @@
 package de.darkatra.vrising.discord.command
 
 import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
+import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorStatusParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
+import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorStatusParameter
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction

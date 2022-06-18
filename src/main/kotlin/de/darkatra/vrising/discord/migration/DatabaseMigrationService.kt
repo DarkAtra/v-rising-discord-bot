@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service
 class DatabaseMigrationService(
     private val database: Nitrite,
     @Value("\${version}")
-    private val currentAppVersion: String
+    appVersionFromPom: String,
 ) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private val repository = database.getRepository(Schema::class.java)
 
+    private val currentAppVersion: SemanticVersion = Schema("V$appVersionFromPom").asSemanticVersion()
     private val migrations: List<DatabaseMigration> = listOf(
         DatabaseMigration(
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 3 },
@@ -32,19 +33,18 @@ class DatabaseMigrationService(
         )
     )
 
-    fun migrateToLatestVersion() {
+    fun migrateToLatestVersion(): Boolean {
 
         // find the current version or default to V1.3.0 (the version before this feature was introduced)
         val currentSchemaVersion = repository.find().toList()
-            .maxByOrNull(Schema::appVersion)
-            ?.let(Schema::appVersionAsSemanticVersion)
+            .map(Schema::asSemanticVersion)
+            .maxWithOrNull(SemanticVersion.getComparator())
             ?: SemanticVersion(major = 1, minor = 3, patch = 0)
 
         val migrationsToPerform = migrations.filter { migration -> migration.isApplicable(currentSchemaVersion) }
         if (migrationsToPerform.isNotEmpty()) {
 
-            val (major, minor, patch) = currentSchemaVersion
-            logger.info("Will migrate from V$major.$minor.$patch to V$currentAppVersion by performing ${migrationsToPerform.size} migrations.")
+            logger.info("Will migrate from V$currentSchemaVersion to V$currentAppVersion by performing ${migrationsToPerform.size} migrations.")
 
             val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
 
@@ -54,9 +54,11 @@ class DatabaseMigrationService(
             }
 
             repository.insert(Schema("V$currentAppVersion"))
-            logger.info("Database migration from V$major.$minor.$patch to V$currentAppVersion was successful.")
+            logger.info("Database migration from V$currentSchemaVersion to V$currentAppVersion was successful.")
+            return true
         } else {
             logger.info("No migrations need to be performed.")
+            return false
         }
     }
 }
