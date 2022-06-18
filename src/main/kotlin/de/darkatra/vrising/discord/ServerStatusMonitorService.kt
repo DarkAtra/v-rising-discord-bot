@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord
 
+import com.ibasco.agql.core.exceptions.ReadTimeoutException
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
@@ -17,6 +18,7 @@ import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
@@ -26,6 +28,8 @@ class ServerStatusMonitorService(
     database: Nitrite,
     private val serverQueryClient: ServerQueryClient
 ) : CoroutineScope {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 
@@ -68,8 +72,8 @@ class ServerStatusMonitorService(
     fun launchServerStatusMonitor(kord: Kord) {
         launch {
             while (isActive) {
-                runCatching {
-                    getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusConfiguration ->
+                getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusConfiguration ->
+                    runCatching {
 
                         val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
                         if (channel == null || channel !is MessageChannelBehavior) {
@@ -103,10 +107,13 @@ class ServerStatusMonitorService(
 
                         serverStatusConfiguration.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
                         putServerStatusMonitor(serverStatusConfiguration)
+                    }.onFailure { throwable ->
+                        if (throwable is ReadTimeoutException) {
+                            logger.warn("Timeout while fetching the status of ${serverStatusConfiguration.id}.", throwable)
+                            return@forEach
+                        }
+                        logger.error("Exception while fetching the status of ${serverStatusConfiguration.id}", throwable)
                     }
-                }.onFailure { throwable ->
-                    println("Exception in status monitoring thread: ${throwable.message}")
-                    throwable.printStackTrace()
                 }
 
                 delay(Duration.ofMinutes(1).toMillis())
