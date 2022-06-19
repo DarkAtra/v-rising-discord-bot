@@ -39,7 +39,7 @@ object ServerStatusEmbed {
 
             field {
                 name = "Ip and Port"
-                value = "${serverInfo.hostAddress}:${serverInfo.port}"
+                value = "${serverInfo.hostAddress}:${serverInfo.gamePort}"
                 inline = true
             }
 
