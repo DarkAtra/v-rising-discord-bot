@@ -4,7 +4,7 @@ import org.dizitart.no2.Nitrite
 import org.slf4j.LoggerFactory
 import java.io.File
 
-object DatabaseUtils {
+internal object DatabaseTestUtils {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 

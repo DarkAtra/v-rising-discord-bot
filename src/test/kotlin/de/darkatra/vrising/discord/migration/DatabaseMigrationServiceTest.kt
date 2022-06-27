@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.test.DatabaseUtils
+import de.darkatra.vrising.discord.test.DatabaseTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +12,7 @@ internal class DatabaseMigrationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        database = DatabaseUtils.getTestDatabase()
+        database = DatabaseTestUtils.getTestDatabase()
     }
 
     @Test
