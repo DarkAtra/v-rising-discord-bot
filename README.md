@@ -100,3 +100,7 @@ bot:
   database-password: <the-database-password>
   database-path: /data/bot.db
 ```
+
+## Required Permissions
+
+![Required Discord Permissions](./docs/discord-permissions.png)

@@ -42,7 +42,8 @@ class Bot(
             val command = commands.find { command -> command.isSupported(interaction) }
             if (command == null) {
                 interaction.deferEphemeralResponse().respond {
-                    content = "This command is not supported here, please refer to the documentation."
+                    content = """This command is not supported here, please refer to the documentation.
+                        |Be sure to use the commands in the channel where you want the status message to appear.""".trimMargin()
                 }
                 return@on
             }
