@@ -6,6 +6,10 @@ This bot allows you to display some information about your v rising server on di
 
 ![Preview](./docs/preview.png)
 
+## Support
+
+If you have any questions, you can ping me on Discord: DarkAtra#6555
+
 ## Discord Commands
 
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific.
