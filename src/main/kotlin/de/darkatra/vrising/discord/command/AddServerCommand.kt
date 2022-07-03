@@ -35,6 +35,9 @@ class AddServerCommand(
             description = description
         ) {
 
+            dmPermission = false
+            disableCommandInGuilds()
+
             addServerHostnameParameter()
             addServerQueryPortParameter()
 

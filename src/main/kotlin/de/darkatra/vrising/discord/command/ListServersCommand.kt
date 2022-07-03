@@ -22,7 +22,10 @@ class ListServersCommand(
         kord.createGlobalChatInputCommand(
             name = name,
             description = description
-        )
+        ) {
+            dmPermission = false
+            disableCommandInGuilds()
+        }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
