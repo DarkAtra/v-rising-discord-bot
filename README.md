@@ -8,7 +8,8 @@ This bot allows you to display some information about your v rising server on di
 
 ## Support
 
-If you have any questions, you can ping me on Discord: `DarkAtra#6555`
+If you have questions or need support, feel free to
+join [this discord server](https://discord.com/channels/993243434695540837/993243577566101607/993243771468795934).
 
 ## Discord Commands
 
