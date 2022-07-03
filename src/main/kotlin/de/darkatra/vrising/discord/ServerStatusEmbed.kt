@@ -11,7 +11,6 @@ object ServerStatusEmbed {
         serverInfo: SourceServer,
         players: List<SourcePlayer>,
         rules: Map<String, Any>,
-        displayPlayerGearLevel: Boolean,
         displayServerDescription: Boolean,
         embedBuilder: EmbedBuilder
     ) {
@@ -63,12 +62,7 @@ object ServerStatusEmbed {
                     .forEach { chunk ->
                         field {
                             name = "Online players"
-                            value = chunk.joinToString(separator = "\n") { player ->
-                                when (displayPlayerGearLevel) {
-                                    true -> "**${player.name}** - ${player.score}"
-                                    false -> "**${player.name}**"
-                                }
-                            }
+                            value = chunk.joinToString(separator = "\n") { player -> "**${player.name}**" }
                             inline = true
                         }
                     }

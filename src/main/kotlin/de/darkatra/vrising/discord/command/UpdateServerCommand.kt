@@ -1,13 +1,11 @@
 package de.darkatra.vrising.discord.command
 
 import de.darkatra.vrising.discord.ServerStatusMonitorService
-import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorStatusParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
@@ -35,13 +33,14 @@ class UpdateServerCommand(
             name = name,
             description = description
         ) {
+            dmPermission = false
+            disableCommandInGuilds()
 
             addServerStatusMonitorIdParameter()
 
             addServerHostnameParameter(required = false)
             addServerQueryPortParameter(required = false)
             addServerStatusMonitorStatusParameter(required = false)
-            addDisplayPlayerGearLevelParameter(required = false)
             addDisplayServerDescriptionParameter(required = false)
         }
     }
@@ -52,7 +51,6 @@ class UpdateServerCommand(
         val hostName = interaction.getServerHostnameParameter()
         val queryPort = interaction.getServerQueryPortParameter()
         val status = interaction.getServerStatusMonitorStatusParameter()
-        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
@@ -74,9 +72,6 @@ class UpdateServerCommand(
         }
         if (status != null) {
             serverStatusMonitorBuilder.status = status
-        }
-        if (displayPlayerGearLevel != null) {
-            serverStatusMonitorBuilder.displayPlayerGearLevel = displayPlayerGearLevel
         }
         if (displayServerDescription != null) {
             serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
