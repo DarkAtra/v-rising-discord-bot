@@ -30,6 +30,15 @@ class DatabaseMigrationService(
                 document["status"] = ServerStatusMonitorStatus.ACTIVE.name
                 document["displayServerDescription"] = true
             }
+        ),
+        // Patch 0.5.42405 -> Gear Score will no longer be shown for online Vampires in the Steam Server List.
+        DatabaseMigration(
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 5 },
+            action = { document ->
+                // we can't remove the field completely due to how nitrites update function works
+                // setting it to false instead (this was the default value in previous versions)
+                document["displayPlayerGearLevel"] = false
+            }
         )
     )
 

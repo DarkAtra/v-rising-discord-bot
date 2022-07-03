@@ -4,11 +4,9 @@ import com.fasterxml.uuid.Generators
 import de.darkatra.vrising.discord.ServerStatusMonitor
 import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.ServerStatusMonitorStatus
-import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
@@ -41,7 +39,6 @@ class AddServerCommand(
             addServerHostnameParameter()
             addServerQueryPortParameter()
 
-            addDisplayPlayerGearLevelParameter(required = false)
             addDisplayServerDescriptionParameter(required = false)
         }
     }
@@ -50,7 +47,6 @@ class AddServerCommand(
 
         val hostName = interaction.getServerHostnameParameter()!!
         val queryPort = interaction.getServerQueryPortParameter()!!
-        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: false
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: false
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
@@ -64,7 +60,6 @@ class AddServerCommand(
                 hostName = hostName,
                 queryPort = queryPort,
                 status = ServerStatusMonitorStatus.ACTIVE,
-                displayPlayerGearLevel = displayPlayerGearLevel,
                 displayServerDescription = displayServerDescription
             )
         )

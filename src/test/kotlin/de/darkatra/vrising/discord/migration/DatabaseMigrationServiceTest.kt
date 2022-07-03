@@ -38,15 +38,16 @@ internal class DatabaseMigrationServiceTest {
         val repository = database.getRepository(Schema::class.java)
         repository.insert(Schema(appVersion = "V1.4.0"))
         repository.insert(Schema(appVersion = "V1.5.0"))
+        repository.insert(Schema(appVersion = "V1.6.0"))
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
-            appVersionFromPom = "1.5.0"
+            appVersionFromPom = "1.6.0"
         )
 
         assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse
 
         val schemas = repository.find().toList()
-        assertThat(schemas).hasSize(2)
+        assertThat(schemas).hasSize(3)
     }
 }

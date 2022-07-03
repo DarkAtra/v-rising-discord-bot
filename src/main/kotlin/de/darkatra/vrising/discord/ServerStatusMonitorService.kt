@@ -36,11 +36,7 @@ class ServerStatusMonitorService(
     private var repository = database.getRepository(ServerStatusMonitor::class.java)
 
     fun putServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
-        if (repository.find(ObjectFilters.eq("id", serverStatusMonitor.id)).firstOrNull() != null) {
-            repository.update(serverStatusMonitor)
-        } else {
-            repository.insert(serverStatusMonitor)
-        }
+        repository.update(serverStatusMonitor, true)
     }
 
     fun removeServerStatusMonitor(id: String, discordServerId: String): Boolean {
@@ -88,7 +84,6 @@ class ServerStatusMonitorService(
                             ServerStatusEmbed.buildEmbed(serverInfo,
                                 players,
                                 rules,
-                                serverStatusConfiguration.displayPlayerGearLevel,
                                 serverStatusConfiguration.displayServerDescription,
                                 embedBuilder
                             )
