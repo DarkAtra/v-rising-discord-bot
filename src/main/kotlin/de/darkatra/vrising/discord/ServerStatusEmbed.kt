@@ -48,22 +48,17 @@ object ServerStatusEmbed {
                 inline = true
             }
 
-            // for how many days the server has been running in in-game days
-            rules["days-running"]?.let { currentDay ->
-                field {
-                    name = "Ingame days"
-                    value = "$currentDay"
-                    inline = true
+            // days-runningv2 -> for how many days the server has been running in real-time days (introduced in 0.5.42553)
+            // days-running -> for how many days the server has been running in in-game days (pre 0.5.42553)
+            val currentDay = rules["days-runningv2"]
+            field {
+                name = when (currentDay != null) {
+                    true -> "Days running"
+                    false -> "Ingame days"
                 }
-            }
-
-            // for how many days the server has been running in real-time days (introduced in Patch 0.5.42553)
-            rules["days-runningv2"]?.let { currentDay ->
-                field {
-                    name = "Days running"
-                    value = "$currentDay"
-                    inline = true
-                }
+                // fallback to the old field for older servers and "-" if both fields are absent
+                value = "${currentDay ?: rules["days-running"] ?: "-"}"
+                inline = true
             }
 
             if (players.isNotEmpty()) {
