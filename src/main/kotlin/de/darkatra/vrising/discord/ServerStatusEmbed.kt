@@ -48,9 +48,19 @@ object ServerStatusEmbed {
                 inline = true
             }
 
+            // for how many days the server has been running in in-game days
             rules["days-running"]?.let { currentDay ->
                 field {
                     name = "Ingame days"
+                    value = "$currentDay"
+                    inline = true
+                }
+            }
+
+            // for how many days the server has been running in real-time days (introduced in Patch 0.5.42553)
+            rules["days-runningv2"]?.let { currentDay ->
+                field {
+                    name = "Days running"
                     value = "$currentDay"
                     inline = true
                 }
