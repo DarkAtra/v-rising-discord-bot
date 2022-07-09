@@ -80,7 +80,7 @@ class UpdateServerCommand(
         serverStatusMonitorService.putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
         interaction.deferEphemeralResponse().respond {
-            content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take up to 1 minute before the update is visible."
+            content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take some time until the status message is updated."
         }
     }
 }

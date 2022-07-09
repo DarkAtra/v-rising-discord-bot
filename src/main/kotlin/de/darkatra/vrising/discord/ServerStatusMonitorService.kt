@@ -20,13 +20,13 @@ import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.time.Duration
 import kotlin.coroutines.CoroutineContext
 
 @Service
 class ServerStatusMonitorService(
     database: Nitrite,
-    private val serverQueryClient: ServerQueryClient
+    private val serverQueryClient: ServerQueryClient,
+    private val botProperties: BotProperties
 ) : CoroutineScope {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -73,6 +73,8 @@ class ServerStatusMonitorService(
 
                         val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
                         if (channel == null || channel !is MessageChannelBehavior) {
+                            logger.debug("""Skipping server monitor '${serverStatusConfiguration.id}' because the channel
+                                |'${serverStatusConfiguration.discordChannelId}' does not seem to exist""".trimMargin())
                             return@forEach
                         }
 
@@ -94,6 +96,7 @@ class ServerStatusMonitorService(
                             try {
                                 channel.getMessage(Snowflake(currentEmbedMessageId))
                                     .edit { embed(embedCustomizer) }
+                                logger.debug("Successfully updated the status of server monitor: ${serverStatusConfiguration.id}")
                                 return@forEach
                             } catch (e: EntityNotFoundException) {
                                 serverStatusConfiguration.currentEmbedMessageId = null
@@ -102,6 +105,8 @@ class ServerStatusMonitorService(
 
                         serverStatusConfiguration.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
                         putServerStatusMonitor(serverStatusConfiguration)
+                        logger.debug("Successfully updated the status and persisted the embedId of server monitor: ${serverStatusConfiguration.id}")
+
                     }.onFailure { throwable ->
                         if (throwable is ReadTimeoutException) {
                             logger.warn("Timeout while fetching the status of ${serverStatusConfiguration.id}.", throwable)
@@ -111,7 +116,8 @@ class ServerStatusMonitorService(
                     }
                 }
 
-                delay(Duration.ofMinutes(1).toMillis())
+                logger.debug("Waiting for ${botProperties.updateDelay.toMillis()} millis before performing the next update.")
+                delay(botProperties.updateDelay.toMillis())
             }
         }
     }

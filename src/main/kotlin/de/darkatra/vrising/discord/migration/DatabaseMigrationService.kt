@@ -51,23 +51,23 @@ class DatabaseMigrationService(
             ?: SemanticVersion(major = 1, minor = 3, patch = 0)
 
         val migrationsToPerform = migrations.filter { migration -> migration.isApplicable(currentSchemaVersion) }
-        if (migrationsToPerform.isNotEmpty()) {
-
-            logger.info("Will migrate from V$currentSchemaVersion to V$currentAppVersion by performing ${migrationsToPerform.size} migrations.")
-
-            val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
-
-            collection.find().forEach { document ->
-                migrationsToPerform.forEach { migration -> migration.action(document) }
-                collection.update(document)
-            }
-
-            repository.insert(Schema("V$currentAppVersion"))
-            logger.info("Database migration from V$currentSchemaVersion to V$currentAppVersion was successful.")
-            return true
-        } else {
+        if (migrationsToPerform.isEmpty()) {
             logger.info("No migrations need to be performed.")
             return false
         }
+
+        logger.info("Will migrate from V$currentSchemaVersion to V$currentAppVersion by performing ${migrationsToPerform.size} migrations.")
+
+        val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
+
+        collection.find().forEach { document ->
+            migrationsToPerform.forEach { migration -> migration.action(document) }
+            collection.update(document)
+        }
+
+        repository.insert(Schema("V$currentAppVersion"))
+        logger.info("Database migration from V$currentSchemaVersion to V$currentAppVersion was successful.")
+
+        return true
     }
 }

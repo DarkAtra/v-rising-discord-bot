@@ -65,7 +65,7 @@ class AddServerCommand(
         )
 
         interaction.deferEphemeralResponse().respond {
-            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It may take up to 1 minute for the status message to appear."
+            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It may take some time until the status message appears."
         }
     }
 }

@@ -13,3 +13,4 @@ bot:
   database-path: ./bot.db
   database-username: v-rising-discord-bot
   database-password: ~
+  update-delay: 1m

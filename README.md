@@ -52,12 +52,13 @@ Removes a server from the status monitor.
 
 ## Configuration Properties
 
-| Property                        | Type    | Description                                                                                                                      | Default value          |
-|---------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
-| `bot.discord-bot-token`         | String  | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
-| `bot.database-path`             | Path    | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
-| `bot.database-username`         | String  | The username for the database.                                                                                                   | `v-rising-discord-bot` |
-| `bot.database-password`         | String  | The password for the database.                                                                                                   | `null`                 |
+| Property                | Type     | Description                                                                                                                      | Default value          |
+|-------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| `bot.discord-bot-token` | String   | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
+| `bot.database-path`     | Path     | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
+| `bot.database-username` | String   | The username for the database.                                                                                                   | `v-rising-discord-bot` |
+| `bot.database-password` | String   | The password for the database.                                                                                                   | `null`                 |
+| `bot.update-delay`      | Duration | The delay between status monitor updates. At least 30 seconds.                                                                   | `1m`                   |
 
 ## How to run it yourself using docker-compose
 
