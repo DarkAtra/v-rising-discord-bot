@@ -1,6 +1,5 @@
 package de.darkatra.vrising.discord
 
-import com.ibasco.agql.core.exceptions.ReadTimeoutException
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
@@ -73,8 +72,10 @@ class ServerStatusMonitorService(
 
                         val channel = kord.getChannel(Snowflake(serverStatusConfiguration.discordChannelId))
                         if (channel == null || channel !is MessageChannelBehavior) {
-                            logger.debug("""Skipping server monitor '${serverStatusConfiguration.id}' because the channel
-                                |'${serverStatusConfiguration.discordChannelId}' does not seem to exist""".trimMargin())
+                            logger.debug(
+                                """Skipping server monitor '${serverStatusConfiguration.id}' because the channel
+                                |'${serverStatusConfiguration.discordChannelId}' does not seem to exist""".trimMargin()
+                            )
                             return@forEach
                         }
 
@@ -83,7 +84,8 @@ class ServerStatusMonitorService(
                         val rules = serverQueryClient.getRules(serverStatusConfiguration.hostName, serverStatusConfiguration.queryPort)
 
                         val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
-                            ServerStatusEmbed.buildEmbed(serverInfo,
+                            ServerStatusEmbed.buildEmbed(
+                                serverInfo,
                                 players,
                                 rules,
                                 serverStatusConfiguration.displayServerDescription,
@@ -108,10 +110,6 @@ class ServerStatusMonitorService(
                         logger.debug("Successfully updated the status and persisted the embedId of server monitor: ${serverStatusConfiguration.id}")
 
                     }.onFailure { throwable ->
-                        if (throwable is ReadTimeoutException) {
-                            logger.warn("Timeout while fetching the status of ${serverStatusConfiguration.id}.", throwable)
-                            return@forEach
-                        }
                         logger.error("Exception while fetching the status of ${serverStatusConfiguration.id}", throwable)
                     }
                 }
