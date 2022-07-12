@@ -5,6 +5,7 @@ spring:
 logging:
   level:
     root: info
+    com.ibasco.agql: warn
 
 version: @project.version@
 
