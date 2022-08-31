@@ -76,7 +76,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:1.7.7
+    image: ghcr.io/darkatra/v-rising-discord-bot:1.8.0
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
