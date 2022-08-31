@@ -73,6 +73,19 @@ internal class BotPropertiesTest {
         assertThat(result).hasSize(1)
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = [-99, -1])
+    internal fun `should be invalid if maxFailedAttempts is below 1`(maxFailedAttempts: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxFailedAttempts = maxFailedAttempts
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
     private fun getValidBotProperties(): BotProperties {
         return BotProperties().apply {
             discordBotToken = "discord-token"
@@ -80,6 +93,7 @@ internal class BotPropertiesTest {
             databaseUsername = "username"
             databasePassword = "password"
             updateDelay = Duration.ofSeconds(30)
+            maxFailedAttempts = 5
         }
     }
 }

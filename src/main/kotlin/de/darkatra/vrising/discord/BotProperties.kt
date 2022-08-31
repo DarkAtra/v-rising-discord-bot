@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 import java.nio.file.Path
 import java.time.Duration
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -29,4 +30,8 @@ class BotProperties {
     @field:NotNull
     @field:DurationMin(seconds = 30)
     lateinit var updateDelay: Duration
+
+    @field:Min(0)
+    @field:NotNull
+    var maxFailedAttempts: Int = 0
 }

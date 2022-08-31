@@ -23,6 +23,7 @@ data class ServerStatusMonitor(
     val displayServerDescription: Boolean,
 
     var currentEmbedMessageId: String? = null,
+    var currentFailedAttempts: Int = 0,
 ) {
 
     fun builder(): ServerStatusMonitorBuilder {
@@ -34,7 +35,8 @@ data class ServerStatusMonitor(
             queryPort = queryPort,
             status = status,
             displayServerDescription = displayServerDescription,
-            currentEmbedMessageId = currentEmbedMessageId
+            currentEmbedMessageId = currentEmbedMessageId,
+            currentFailedAttempts = currentFailedAttempts
         )
     }
 }
@@ -50,6 +52,7 @@ class ServerStatusMonitorBuilder(
     var displayServerDescription: Boolean,
 
     var currentEmbedMessageId: String? = null,
+    var currentFailedAttempts: Int,
 ) {
 
     fun build(): ServerStatusMonitor {
@@ -61,7 +64,8 @@ class ServerStatusMonitorBuilder(
             queryPort = queryPort,
             status = status,
             displayServerDescription = displayServerDescription,
-            currentEmbedMessageId = currentEmbedMessageId
+            currentEmbedMessageId = currentEmbedMessageId,
+            currentFailedAttempts = currentFailedAttempts
         )
     }
 }
