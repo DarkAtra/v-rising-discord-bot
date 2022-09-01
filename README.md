@@ -50,15 +50,24 @@ Removes a server from the status monitor.
 |------------------------------|-----------------------------------------------------------------------|----------|
 | `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
 
+### `/get-server-details`
+
+Gets all the configuration details for the specified server.
+
+| Parameter                    | Description                                                           | Required |
+|------------------------------|-----------------------------------------------------------------------|----------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
+
 ## Configuration Properties
 
-| Property                | Type     | Description                                                                                                                      | Default value          |
-|-------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
-| `bot.discord-bot-token` | String   | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
-| `bot.database-path`     | Path     | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
-| `bot.database-username` | String   | The username for the database.                                                                                                   | `v-rising-discord-bot` |
-| `bot.database-password` | String   | The password for the database.                                                                                                   | `null`                 |
-| `bot.update-delay`      | Duration | The delay between status monitor updates. At least 30 seconds.                                                                   | `1m`                   |
+| Property                  | Type     | Description                                                                                                                      | Default value          |
+|---------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| `bot.discord-bot-token`   | String   | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
+| `bot.database-path`       | Path     | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
+| `bot.database-username`   | String   | The username for the database.                                                                                                   | `v-rising-discord-bot` |
+| `bot.database-password`   | String   | The password for the database.                                                                                                   | `null`                 |
+| `bot.update-delay`        | Duration | The delay between status monitor updates. At least 30 seconds.                                                                   | `1m`                   |
+| `bot.max-failed-attempts` | Int      | The maximum amount of attempts to be made until a server is disabled. Use `0` if you don't want to use this feature.             | `0`                    |
 
 ## How to run it yourself using docker-compose
 
@@ -67,7 +76,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:1.5.4
+    image: ghcr.io/darkatra/v-rising-discord-bot:1.8.0
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
