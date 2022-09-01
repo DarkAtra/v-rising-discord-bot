@@ -39,7 +39,11 @@ class DatabaseMigrationService(
                 // setting it to false instead (this was the default value in previous versions)
                 document["displayPlayerGearLevel"] = false
             }
-        )
+        ),
+        DatabaseMigration(
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 7 },
+            action = { document -> document["currentFailedAttempts"] = 0 }
+        ),
     )
 
     fun migrateToLatestVersion(): Boolean {
