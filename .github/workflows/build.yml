@@ -57,7 +57,7 @@ jobs:
         run: echo "::set-output name=image-name::$(mvn help:evaluate -Dexpression=image.name -q -DforceStdout)"
 
       - name: Scan Docker Image for Vulnerabilities
-        uses: aquasecurity/trivy-action@0.7.1
+        uses: aquasecurity/trivy-action@0.8.0
         with:
           image-ref: ${{ steps.get-image-name.outputs.image-name }}
           format: sarif
