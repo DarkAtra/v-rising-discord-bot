@@ -31,7 +31,7 @@
     <properties>
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <kotlin.version>1.7.22</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
@@ -141,6 +141,7 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <configuration>
+                    <jvmTarget>${java.version}</jvmTarget>
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
@@ -168,6 +169,10 @@
                         </env>
                     </image>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
