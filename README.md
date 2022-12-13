@@ -77,6 +77,8 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 services:
   v-rising-discord-bot:
     image: ghcr.io/darkatra/v-rising-discord-bot:1.8.0
+    mem_reservation: 256M
+    mem_limit: 512M
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
