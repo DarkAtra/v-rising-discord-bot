@@ -32,7 +32,7 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>1.8.0</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
         <kord.version>0.8.0-M17</kord.version>
