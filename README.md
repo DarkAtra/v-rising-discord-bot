@@ -4,7 +4,7 @@
 
 This bot allows you to display some information about your v rising server on discord.
 
-![Preview](./docs/preview.png)
+<img alt="Preview" src="./docs/preview.png" width="400"/>
 
 ## Support
 
@@ -46,17 +46,17 @@ untouched.
 
 Removes a server from the status monitor.
 
-| Parameter                    | Description                                                           | Required |
-|------------------------------|-----------------------------------------------------------------------|----------|
-| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
+| Parameter                  | Description                          | Required |
+|----------------------------|--------------------------------------|----------|
+| `server-status-monitor-id` | The id of the server status monitor. | `true`   |
 
 ### `/get-server-details`
 
 Gets all the configuration details for the specified server.
 
-| Parameter                    | Description                                                           | Required |
-|------------------------------|-----------------------------------------------------------------------|----------|
-| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
+| Parameter                  | Description                          | Required |
+|----------------------------|--------------------------------------|----------|
+| `server-status-monitor-id` | The id of the server status monitor. | `true`   |
 
 ## Configuration Properties
 
@@ -76,7 +76,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:1.8.0
+    image: ghcr.io/darkatra/v-rising-discord-bot:2.0.4
     mem_reservation: 256M
     mem_limit: 512M
     volumes:
