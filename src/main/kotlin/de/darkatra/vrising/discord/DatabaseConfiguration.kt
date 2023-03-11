@@ -15,7 +15,6 @@ class DatabaseConfiguration(
     @Bean
     fun database(): Nitrite {
         return Nitrite.builder()
-            .compressed()
             .filePath(botProperties.databasePath.absolutePathString())
             .openOrCreate(botProperties.databaseUsername, botProperties.databasePassword)
     }
