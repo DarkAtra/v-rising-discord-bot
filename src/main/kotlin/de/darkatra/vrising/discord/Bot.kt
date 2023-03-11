@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.command.Command
+import de.darkatra.vrising.discord.command.ValidationException
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -48,7 +49,13 @@ class Bot(
                 return@on
             }
 
-            command.handle(interaction)
+            try {
+                command.handle(interaction)
+            } catch (e: ValidationException) {
+                interaction.deferEphemeralResponse().respond {
+                    content = "Could not perform command. Cause: ${e.message}"
+                }
+            }
         }
 
         kord.on<ReadyEvent> {

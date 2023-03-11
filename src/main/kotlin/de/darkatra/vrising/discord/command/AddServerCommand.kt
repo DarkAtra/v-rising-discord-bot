@@ -4,6 +4,7 @@ import com.fasterxml.uuid.Generators
 import de.darkatra.vrising.discord.ServerStatusMonitor
 import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
@@ -51,6 +52,8 @@ class AddServerCommand(
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
+
+        ServerHostnameParameter.validate(hostName)
 
         serverStatusMonitorService.putServerStatusMonitor(
             ServerStatusMonitor(

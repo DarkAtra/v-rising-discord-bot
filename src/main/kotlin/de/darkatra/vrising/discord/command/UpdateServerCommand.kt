@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord.command
 
 import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
@@ -65,6 +66,7 @@ class UpdateServerCommand(
 
         val serverStatusMonitorBuilder = serverStatusMonitor.builder()
         if (hostName != null) {
+            ServerHostnameParameter.validate(hostName)
             serverStatusMonitorBuilder.hostName = hostName
         }
         if (queryPort != null) {
