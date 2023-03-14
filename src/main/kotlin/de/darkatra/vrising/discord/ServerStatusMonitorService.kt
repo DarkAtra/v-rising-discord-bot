@@ -8,26 +8,21 @@ import dev.kord.core.behavior.edit
 import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.rest.builder.message.modify.embed
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import kotlin.coroutines.CoroutineContext
 
 @Service
 class ServerStatusMonitorService(
     database: Nitrite,
     private val serverQueryClient: ServerQueryClient,
     private val botProperties: BotProperties
-) : CoroutineScope {
+) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    override val coroutineContext: CoroutineContext = Dispatchers.Default
 
     private var repository = database.getRepository(ServerStatusMonitor::class.java)
 

@@ -6,10 +6,10 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-internal class SchemaTest {
+class SchemaTest {
 
     @Test
-    internal fun `should convert to semantic version`() {
+    fun `should convert to semantic version`() {
 
         val schema = Schema(
             appVersion = "V1.4.2"
@@ -23,7 +23,7 @@ internal class SchemaTest {
     }
 
     @Test
-    internal fun `should convert to semantic version for pre-release`() {
+    fun `should convert to semantic version for pre-release`() {
 
         val schema = Schema(
             appVersion = "V1.4.2-next.1"
@@ -38,7 +38,7 @@ internal class SchemaTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "     ", "V1", "V1.", "V1.4", "V1.4.", "a1.4.2", "a.4.2", "V1.b.2", "V1.4.c"])
-    internal fun `should fail to convert to semantic version`(invalidAppVersion: String) {
+    fun `should fail to convert to semantic version`(invalidAppVersion: String) {
 
         val schema = Schema(
             appVersion = invalidAppVersion

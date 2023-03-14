@@ -8,12 +8,12 @@ import org.junit.jupiter.params.provider.ValueSource
 import java.nio.file.Path
 import java.time.Duration
 
-internal class BotPropertiesTest {
+class BotPropertiesTest {
 
     private val validator = Validation.buildDefaultValidatorFactory().use { it.validator }
 
     @Test
-    internal fun `should be valid`() {
+    fun `should be valid`() {
 
         val botProperties = getValidBotProperties()
 
@@ -24,7 +24,7 @@ internal class BotPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "  ", "\t"])
-    internal fun `should be invalid if discordBotToken is blank`(discordBotToken: String) {
+    fun `should be invalid if discordBotToken is blank`(discordBotToken: String) {
 
         val botProperties = getValidBotProperties().apply {
             this.discordBotToken = discordBotToken
@@ -37,7 +37,7 @@ internal class BotPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "  ", "\t"])
-    internal fun `should be invalid if databaseUsername is blank`(databaseUsername: String) {
+    fun `should be invalid if databaseUsername is blank`(databaseUsername: String) {
 
         val botProperties = getValidBotProperties().apply {
             this.databaseUsername = databaseUsername
@@ -50,7 +50,7 @@ internal class BotPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "  ", "\t"])
-    internal fun `should be invalid if databasePassword is blank`(databasePassword: String) {
+    fun `should be invalid if databasePassword is blank`(databasePassword: String) {
 
         val botProperties = getValidBotProperties().apply {
             this.databasePassword = databasePassword
@@ -62,7 +62,7 @@ internal class BotPropertiesTest {
     }
 
     @Test
-    internal fun `should be invalid if updateDelay is below 30 seconds`() {
+    fun `should be invalid if updateDelay is below 30 seconds`() {
 
         val botProperties = getValidBotProperties().apply {
             this.updateDelay = Duration.ofSeconds(29)
@@ -75,7 +75,7 @@ internal class BotPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(ints = [-99, -1])
-    internal fun `should be invalid if maxFailedAttempts is below 1`(maxFailedAttempts: Int) {
+    fun `should be invalid if maxFailedAttempts is below 1`(maxFailedAttempts: Int) {
 
         val botProperties = getValidBotProperties().apply {
             this.maxFailedAttempts = maxFailedAttempts
