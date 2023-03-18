@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import org.dizitart.no2.Nitrite
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @EnableScheduling
 @SpringBootApplication
 @EnableConfigurationProperties(BotProperties::class)
+@RegisterReflectionForBinding(BotProperties::class, ServerStatusMonitor::class)
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,
