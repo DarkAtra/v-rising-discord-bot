@@ -19,6 +19,7 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.SchedulingConfigurer
 import org.springframework.scheduling.config.IntervalTask
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @EnableScheduling
 @SpringBootApplication
+@ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
 @RegisterReflectionForBinding(BotProperties::class, ServerStatusMonitor::class)
 class Bot(

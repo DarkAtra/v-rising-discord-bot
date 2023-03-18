@@ -219,5 +219,11 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>native</id>
+            <properties>
+                <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}-native</image.name>
+            </properties>
+        </profile>
     </profiles>
 </project>
