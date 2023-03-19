@@ -4,15 +4,14 @@ import com.ibasco.agql.core.util.ConnectOptions
 import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
-import io.ktor.network.selector.InterestSuspensionsMap
-import io.ktor.utils.io.pool.DefaultPool
+import io.ktor.network.selector.*
+import io.ktor.utils.io.pool.*
 import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
 import org.dizitart.no2.meta.Attributes
 import org.h2.store.fs.FilePathDisk
 import org.h2.store.fs.FilePathNio
-import org.springframework.aot.hint.BindingReflectionHintsRegistrar
 import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
@@ -24,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class BotRuntimeHints : RuntimeHintsRegistrar {
 
-    private val bindingReflectionHintsRegistrar = BindingReflectionHintsRegistrar()
+//    private val bindingReflectionHintsRegistrar = BindingReflectionHintsRegistrar()
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
@@ -52,9 +51,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             // required by ktor (dependency of kord)
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
-            // required by kord
-            //            .registerType(GuildApplicationCommandPermissionsData::class.java)
-            //            .registerType(StickerPackData::class.java)
             // required by SourceQueryClient
             .registerType(ConnectOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             .registerType(GeneralOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
