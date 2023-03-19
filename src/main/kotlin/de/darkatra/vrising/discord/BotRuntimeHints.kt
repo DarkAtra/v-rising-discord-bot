@@ -8,12 +8,14 @@ import dev.kord.core.cache.data.ApplicationCommandData
 import dev.kord.core.cache.data.AutoModerationRuleData
 import dev.kord.core.cache.data.ChannelData
 import dev.kord.core.cache.data.EmojiData
+import dev.kord.core.cache.data.GuildApplicationCommandPermissionsData
 import dev.kord.core.cache.data.GuildData
 import dev.kord.core.cache.data.MemberData
 import dev.kord.core.cache.data.MessageData
 import dev.kord.core.cache.data.PresenceData
 import dev.kord.core.cache.data.RoleData
 import dev.kord.core.cache.data.StickerData
+import dev.kord.core.cache.data.StickerPackData
 import dev.kord.core.cache.data.ThreadMemberData
 import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
@@ -60,8 +62,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             WebhookData::class.java
         )
 
-        ApplicationCommandData::class.constructors
-
         hints.reflection()
             // required by nitrite to create or open file based databases
             .registerType(FilePathDisk::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
@@ -69,8 +69,11 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             // required by kotlin coroutines (dependency of kord)
             .registerType(TypeReference.of("kotlin.internal.jdk8.JDK8PlatformImplementations"), MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             // required by ktor (dependency of kord)
-            .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
+            // required by kord
+            .registerType(GuildApplicationCommandPermissionsData::class.java)
+            .registerType(StickerPackData::class.java)
             // required by SourceQueryClient
             .registerType(ConnectOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             .registerType(GeneralOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
