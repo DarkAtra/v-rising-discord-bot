@@ -23,6 +23,8 @@ import dev.kord.core.cache.data.WebhookData
 import io.ktor.network.selector.InterestSuspensionsMap
 import io.ktor.utils.io.pool.DefaultPool
 import org.dizitart.no2.Index
+import org.dizitart.no2.NitriteId
+import org.dizitart.no2.meta.Attributes
 import org.h2.store.fs.FilePathDisk
 import org.h2.store.fs.FilePathNio
 import org.springframework.aot.hint.BindingReflectionHintsRegistrar
@@ -30,18 +32,27 @@ import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.aot.hint.TypeReference
+import java.util.concurrent.atomic.AtomicBoolean
 
+/**
+ * Runtime hints for dependencies. Should be removed when each dependency has official support for GraalVM Native Image.
+ */
 class BotRuntimeHints : RuntimeHintsRegistrar {
 
     private val bindingReflectionHintsRegistrar = BindingReflectionHintsRegistrar()
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
-        // required to create a nitrite database with password
+        // required by nitrite to create a database with password
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.Security\$UserCredential"))
-        // required to create nitrite indices
-        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
+        // required by nitrite to create indices
+        hints.serialization().registerType(Attributes::class.java)
+        hints.serialization().registerType(AtomicBoolean::class.java)
         hints.serialization().registerType(Index::class.java)
+        hints.serialization().registerType(TypeReference.of("java.lang.Long"))
+        hints.serialization().registerType(TypeReference.of("java.lang.Number"))
+        hints.serialization().registerType(NitriteId::class.java)
+        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
 
         // required by kord (via kotlinx-serialization)
         bindingReflectionHintsRegistrar.registerReflectionHints(
@@ -63,7 +74,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         )
 
         hints.reflection()
-            // required by nitrite to create or open file based databases
+            // required by nitrite to create and open file based databases
             .registerType(FilePathDisk::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             .registerType(FilePathNio::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             // required by kotlin coroutines (dependency of kord)
