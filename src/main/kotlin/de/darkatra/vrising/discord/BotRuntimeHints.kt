@@ -4,8 +4,6 @@ import com.ibasco.agql.core.util.ConnectOptions
 import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
-import dev.kord.core.cache.data.GuildApplicationCommandPermissionsData
-import dev.kord.core.cache.data.StickerPackData
 import io.ktor.network.selector.InterestSuspensionsMap
 import io.ktor.utils.io.pool.DefaultPool
 import org.dizitart.no2.Document
@@ -55,8 +53,8 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
             // required by kord
-            .registerType(GuildApplicationCommandPermissionsData::class.java)
-            .registerType(StickerPackData::class.java)
+            //            .registerType(GuildApplicationCommandPermissionsData::class.java)
+            //            .registerType(StickerPackData::class.java)
             // required by SourceQueryClient
             .registerType(ConnectOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             .registerType(GeneralOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
