@@ -4,24 +4,11 @@ import com.ibasco.agql.core.util.ConnectOptions
 import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
-import dev.kord.core.cache.data.ApplicationCommandData
-import dev.kord.core.cache.data.AutoModerationRuleData
-import dev.kord.core.cache.data.ChannelData
-import dev.kord.core.cache.data.EmojiData
 import dev.kord.core.cache.data.GuildApplicationCommandPermissionsData
-import dev.kord.core.cache.data.GuildData
-import dev.kord.core.cache.data.MemberData
-import dev.kord.core.cache.data.MessageData
-import dev.kord.core.cache.data.PresenceData
-import dev.kord.core.cache.data.RoleData
-import dev.kord.core.cache.data.StickerData
 import dev.kord.core.cache.data.StickerPackData
-import dev.kord.core.cache.data.ThreadMemberData
-import dev.kord.core.cache.data.UserData
-import dev.kord.core.cache.data.VoiceStateData
-import dev.kord.core.cache.data.WebhookData
 import io.ktor.network.selector.InterestSuspensionsMap
 import io.ktor.utils.io.pool.DefaultPool
+import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
 import org.dizitart.no2.meta.Attributes
@@ -48,30 +35,15 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         // required by nitrite to create indices
         hints.serialization().registerType(Attributes::class.java)
         hints.serialization().registerType(AtomicBoolean::class.java)
+        hints.serialization().registerType(Document::class.java)
+        hints.serialization().registerType(HashMap::class.java)
         hints.serialization().registerType(Index::class.java)
+        hints.serialization().registerType(TypeReference.of("java.lang.Integer"))
+        hints.serialization().registerType(LinkedHashMap::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.Long"))
         hints.serialization().registerType(TypeReference.of("java.lang.Number"))
         hints.serialization().registerType(NitriteId::class.java)
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
-
-        // required by kord (via kotlinx-serialization)
-        bindingReflectionHintsRegistrar.registerReflectionHints(
-            hints.reflection(),
-            ApplicationCommandData::class.java,
-            AutoModerationRuleData::class.java,
-            ChannelData::class.java,
-            EmojiData::class.java,
-            GuildData::class.java,
-            MemberData::class.java,
-            MessageData::class.java,
-            PresenceData::class.java,
-            RoleData::class.java,
-            StickerData::class.java,
-            ThreadMemberData::class.java,
-            UserData::class.java,
-            VoiceStateData::class.java,
-            WebhookData::class.java
-        )
 
         hints.reflection()
             // required by nitrite to create and open file based databases
