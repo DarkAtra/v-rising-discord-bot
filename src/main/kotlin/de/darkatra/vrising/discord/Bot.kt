@@ -9,6 +9,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import org.dizitart.no2.Nitrite
@@ -72,7 +73,9 @@ class Bot(
         }
 
         kord.on<ReadyEvent> {
-            kord.getGlobalApplicationCommands().collect { applicationCommand -> applicationCommand.delete() }
+            kord.getGlobalApplicationCommands()
+                .filterNot { command -> commands.any { it.getCommandName() == command.name } }
+                .collect { applicationCommand -> applicationCommand.delete() }
             commands.forEach { command -> command.register(kord) }
             isReady.set(true)
         }
