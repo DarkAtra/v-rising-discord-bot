@@ -12,8 +12,8 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "mvn -B -ntp versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version}",
-                "publishCmd": "mvn -B -ntp -Ppublish-ghcr -DskipTests clean package spring-boot:build-image"
+                "prepareCmd": "mvn -B -ntp clean versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version}",
+                "publishCmd": "./publish.sh"
             }
         ],
         [
