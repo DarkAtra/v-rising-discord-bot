@@ -3,6 +3,7 @@ package de.darkatra.vrising.discord
 import com.ibasco.agql.core.util.ConnectOptions
 import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
+import com.ibasco.agql.core.util.HttpOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
 import io.ktor.network.selector.InterestSuspensionsMap
 import io.ktor.utils.io.pool.DefaultPool
@@ -58,6 +59,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType(ConnectOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
             .registerType(GeneralOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
             .registerType(FailsafeOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
+            .registerType(HttpOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
             .registerType(SourceQueryOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
     }
 }
