@@ -5,8 +5,8 @@ import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.core.util.HttpOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
-import io.ktor.network.selector.InterestSuspensionsMap
-import io.ktor.utils.io.pool.DefaultPool
+import io.ktor.network.selector.*
+import io.ktor.utils.io.pool.*
 import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
@@ -39,12 +39,13 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         hints.serialization().registerType(Document::class.java)
         hints.serialization().registerType(HashMap::class.java)
         hints.serialization().registerType(Index::class.java)
+        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
         hints.serialization().registerType(TypeReference.of("java.lang.Integer"))
         hints.serialization().registerType(LinkedHashMap::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.Long"))
         hints.serialization().registerType(TypeReference.of("java.lang.Number"))
         hints.serialization().registerType(NitriteId::class.java)
-        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
+        hints.serialization().registerType(TypeReference.of("java.lang.String"))
 
         hints.reflection()
             // required by nitrite to create and open file based databases

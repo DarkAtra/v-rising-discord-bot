@@ -4,9 +4,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.mockito.Mockito
 import java.time.Duration
 
+@DisabledInNativeImage
 class ServerStatusMonitorServiceTest {
 
     private val nitrite: Nitrite = DatabaseConfigurationTestUtils.getTestDatabase()
@@ -19,7 +21,6 @@ class ServerStatusMonitorServiceTest {
 
     @BeforeEach
     fun setUp() {
-
         DatabaseConfigurationTestUtils.clearDatabase(nitrite)
     }
 
