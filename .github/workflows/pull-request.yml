@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   verify:
+    name: Verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,13 +28,14 @@ jobs:
         run: mvn -B -ntp verify
 
   verify-native:
+    name: Verify Native
     strategy:
       matrix:
         os:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-    runs-on: { { matrix.os } }
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
         with:
