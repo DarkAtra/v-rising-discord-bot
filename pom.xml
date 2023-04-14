@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.4</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
 
@@ -32,11 +32,11 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>1.8.10</kotlin.version>
+        <kotlin.version>1.8.20</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
         <kord.version>feature-graal-SNAPSHOT</kord.version>
-        <agql-source-query.version>1.1.0</agql-source-query.version>
+        <agql-source-query.version>1.2.0</agql-source-query.version>
         <java-uuid-generator.version>4.1.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
         <commons-validator.version>1.7</commons-validator.version>
