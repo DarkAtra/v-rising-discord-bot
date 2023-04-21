@@ -1,12 +1,7 @@
 package de.darkatra.vrising.discord
 
-import com.ibasco.agql.core.util.ConnectOptions
-import com.ibasco.agql.core.util.FailsafeOptions
-import com.ibasco.agql.core.util.GeneralOptions
-import com.ibasco.agql.core.util.HttpOptions
-import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
-import io.ktor.network.selector.*
-import io.ktor.utils.io.pool.*
+import io.ktor.network.selector.InterestSuspensionsMap
+import io.ktor.utils.io.pool.DefaultPool
 import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
@@ -56,11 +51,5 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             // required by ktor (dependency of kord)
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
-            // required by SourceQueryClient
-            .registerType(ConnectOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
-            .registerType(GeneralOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
-            .registerType(FailsafeOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
-            .registerType(HttpOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
-            .registerType(SourceQueryOptions::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.PUBLIC_FIELDS)
     }
 }
