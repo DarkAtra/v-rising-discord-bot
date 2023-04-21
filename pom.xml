@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.6</version>
         <relativePath/>
     </parent>
 
@@ -35,7 +35,7 @@
         <kotlin.version>1.8.20</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>feature-graal-SNAPSHOT</kord.version>
+        <kord.version>0.8.3</kord.version>
         <agql-source-query.version>1.2.0</agql-source-query.version>
         <java-uuid-generator.version>4.1.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
