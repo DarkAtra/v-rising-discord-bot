@@ -1,22 +1,24 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.test.DatabaseTestUtils
+import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 
-internal class DatabaseMigrationServiceTest {
+@DisabledInNativeImage
+class DatabaseMigrationServiceTest {
 
     private lateinit var database: Nitrite
 
     @BeforeEach
-    internal fun setUp() {
-        database = DatabaseTestUtils.getTestDatabase()
+    fun setUp() {
+        database = DatabaseConfigurationTestUtils.getTestDatabase()
     }
 
     @Test
-    internal fun `should perform database migration when no schema was found`() {
+    fun `should perform database migration when no schema was found`() {
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
@@ -33,7 +35,7 @@ internal class DatabaseMigrationServiceTest {
     }
 
     @Test
-    internal fun `should not perform database migration when schema matches the current version`() {
+    fun `should not perform database migration when schema matches the current version`() {
 
         val repository = database.getRepository(Schema::class.java)
         repository.insert(Schema(appVersion = "V1.4.0"))

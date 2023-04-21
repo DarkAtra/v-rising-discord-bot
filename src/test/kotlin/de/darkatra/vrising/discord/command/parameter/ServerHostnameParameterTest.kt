@@ -6,11 +6,11 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-internal class ServerHostnameParameterTest {
+class ServerHostnameParameterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["localhost", "darkatra.de"])
-    internal fun `should accept hostnames`(hostname: String) {
+    fun `should accept hostnames`(hostname: String) {
         assertDoesNotThrow {
             ServerHostnameParameter.validate(hostname)
         }
@@ -18,7 +18,7 @@ internal class ServerHostnameParameterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["127.0.0.1", "192.168.178.1"])
-    internal fun `should accept ip v4 address`(ipv4: String) {
+    fun `should accept ip v4 address`(ipv4: String) {
         assertDoesNotThrow {
             ServerHostnameParameter.validate(ipv4)
         }
@@ -26,7 +26,7 @@ internal class ServerHostnameParameterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["0:0:0:0:0:0:0:1", "::1"])
-    internal fun `should accept ip v6 address`(ipv6: String) {
+    fun `should accept ip v6 address`(ipv6: String) {
         assertDoesNotThrow {
             ServerHostnameParameter.validate(ipv6)
         }
@@ -34,7 +34,7 @@ internal class ServerHostnameParameterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["DarkAtra.de - V Rising Duo PvP", "[EU] Official #1234"])
-    internal fun `should not accept server names`(hostname: String) {
+    fun `should not accept server names`(hostname: String) {
         assertThrows<ValidationException> {
             ServerHostnameParameter.validate(hostname)
         }

@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.4</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
 
     <groupId>de.darkatra</groupId>
     <artifactId>v-rising-discord-bot</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6-next.3</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -32,11 +32,11 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>1.8.10</kotlin.version>
+        <kotlin.version>1.8.20</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.8.0-M17</kord.version>
-        <agql-source-query.version>1.1.0</agql-source-query.version>
+        <kord.version>feature-graal-SNAPSHOT</kord.version>
+        <agql-source-query.version>1.2.0</agql-source-query.version>
         <java-uuid-generator.version>4.1.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
         <commons-validator.version>1.7</commons-validator.version>
@@ -219,5 +219,24 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>native</id>
+            <properties>
+                <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}-native</image.name>
+            </properties>
+        </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

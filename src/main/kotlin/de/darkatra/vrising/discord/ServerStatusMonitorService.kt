@@ -8,29 +8,21 @@ import dev.kord.core.behavior.edit
 import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.rest.builder.message.modify.embed
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import kotlin.coroutines.CoroutineContext
 
 @Service
 class ServerStatusMonitorService(
     database: Nitrite,
     private val serverQueryClient: ServerQueryClient,
     private val botProperties: BotProperties
-) : CoroutineScope {
+) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    override val coroutineContext: CoroutineContext = Dispatchers.Default
 
     private var repository = database.getRepository(ServerStatusMonitor::class.java)
 
@@ -72,86 +64,84 @@ class ServerStatusMonitorService(
         )
     }
 
-    fun launchServerStatusMonitor(kord: Kord) {
-        launch {
-            while (isActive) {
-                getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusMonitor ->
-                    runCatching {
+    suspend fun updateServerStatusMonitor(kord: Kord) {
+        getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusMonitor ->
+            updateServerStatusMonitor(kord, serverStatusMonitor)
+        }
+    }
 
-                        val channel = kord.getChannel(Snowflake(serverStatusMonitor.discordChannelId))
-                        if (channel == null || channel !is MessageChannelBehavior) {
-                            logger.debug(
-                                """Disabling server monitor '${serverStatusMonitor.id}' because the channel
+    suspend fun updateServerStatusMonitor(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+        runCatching {
+
+            val channel = kord.getChannel(Snowflake(serverStatusMonitor.discordChannelId))
+            if (channel == null || channel !is MessageChannelBehavior) {
+                logger.debug(
+                    """Disabling server monitor '${serverStatusMonitor.id}' because the channel
                                 |'${serverStatusMonitor.discordChannelId}' does not seem to exist""".trimMargin()
-                            )
-                            disableServerStatusMonitor(serverStatusMonitor)
-                            return@forEach
-                        }
+                )
+                disableServerStatusMonitor(serverStatusMonitor)
+                return
+            }
 
-                        val serverInfo = serverQueryClient.getServerInfo(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
-                        val players = serverQueryClient.getPlayerList(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
-                        val rules = serverQueryClient.getRules(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
+            val serverInfo = serverQueryClient.getServerInfo(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
+            val players = serverQueryClient.getPlayerList(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
+            val rules = serverQueryClient.getRules(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
 
-                        val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
-                            ServerStatusEmbed.buildEmbed(
-                                serverInfo,
-                                players,
-                                rules,
-                                serverStatusMonitor.displayServerDescription,
-                                embedBuilder
-                            )
-                        }
+            val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
+                ServerStatusEmbed.buildEmbed(
+                    serverInfo,
+                    players,
+                    rules,
+                    serverStatusMonitor.displayServerDescription,
+                    embedBuilder
+                )
+            }
 
-                        val currentEmbedMessageId = serverStatusMonitor.currentEmbedMessageId
-                        if (currentEmbedMessageId != null) {
-                            try {
-                                channel.getMessage(Snowflake(currentEmbedMessageId))
-                                    .edit { embed(embedCustomizer) }
+            val currentEmbedMessageId = serverStatusMonitor.currentEmbedMessageId
+            if (currentEmbedMessageId != null) {
+                try {
+                    channel.getMessage(Snowflake(currentEmbedMessageId))
+                        .edit { embed(embedCustomizer) }
 
-                                serverStatusMonitor.currentFailedAttempts = 0
-                                putServerStatusMonitor(serverStatusMonitor)
+                    serverStatusMonitor.currentFailedAttempts = 0
+                    putServerStatusMonitor(serverStatusMonitor)
 
-                                logger.debug("Successfully updated the status of server monitor: ${serverStatusMonitor.id}")
-                                return@forEach
-                            } catch (e: EntityNotFoundException) {
-                                serverStatusMonitor.currentEmbedMessageId = null
-                            }
-                        }
+                    logger.debug("Successfully updated the status of server monitor: ${serverStatusMonitor.id}")
+                    return
+                } catch (e: EntityNotFoundException) {
+                    serverStatusMonitor.currentEmbedMessageId = null
+                }
+            }
 
-                        serverStatusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
-                        serverStatusMonitor.currentFailedAttempts = 0
-                        putServerStatusMonitor(serverStatusMonitor)
+            serverStatusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
+            serverStatusMonitor.currentFailedAttempts = 0
+            putServerStatusMonitor(serverStatusMonitor)
 
-                        logger.debug("Successfully updated the status and persisted the embedId of server monitor: ${serverStatusMonitor.id}")
+            logger.debug("Successfully updated the status and persisted the embedId of server monitor: ${serverStatusMonitor.id}")
 
-                    }.onFailure { throwable ->
-                        logger.error("Exception while fetching the status of ${serverStatusMonitor.id}", throwable)
-                        serverStatusMonitor.currentFailedAttempts += 1
-                        putServerStatusMonitor(serverStatusMonitor)
+        }.onFailure { throwable ->
 
-                        if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
-                            logger.debug("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
-                            disableServerStatusMonitor(serverStatusMonitor)
+            logger.error("Exception while fetching the status of ${serverStatusMonitor.id}", throwable)
+            serverStatusMonitor.currentFailedAttempts += 1
+            putServerStatusMonitor(serverStatusMonitor)
 
-                            val channel = kord.getChannel(Snowflake(serverStatusMonitor.discordChannelId))
-                            if (channel == null || channel !is MessageChannelBehavior) {
-                                return@forEach
-                            }
+            if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
+                logger.debug("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
+                disableServerStatusMonitor(serverStatusMonitor)
 
-                            channel.createMessage(
-                                """Disabled server status monitor '${serverStatusMonitor.id}' because the server did not
+                val channel = kord.getChannel(Snowflake(serverStatusMonitor.discordChannelId))
+                if (channel == null || channel !is MessageChannelBehavior) {
+                    return
+                }
+
+                channel.createMessage(
+                    """Disabled server status monitor '${serverStatusMonitor.id}' because the server did not
                                 |respond after ${botProperties.maxFailedAttempts} attempts.
                                 |Please make sure the server is running and is accessible from the internet to use this bot.
                                 |You can re-enable the server status monitor with the update-server command.""".trimMargin()
-                            )
+                )
 
-                            return@forEach
-                        }
-                    }
-                }
-
-                logger.debug("Waiting for ${botProperties.updateDelay.toMillis()} millis before performing the next update.")
-                delay(botProperties.updateDelay.toMillis())
+                return
             }
         }
     }
