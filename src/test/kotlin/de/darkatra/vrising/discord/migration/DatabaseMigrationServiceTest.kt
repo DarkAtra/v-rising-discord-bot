@@ -5,7 +5,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 
+@DisabledInNativeImage
 class DatabaseMigrationServiceTest {
 
     private lateinit var database: Nitrite
