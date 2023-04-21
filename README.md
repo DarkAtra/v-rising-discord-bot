@@ -116,6 +116,14 @@ bot:
   database-path: /data/bot.db
 ```
 
+## Native Docker Image (Beta)
+
+The v-rising-discord-bot is also available as a native executable built with GraalVM Native Image. The native executable should behave exactly the same as
+the JVM version but requires less memory and is overall faster. It is also possible to use the same database with bot the native executable and the jar version.
+Please [file a new issue](https://github.com/DarkAtra/v-rising-discord-bot/issues/new/choose)if you notice any issues.
+
+Find the latest native docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot).
+
 ## Required Permissions
 
 ![Required Discord Permissions](./docs/discord-permissions.png)
