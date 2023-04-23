@@ -14,12 +14,6 @@
         {
             "matchPackagePatterns": "*",
             "allowedVersions": "!/-.+\\.[0-9]+$/"
-        },
-        {
-            "matchPackagePatterns": [
-                "dev.kord:kord-core"
-            ],
-            "enabled": false
         }
     ]
 }
