@@ -16,8 +16,8 @@ import dev.kord.core.cache.data.ThreadMemberData
 import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
 import dev.kord.core.cache.data.WebhookData
-import io.ktor.network.selector.*
-import io.ktor.utils.io.pool.*
+import io.ktor.network.selector.InterestSuspensionsMap
+import io.ktor.utils.io.pool.DefaultPool
 import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
