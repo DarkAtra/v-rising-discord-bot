@@ -8,8 +8,7 @@ This bot allows you to display some information about your v rising server on di
 
 ## Support
 
-If you have questions or need support, feel free to
-join [this discord server](https://discord.gg/KcMcYKa6Nt).
+If you have questions or need support, feel free to join [this discord server](https://discord.gg/KcMcYKa6Nt).
 
 ## Discord Commands
 
@@ -100,7 +99,7 @@ case `/opt/v-rising-discord-bot`.
      discord-bot-token: <your-discord-bot-token>
      database-password: <the-database-password>
    ```
-3. Run the application using `java -jar v-rising-discord-bot:<version>.jar`
+3. Run the application using `java -jar v-rising-discord-bot-<version>.jar`
 4. Profit
 
 If you run the application in a Linux environment, make sure that you use a separate user. Also, ensure that you're using at least Java 17.
