@@ -58,8 +58,8 @@ class ServerStatusMonitorService(
 
     fun disableServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
         putServerStatusMonitor(
-            serverStatusMonitor.builder().also {
-                it.status = ServerStatusMonitorStatus.INACTIVE
+            serverStatusMonitor.builder().apply {
+                status = ServerStatusMonitorStatus.INACTIVE
             }.build()
         )
     }
@@ -71,13 +71,16 @@ class ServerStatusMonitorService(
     }
 
     suspend fun updateServerStatusMonitor(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+
+        val serverStatusMonitorBuilder = serverStatusMonitor.builder()
+
         runCatching {
 
             val channel = kord.getChannel(Snowflake(serverStatusMonitor.discordChannelId))
             if (channel == null || channel !is MessageChannelBehavior) {
                 logger.debug(
                     """Disabling server monitor '${serverStatusMonitor.id}' because the channel
-                                |'${serverStatusMonitor.discordChannelId}' does not seem to exist""".trimMargin()
+                        |'${serverStatusMonitor.discordChannelId}' does not seem to exist""".trimMargin()
                 )
                 disableServerStatusMonitor(serverStatusMonitor)
                 return
@@ -103,27 +106,38 @@ class ServerStatusMonitorService(
                     channel.getMessage(Snowflake(currentEmbedMessageId))
                         .edit { embed(embedCustomizer) }
 
-                    serverStatusMonitor.currentFailedAttempts = 0
-                    putServerStatusMonitor(serverStatusMonitor)
+                    serverStatusMonitorBuilder.currentFailedAttempts = 0
+                    putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
                     logger.debug("Successfully updated the status of server monitor: ${serverStatusMonitor.id}")
                     return
                 } catch (e: EntityNotFoundException) {
-                    serverStatusMonitor.currentEmbedMessageId = null
+                    serverStatusMonitorBuilder.currentEmbedMessageId = null
                 }
             }
 
-            serverStatusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
-            serverStatusMonitor.currentFailedAttempts = 0
-            putServerStatusMonitor(serverStatusMonitor)
+            serverStatusMonitorBuilder.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
+            serverStatusMonitorBuilder.currentFailedAttempts = 0
+
+            putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
             logger.debug("Successfully updated the status and persisted the embedId of server monitor: ${serverStatusMonitor.id}")
 
         }.onFailure { throwable ->
 
             logger.error("Exception while fetching the status of ${serverStatusMonitor.id}", throwable)
-            serverStatusMonitor.currentFailedAttempts += 1
-            putServerStatusMonitor(serverStatusMonitor)
+            serverStatusMonitorBuilder.currentFailedAttempts += 1
+
+            if (botProperties.maxRecentErrors > 0) {
+                serverStatusMonitorBuilder.recentErrors = serverStatusMonitorBuilder.recentErrors
+                    .takeLast((botProperties.maxRecentErrors - 1).coerceAtLeast(0))
+                    .toMutableList()
+                    .apply {
+                        add("${throwable::class.simpleName}: ${throwable.message}")
+                    }
+            }
+
+            putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
             if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
                 logger.debug("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
@@ -136,9 +150,9 @@ class ServerStatusMonitorService(
 
                 channel.createMessage(
                     """Disabled server status monitor '${serverStatusMonitor.id}' because the server did not
-                                |respond after ${botProperties.maxFailedAttempts} attempts.
-                                |Please make sure the server is running and is accessible from the internet to use this bot.
-                                |You can re-enable the server status monitor with the update-server command.""".trimMargin()
+                        |respond after ${botProperties.maxFailedAttempts} attempts.
+                        |Please make sure the server is running and is accessible from the internet to use this bot.
+                        |You can re-enable the server status monitor with the update-server command.""".trimMargin()
                 )
 
                 return

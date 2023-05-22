@@ -22,8 +22,10 @@ data class ServerStatusMonitor(
     val status: ServerStatusMonitorStatus,
     val displayServerDescription: Boolean,
 
-    var currentEmbedMessageId: String? = null,
-    var currentFailedAttempts: Int = 0,
+    val currentEmbedMessageId: String? = null,
+    val currentFailedAttempts: Int = 0,
+
+    val recentErrors: List<String> = emptyList()
 ) {
 
     fun builder(): ServerStatusMonitorBuilder {
@@ -36,7 +38,8 @@ data class ServerStatusMonitor(
             status = status,
             displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId,
-            currentFailedAttempts = currentFailedAttempts
+            currentFailedAttempts = currentFailedAttempts,
+            recentErrors = recentErrors.toMutableList()
         )
     }
 }
@@ -53,6 +56,8 @@ class ServerStatusMonitorBuilder(
 
     var currentEmbedMessageId: String? = null,
     var currentFailedAttempts: Int,
+
+    var recentErrors: MutableList<String>
 ) {
 
     fun build(): ServerStatusMonitor {
@@ -65,7 +70,8 @@ class ServerStatusMonitorBuilder(
             status = status,
             displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId,
-            currentFailedAttempts = currentFailedAttempts
+            currentFailedAttempts = currentFailedAttempts,
+            recentErrors = recentErrors
         )
     }
 }
