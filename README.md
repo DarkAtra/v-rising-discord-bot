@@ -70,14 +70,14 @@ Gets all the configuration details for the specified server.
 
 ## How to run it yourself using docker-compose
 
-Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot).
+Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot). If you prefer to use the JVM based version of this bot, remove the `-native` suffix from the `image` name in the example below.
 
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:2.0.4
-    mem_reservation: 256M
-    mem_limit: 512M
+    image: ghcr.io/darkatra/v-rising-discord-bot:2.1.5-native
+    mem_reservation: 128M
+    mem_limit: 256M
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
