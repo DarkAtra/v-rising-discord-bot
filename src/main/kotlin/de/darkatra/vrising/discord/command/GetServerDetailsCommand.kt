@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.command
 
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
@@ -9,10 +10,12 @@ import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.message.modify.embed
 import org.springframework.stereotype.Component
+import org.springframework.util.StringUtils
 
 @Component
 class GetServerDetailsCommand(
     private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val botProperties: BotProperties
 ) : Command {
 
     private val name: String = "get-server-details"
@@ -96,6 +99,16 @@ class GetServerDetailsCommand(
                     name = "Current Failed Attempts"
                     value = "${serverStatusMonitor.currentFailedAttempts}"
                     inline = true
+                }
+
+                field {
+                    name = "Most recent Errors"
+                    value = when (serverStatusMonitor.recentErrors.isEmpty()) {
+                        true -> "-"
+                        false -> serverStatusMonitor.recentErrors.joinToString("\n") {
+                            "```${StringUtils.truncate(it, botProperties.maxCharactersPerError)}```"
+                        }
+                    }
                 }
             }
         }
