@@ -4,6 +4,7 @@ import com.ibasco.agql.protocols.valve.source.query.info.SourceServer
 import com.ibasco.agql.protocols.valve.source.query.players.SourcePlayer
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
+import java.lang.String.CASE_INSENSITIVE_ORDER
 
 object ServerStatusEmbed {
 
@@ -62,7 +63,7 @@ object ServerStatusEmbed {
             }
 
             if (players.isNotEmpty()) {
-                players.sortedBy { player -> player.name }
+                players.sortedWith(compareBy(CASE_INSENSITIVE_ORDER) { player -> player.name })
                     .chunked(20)
                     .forEach { chunk ->
                         field {
