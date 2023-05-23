@@ -45,6 +45,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         // required by nitrite to create a database with password
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.Security\$UserCredential"))
         // required by nitrite for serialization
+        hints.serialization().registerType(TypeReference.of("java.util.ArrayList"))
         hints.serialization().registerType(Attributes::class.java)
         hints.serialization().registerType(AtomicBoolean::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.Boolean"))
