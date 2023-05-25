@@ -14,6 +14,7 @@ import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 @Service
 class ServerStatusMonitorService(
@@ -133,7 +134,12 @@ class ServerStatusMonitorService(
                     .takeLast((botProperties.maxRecentErrors - 1).coerceAtLeast(0))
                     .toMutableList()
                     .apply {
-                        add("${throwable::class.simpleName}: ${throwable.message}")
+                        add(
+                            Error(
+                                message = "${throwable::class.simpleName}: ${throwable.message}",
+                                occurredAt = Instant.now()
+                            )
+                        )
                     }
             }
 

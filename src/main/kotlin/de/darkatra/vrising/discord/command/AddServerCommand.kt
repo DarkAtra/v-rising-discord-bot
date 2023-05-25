@@ -55,9 +55,10 @@ class AddServerCommand(
 
         ServerHostnameParameter.validate(hostName)
 
+        val serverStatusMonitorId = Generators.timeBasedGenerator().generate()
         serverStatusMonitorService.putServerStatusMonitor(
             ServerStatusMonitor(
-                id = Generators.timeBasedGenerator().generate().toString(),
+                id = serverStatusMonitorId.toString(),
                 discordServerId = discordServerId.toString(),
                 discordChannelId = channelId.toString(),
                 hostName = hostName,
@@ -68,7 +69,8 @@ class AddServerCommand(
         )
 
         interaction.deferEphemeralResponse().respond {
-            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It may take some time until the status message appears."
+            content = """Added monitor with id '${serverStatusMonitorId}' for '${hostName}:${queryPort}' to channel '$channelId'.
+                |It may take some time until the status message appears.""".trimMargin()
         }
     }
 }
