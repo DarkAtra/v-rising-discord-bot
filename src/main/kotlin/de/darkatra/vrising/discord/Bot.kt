@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class)
+@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class)
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,

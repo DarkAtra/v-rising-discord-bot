@@ -106,7 +106,7 @@ class GetServerDetailsCommand(
                     value = when (serverStatusMonitor.recentErrors.isEmpty()) {
                         true -> "-"
                         false -> serverStatusMonitor.recentErrors.joinToString("\n") {
-                            "```${StringUtils.truncate(it, botProperties.maxCharactersPerError)}```"
+                            "${it.occurredAt}```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
                         }
                     }
                 }

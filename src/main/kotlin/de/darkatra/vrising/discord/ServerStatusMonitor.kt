@@ -4,6 +4,7 @@ import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
 import org.dizitart.no2.objects.Index
 import org.dizitart.no2.objects.Indices
+import java.time.Instant
 
 @Indices(
     value = [
@@ -25,7 +26,7 @@ data class ServerStatusMonitor(
     val currentEmbedMessageId: String? = null,
     val currentFailedAttempts: Int = 0,
 
-    val recentErrors: List<String> = emptyList()
+    val recentErrors: List<Error> = emptyList()
 ) {
 
     fun builder(): ServerStatusMonitorBuilder {
@@ -44,6 +45,11 @@ data class ServerStatusMonitor(
     }
 }
 
+data class Error(
+    val message: String,
+    val occurredAt: Instant
+)
+
 class ServerStatusMonitorBuilder(
     var id: String,
     var discordServerId: String,
@@ -57,7 +63,7 @@ class ServerStatusMonitorBuilder(
     var currentEmbedMessageId: String? = null,
     var currentFailedAttempts: Int,
 
-    var recentErrors: MutableList<String>
+    var recentErrors: MutableList<Error>
 ) {
 
     fun build(): ServerStatusMonitor {
