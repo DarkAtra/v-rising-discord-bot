@@ -137,7 +137,7 @@ class ServerStatusMonitorService(
                         add(
                             Error(
                                 message = "${throwable::class.simpleName}: ${throwable.message}",
-                                occurredAt = Instant.now()
+                                timestamp = Instant.now().toString()
                             )
                         )
                     }

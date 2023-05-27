@@ -29,7 +29,6 @@ import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.aot.hint.TypeReference
-import java.time.Instant
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
@@ -55,7 +54,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         hints.serialization().registerType(Document::class.java)
         hints.serialization().registerType(HashMap::class.java)
         hints.serialization().registerType(Index::class.java)
-        hints.serialization().registerType(Instant::class.java)
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
         hints.serialization().registerType(TypeReference.of("java.lang.Integer"))
         hints.serialization().registerType(LinkedHashMap::class.java)

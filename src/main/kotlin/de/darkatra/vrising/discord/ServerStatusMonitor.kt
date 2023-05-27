@@ -4,7 +4,6 @@ import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
 import org.dizitart.no2.objects.Index
 import org.dizitart.no2.objects.Indices
-import java.time.Instant
 
 @Indices(
     value = [
@@ -47,7 +46,7 @@ data class ServerStatusMonitor(
 
 data class Error(
     val message: String,
-    val occurredAt: Instant
+    val timestamp: String
 )
 
 class ServerStatusMonitorBuilder(
