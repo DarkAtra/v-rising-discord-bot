@@ -76,6 +76,7 @@ Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord
 services:
   v-rising-discord-bot:
     image: ghcr.io/darkatra/v-rising-discord-bot:2.1.5-native
+    command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
     volumes:
