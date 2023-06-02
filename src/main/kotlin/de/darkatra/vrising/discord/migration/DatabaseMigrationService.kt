@@ -21,29 +21,42 @@ class DatabaseMigrationService(
     private val currentAppVersion: SemanticVersion = Schema("V$appVersionFromPom").asSemanticVersion()
     private val migrations: List<DatabaseMigration> = listOf(
         DatabaseMigration(
+            description = "Set default value for new displayPlayerGearLevel property.",
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 3 },
-            action = { document -> document["displayPlayerGearLevel"] = true }
+            documentAction = { document -> document["displayPlayerGearLevel"] = true }
         ),
         DatabaseMigration(
+            description = "Set default value for new status and displayServerDescription property.",
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 4 },
-            action = { document ->
+            documentAction = { document ->
                 document["status"] = ServerStatusMonitorStatus.ACTIVE.name
                 document["displayServerDescription"] = true
             }
         ),
-        // Patch 0.5.42405 -> Gear Score will no longer be shown for online Vampires in the Steam Server List.
         DatabaseMigration(
+            description = "Remove the displayPlayerGearLevel property due to patch 0.5.42405.",
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 5 },
-            action = { document ->
+            documentAction = { document ->
                 // we can't remove the field completely due to how nitrites update function works
                 // setting it to false instead (this was the default value in previous versions)
                 document["displayPlayerGearLevel"] = false
             }
         ),
         DatabaseMigration(
+            description = "Set default value for new currentFailedAttempts property.",
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major == 1 && currentSchemaVersion.minor <= 7 },
-            action = { document -> document["currentFailedAttempts"] = 0 }
+            documentAction = { document -> document["currentFailedAttempts"] = 0 }
         ),
+        DatabaseMigration(
+            description = "Migrate the existing ServerStatusMonitor collection to the new collection name introduced by a package change.",
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 1) },
+            databaseAction = { database ->
+                val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
+                database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").find().forEach { document ->
+                    collection.insert(document)
+                }
+            }
+        )
     )
 
     fun migrateToLatestVersion(): Boolean {
@@ -64,8 +77,12 @@ class DatabaseMigrationService(
 
         val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
 
+        // perform migration that affect the whole database
+        migrationsToPerform.forEach { migration -> migration.databaseAction(database) }
+
+        // perform migration that affect documents in the ServerStatusMonitor collection
         collection.find().forEach { document ->
-            migrationsToPerform.forEach { migration -> migration.action(document) }
+            migrationsToPerform.forEach { migration -> migration.documentAction(document) }
             collection.update(document)
         }
 
