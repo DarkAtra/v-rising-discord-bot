@@ -1,5 +1,9 @@
 package de.darkatra.vrising.discord
 
+import de.darkatra.vrising.discord.botcompanion.BotCompanionClient
+import de.darkatra.vrising.discord.serverquery.ServerQueryClient
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
@@ -13,11 +17,12 @@ class ServerStatusMonitorServiceTest {
 
     private val nitrite: Nitrite = DatabaseConfigurationTestUtils.getTestDatabase()
     private val serverQueryClient: ServerQueryClient = Mockito.mock(ServerQueryClient::class.java)
+    private val botCompanionClient: BotCompanionClient = Mockito.mock(BotCompanionClient::class.java)
     private val botProperties: BotProperties = BotProperties().apply {
         updateDelay = Duration.ofSeconds(1)
     }
 
-    private val serverStatusMonitorService = ServerStatusMonitorService(nitrite, serverQueryClient, botProperties)
+    private val serverStatusMonitorService = ServerStatusMonitorService(nitrite, serverQueryClient, botCompanionClient, botProperties)
 
     @BeforeEach
     fun setUp() {

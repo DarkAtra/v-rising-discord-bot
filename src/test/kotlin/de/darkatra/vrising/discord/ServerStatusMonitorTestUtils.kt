@@ -1,5 +1,7 @@
 package de.darkatra.vrising.discord
 
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
 import dev.kord.common.entity.Snowflake
 import kotlinx.datetime.toKotlinInstant
 import java.time.Instant

@@ -22,24 +22,26 @@ Lists all server status monitors.
 
 Adds a server to the status monitor.
 
-| Parameter                    | Description                                                                                                              | Required |
-|------------------------------|--------------------------------------------------------------------------------------------------------------------------|----------|
-| `server-hostname`            | The hostname of the server to add a status monitor for.                                                                  | `true`   |
-| `server-query-port`          | The query port of the server to add a status monitor for.                                                                | `true`   |
-| `display-server-description` | Whether or not to display the v rising server description on discord. Defaults to not displaying the server description. | `false`  |
+| Parameter                    | Description                                                                                                                                                                                      | Required |
+|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `server-hostname`            | The hostname of the server to add a status monitor for.                                                                                                                                          | `true`   |
+| `server-query-port`          | The query port of the server to add a status monitor for.                                                                                                                                        | `true`   |
+| `server-api-port`            | The api port of the server. Use `-1` to set the value to `null`. This is required to integrate with [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) | `false`  |
+| `display-server-description` | Whether or not to display the v rising server description on discord. Defaults to not displaying the server description.                                                                         | `false`  |
 
 ### `/update-server`
 
 Updates the given server status monitor. Only the parameters that were specified when the command was executed are updated. All other parameters remain
 untouched.
 
-| Parameter                    | Description                                                           | Required |
-|------------------------------|-----------------------------------------------------------------------|----------|
-| `server-status-monitor-id`   | The id of the server status monitor.                                  | `true`   |
-| `server-hostname`            | The hostname of the server to add a status monitor for.               | `false`  |
-| `server-query-port`          | The query port of the server to add a status monitor for.             | `false`  |
-| `status`                     | The status of the server status monitor. Either ACTIVE or INACTIVE.   | `false`  |
-| `display-server-description` | Whether or not to display the v rising server description on discord. | `false`  |
+| Parameter                    | Description                                                                                                                                                                                      | Required |
+|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `server-status-monitor-id`   | The id of the server status monitor.                                                                                                                                                             | `true`   |
+| `server-hostname`            | The hostname of the server to add a status monitor for.                                                                                                                                          | `false`  |
+| `server-query-port`          | The query port of the server to add a status monitor for.                                                                                                                                        | `false`  |
+| `server-api-port`            | The api port of the server. Use `-1` to set the value to `null`. This is required to integrate with [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) | `false`  |
+| `status`                     | The status of the server status monitor. Either ACTIVE or INACTIVE.                                                                                                                              | `false`  |
+| `display-server-description` | Whether or not to display the v rising server description on discord.                                                                                                                            | `false`  |
 
 ### `/remove-server`
 
@@ -69,6 +71,12 @@ Gets all the configuration details for the specified server.
 | `bot.max-failed-attempts`      | Int      | The maximum number of attempts to be made until a server is disabled. Use `0` if you don't want to use this feature.             | `0`                    |
 | `bot.max-recent-errors`        | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `5`                    |
 | `bot.max-characters-per-error` | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `200`                  |
+
+## [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
+
+The v-rising-discord-bot is able to fetch additional data about players, such as the gear level, if
+the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) is installed on the v Rising server and the api port of that
+server is accessible from where the bot runs. I highly recommend **not** exposing the api port to the internet.
 
 ## How to run it yourself using docker-compose
 

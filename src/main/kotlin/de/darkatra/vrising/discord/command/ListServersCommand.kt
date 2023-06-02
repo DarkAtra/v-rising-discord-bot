@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.command
 
-import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -30,11 +30,13 @@ class ListServersCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
+        val response = interaction.deferEphemeralResponse()
+
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
 
-        interaction.deferEphemeralResponse().respond {
+        response.respond {
             content = when (serverStatusConfigurations.isEmpty()) {
                 true -> "No servers found."
                 false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->

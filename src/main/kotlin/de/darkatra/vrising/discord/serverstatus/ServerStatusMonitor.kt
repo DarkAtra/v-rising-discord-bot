@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord
+package de.darkatra.vrising.discord.serverstatus
 
 import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
@@ -19,6 +19,7 @@ data class ServerStatusMonitor(
 
     val hostName: String,
     val queryPort: Int,
+    val apiPort: Int? = null,
     val status: ServerStatusMonitorStatus,
     val displayServerDescription: Boolean,
 
@@ -35,6 +36,7 @@ data class ServerStatusMonitor(
             discordChannelId = discordChannelId,
             hostName = hostName,
             queryPort = queryPort,
+            apiPort = apiPort,
             status = status,
             displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId,
@@ -56,6 +58,7 @@ class ServerStatusMonitorBuilder(
 
     var hostName: String,
     var queryPort: Int,
+    var apiPort: Int? = null,
     var status: ServerStatusMonitorStatus,
     var displayServerDescription: Boolean,
 
@@ -72,6 +75,7 @@ class ServerStatusMonitorBuilder(
             discordChannelId = discordChannelId,
             hostName = hostName,
             queryPort = queryPort,
+            apiPort = apiPort,
             status = status,
             displayServerDescription = displayServerDescription,
             currentEmbedMessageId = currentEmbedMessageId,

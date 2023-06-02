@@ -1,9 +1,9 @@
 package de.darkatra.vrising.discord.command
 
 import de.darkatra.vrising.discord.BotProperties
-import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -38,18 +38,20 @@ class GetServerDetailsCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
+        val response = interaction.deferEphemeralResponse()
+
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusMonitor = serverStatusMonitorService.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
-            interaction.deferEphemeralResponse().respond {
+            response.respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
             }
             return
         }
 
-        interaction.deferEphemeralResponse().respond {
+        response.respond {
             embed {
                 title = "Details for ${serverStatusMonitor.id}"
 
@@ -62,6 +64,15 @@ class GetServerDetailsCommand(
                 field {
                     name = "Query Port"
                     value = "${serverStatusMonitor.queryPort}"
+                    inline = true
+                }
+
+                field {
+                    name = "Api Port"
+                    value = when (serverStatusMonitor.apiPort != null) {
+                        true -> "${serverStatusMonitor.apiPort}"
+                        false -> "-"
+                    }
                     inline = true
                 }
 

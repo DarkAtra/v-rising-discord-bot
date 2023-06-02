@@ -1,5 +1,11 @@
-package de.darkatra.vrising.discord
+package de.darkatra.vrising.discord.serverstatus
 
+import de.darkatra.vrising.discord.BotProperties
+import de.darkatra.vrising.discord.botcompanion.BotCompanionClient
+import de.darkatra.vrising.discord.plus
+import de.darkatra.vrising.discord.serverquery.ServerQueryClient
+import de.darkatra.vrising.discord.serverstatus.model.Player
+import de.darkatra.vrising.discord.serverstatus.model.ServerInfo
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
@@ -20,6 +26,7 @@ import java.time.Instant
 class ServerStatusMonitorService(
     database: Nitrite,
     private val serverQueryClient: ServerQueryClient,
+    private val botCompanionClient: BotCompanionClient,
     private val botProperties: BotProperties
 ) {
 
@@ -90,12 +97,28 @@ class ServerStatusMonitorService(
             val serverInfo = serverQueryClient.getServerInfo(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
             val players = serverQueryClient.getPlayerList(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
             val rules = serverQueryClient.getRules(serverStatusMonitor.hostName, serverStatusMonitor.queryPort)
+            val characters = when {
+                serverStatusMonitor.apiPort != null -> botCompanionClient.getCharacters(serverStatusMonitor.hostName, serverStatusMonitor.apiPort)
+                else -> emptyList()
+            }
 
             val embedCustomizer: (embedBuilder: EmbedBuilder) -> Unit = { embedBuilder ->
                 ServerStatusEmbed.buildEmbed(
-                    serverInfo,
-                    players,
-                    rules,
+                    ServerInfo(
+                        name = serverInfo.name,
+                        ip = serverInfo.hostAddress,
+                        gamePort = serverInfo.gamePort,
+                        queryPort = serverInfo.port,
+                        numberOfPlayers = serverInfo.numOfPlayers,
+                        maxPlayers = serverInfo.maxPlayers,
+                        players = players.map { sourcePlayer ->
+                            Player(
+                                name = sourcePlayer.name,
+                                gearLevel = characters.find { character -> character.name == sourcePlayer.name }?.gearLevel
+                            )
+                        },
+                        rules = rules
+                    ),
                     serverStatusMonitor.displayServerDescription,
                     embedBuilder
                 )
