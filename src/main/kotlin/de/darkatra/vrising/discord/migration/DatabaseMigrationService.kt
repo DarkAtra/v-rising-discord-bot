@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.ServerStatusMonitor
-import de.darkatra.vrising.discord.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.util.ObjectUtils
 import org.slf4j.LoggerFactory

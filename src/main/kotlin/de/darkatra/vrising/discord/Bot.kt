@@ -4,6 +4,9 @@ import de.darkatra.vrising.discord.command.Command
 import de.darkatra.vrising.discord.command.ValidationException
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.migration.Schema
+import de.darkatra.vrising.discord.serverstatus.Error
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent

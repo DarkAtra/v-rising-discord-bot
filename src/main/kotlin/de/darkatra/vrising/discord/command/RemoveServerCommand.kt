@@ -1,8 +1,8 @@
 package de.darkatra.vrising.discord.command
 
-import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -34,12 +34,14 @@ class RemoveServerCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
+        val response = interaction.deferEphemeralResponse()
+
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
 
-        interaction.deferEphemeralResponse().respond {
+        response.respond {
             content = when (wasSuccessful) {
                 true -> "Removed monitor with id '$serverStatusMonitorId'."
                 false -> "No server with id '$serverStatusMonitorId' was found."

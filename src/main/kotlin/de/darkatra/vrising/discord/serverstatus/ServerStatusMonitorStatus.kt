@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord
+package de.darkatra.vrising.discord.serverstatus
 
 enum class ServerStatusMonitorStatus {
     INACTIVE,

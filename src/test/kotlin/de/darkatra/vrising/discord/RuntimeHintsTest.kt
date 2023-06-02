@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.migration.Schema
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
 import org.junit.jupiter.api.Test
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.boot.test.context.SpringBootTest
