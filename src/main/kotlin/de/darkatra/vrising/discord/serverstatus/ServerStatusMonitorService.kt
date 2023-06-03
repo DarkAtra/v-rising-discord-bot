@@ -2,6 +2,7 @@ package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.botcompanion.BotCompanionClient
+import de.darkatra.vrising.discord.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.plus
 import de.darkatra.vrising.discord.serverquery.ServerQueryClient
 import de.darkatra.vrising.discord.serverstatus.model.Player
@@ -112,9 +113,12 @@ class ServerStatusMonitorService(
                         numberOfPlayers = serverInfo.numOfPlayers,
                         maxPlayers = serverInfo.maxPlayers,
                         players = players.map { sourcePlayer ->
+                            val character = characters.find { character -> character.name == sourcePlayer.name }
                             Player(
                                 name = sourcePlayer.name,
-                                gearLevel = characters.find { character -> character.name == sourcePlayer.name }?.gearLevel
+                                gearLevel = character?.gearLevel,
+                                clan = character?.clan,
+                                killedVBloods = character?.killedVBloods?.map(VBlood::displayName)
                             )
                         },
                         rules = rules
