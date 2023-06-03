@@ -66,10 +66,18 @@ object ServerStatusEmbed {
                         field {
                             name = "Online players"
                             value = chunk.joinToString(separator = "\n") { player ->
-                                when {
-                                    player.gearLevel != null -> "**${player.name}** - ${player.gearLevel}"
-                                    else -> "**${player.name}**"
-                                }
+                                buildList {
+                                    add("**${player.name}**")
+                                    if (player.gearLevel != null) {
+                                        add("Gear Level: ${player.gearLevel}")
+                                    }
+                                    if (player.clan != null) {
+                                        add("Clan: ${player.clan}")
+                                    }
+                                    if (player.killedVBloods != null) {
+                                        add("Killed VBloods: ${player.killedVBloods.size}")
+                                    }
+                                }.joinToString(" - ")
                             }
                             inline = true
                         }
