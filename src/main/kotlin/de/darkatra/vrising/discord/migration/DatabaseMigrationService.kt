@@ -3,6 +3,7 @@ package de.darkatra.vrising.discord.migration
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
 import org.dizitart.no2.Nitrite
+import org.dizitart.no2.objects.filters.ObjectFilters
 import org.dizitart.no2.util.ObjectUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -51,10 +52,12 @@ class DatabaseMigrationService(
             description = "Migrate the existing ServerStatusMonitor collection to the new collection name introduced by a package change.",
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 1) },
             databaseAction = { database ->
-                val collection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
-                database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").find().forEach { document ->
-                    collection.insert(document)
+                val oldCollection = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor")
+                val newCollection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
+                oldCollection.find().forEach { document ->
+                    newCollection.insert(document)
                 }
+                oldCollection.remove(ObjectFilters.ALL)
             }
         )
     )
