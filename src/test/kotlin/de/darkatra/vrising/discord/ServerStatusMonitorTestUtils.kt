@@ -22,6 +22,7 @@ object ServerStatusMonitorTestUtils {
             hostName = HOST_NAME,
             queryPort = QUERY_PORT,
             status = status,
+            displayPlayersAsAsciiTable = false,
             displayServerDescription = true,
             displayClan = true,
             displayGearLevel = true,

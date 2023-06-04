@@ -60,6 +60,7 @@ class DatabaseMigrationService(
                 oldCollection.remove(ObjectFilters.ALL)
             },
             documentAction = { document ->
+                document["displayPlayersAsAsciiTable"] = false
                 document["displayClan"] = true
                 document["displayGearLevel"] = true
                 document["displayKilledVBloods"] = true

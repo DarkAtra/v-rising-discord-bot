@@ -10,6 +10,7 @@ class ServerStatusMonitorBuilder(
     var apiPort: Int? = null,
     var status: ServerStatusMonitorStatus,
 
+    var displayPlayersAsAsciiTable: Boolean,
     var displayServerDescription: Boolean,
     var displayClan: Boolean,
     var displayGearLevel: Boolean,
@@ -30,6 +31,7 @@ class ServerStatusMonitorBuilder(
             queryPort = queryPort,
             apiPort = apiPort,
             status = status,
+            displayPlayersAsAsciiTable = displayPlayersAsAsciiTable,
             displayServerDescription = displayServerDescription,
             displayClan = displayClan,
             displayGearLevel = displayGearLevel,

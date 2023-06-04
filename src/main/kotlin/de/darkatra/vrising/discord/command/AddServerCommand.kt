@@ -5,6 +5,7 @@ import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayClanParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayKilledVBloodsParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayPlayersAsAsciiTable
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
@@ -12,6 +13,7 @@ import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayClanParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayKilledVBloodsParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayPlayersAsAsciiTable
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
@@ -49,6 +51,7 @@ class AddServerCommand(
             addServerQueryPortParameter()
             addServerApiPortParameter(required = false)
 
+            addDisplayPlayersAsAsciiTable(required = false)
             addDisplayServerDescriptionParameter(required = false)
             addDisplayClanParameter(required = false)
             addDisplayGearLevelParameter(required = false)
@@ -62,6 +65,7 @@ class AddServerCommand(
         val queryPort = interaction.getServerQueryPortParameter()!!
         val apiPort = interaction.getServerApiPortParameter()
 
+        val displayPlayersAsAsciiTable = interaction.getDisplayPlayersAsAsciiTable() ?: false
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
         val displayClan = interaction.getDisplayClanParameter() ?: true
         val displayGearLevel = interaction.getDisplayGearLevelParameter() ?: true
@@ -82,6 +86,7 @@ class AddServerCommand(
                 queryPort = queryPort,
                 apiPort = apiPort,
                 status = ServerStatusMonitorStatus.ACTIVE,
+                displayPlayersAsAsciiTable = displayPlayersAsAsciiTable,
                 displayServerDescription = displayServerDescription,
                 displayClan = displayClan,
                 displayGearLevel = displayGearLevel,
