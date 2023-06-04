@@ -9,7 +9,11 @@ object ServerStatusEmbed {
 
     fun buildEmbed(
         serverInfo: ServerInfo,
+        apiPortEnabled: Boolean,
         displayServerDescription: Boolean,
+        displayClan: Boolean,
+        displayGearLevel: Boolean,
+        displayKilledVBloods: Boolean,
         embedBuilder: EmbedBuilder
     ) {
         embedBuilder.apply {
@@ -68,14 +72,16 @@ object ServerStatusEmbed {
                             value = chunk.joinToString(separator = "\n") { player ->
                                 buildList {
                                     add("**${player.name}**")
-                                    if (player.gearLevel != null) {
-                                        add("Gear Level: ${player.gearLevel}")
-                                    }
-                                    if (player.clan != null) {
-                                        add("Clan: ${player.clan}")
-                                    }
-                                    if (player.killedVBloods != null) {
-                                        add("Killed VBloods: ${player.killedVBloods.size}")
+                                    if (apiPortEnabled) {
+                                        if (displayGearLevel) {
+                                            add("Gear Level: ${player.gearLevel ?: 0}")
+                                        }
+                                        if (displayClan) {
+                                            add("Clan: ${player.clan ?: "-"}")
+                                        }
+                                        if (displayKilledVBloods) {
+                                            add("Killed VBloods: ${player.killedVBloods?.size ?: 0}")
+                                        }
                                     }
                                 }.joinToString(" - ")
                             }

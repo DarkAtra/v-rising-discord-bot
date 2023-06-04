@@ -3,7 +3,7 @@ package de.darkatra.vrising.discord
 import de.darkatra.vrising.discord.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.serverquery.ServerQueryClient
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach

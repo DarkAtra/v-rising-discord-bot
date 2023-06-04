@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.serverstatus
+package de.darkatra.vrising.discord.serverstatus.model
 
 import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
@@ -21,7 +21,11 @@ data class ServerStatusMonitor(
     val queryPort: Int,
     val apiPort: Int? = null,
     val status: ServerStatusMonitorStatus,
+
     val displayServerDescription: Boolean,
+    val displayClan: Boolean,
+    val displayGearLevel: Boolean,
+    val displayKilledVBloods: Boolean,
 
     val currentEmbedMessageId: String? = null,
     val currentFailedAttempts: Int = 0,
@@ -39,48 +43,12 @@ data class ServerStatusMonitor(
             apiPort = apiPort,
             status = status,
             displayServerDescription = displayServerDescription,
+            displayClan = displayClan,
+            displayGearLevel = displayGearLevel,
+            displayKilledVBloods = displayKilledVBloods,
             currentEmbedMessageId = currentEmbedMessageId,
             currentFailedAttempts = currentFailedAttempts,
             recentErrors = recentErrors.toMutableList()
-        )
-    }
-}
-
-data class Error(
-    val message: String,
-    val timestamp: String
-)
-
-class ServerStatusMonitorBuilder(
-    var id: String,
-    var discordServerId: String,
-    var discordChannelId: String,
-
-    var hostName: String,
-    var queryPort: Int,
-    var apiPort: Int? = null,
-    var status: ServerStatusMonitorStatus,
-    var displayServerDescription: Boolean,
-
-    var currentEmbedMessageId: String? = null,
-    var currentFailedAttempts: Int,
-
-    var recentErrors: MutableList<Error>
-) {
-
-    fun build(): ServerStatusMonitor {
-        return ServerStatusMonitor(
-            id = id,
-            discordServerId = discordServerId,
-            discordChannelId = discordChannelId,
-            hostName = hostName,
-            queryPort = queryPort,
-            apiPort = apiPort,
-            status = status,
-            displayServerDescription = displayServerDescription,
-            currentEmbedMessageId = currentEmbedMessageId,
-            currentFailedAttempts = currentFailedAttempts,
-            recentErrors = recentErrors
         )
     }
 }

@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
@@ -81,6 +81,11 @@ class DatabaseMigrationServiceTest {
 
         assertThat(oldCollection.size()).isEqualTo(0)
         assertThat(newCollection.size()).isEqualTo(1)
+
+        val migratedDocument = newCollection.find().first()
+        assertThat(migratedDocument["displayClan"]).isEqualTo(true)
+        assertThat(migratedDocument["displayGearLevel"]).isEqualTo(true)
+        assertThat(migratedDocument["displayKilledVBloods"]).isEqualTo(true)
 
         val schemas = repository.find().toList()
         assertThat(schemas).hasSize(2)
