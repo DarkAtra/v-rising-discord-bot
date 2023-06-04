@@ -75,6 +75,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Display Players as ASCII Table"
+                    value = "${serverStatusMonitor.displayPlayersAsAsciiTable}"
+                    inline = true
+                }
+
+                field {
                     name = "Display Server Description"
                     value = "${serverStatusMonitor.displayServerDescription}"
                     inline = true
