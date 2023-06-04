@@ -30,13 +30,11 @@ class ListServersCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val response = interaction.deferEphemeralResponse()
-
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
 
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = when (serverStatusConfigurations.isEmpty()) {
                 true -> "No servers found."
                 false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->

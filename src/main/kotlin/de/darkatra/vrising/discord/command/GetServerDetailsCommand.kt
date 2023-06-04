@@ -38,20 +38,18 @@ class GetServerDetailsCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val response = interaction.deferEphemeralResponse()
-
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusMonitor = serverStatusMonitorService.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
-            response.respond {
+            interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
             }
             return
         }
 
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             embed {
                 title = "Details for ${serverStatusMonitor.id}"
 
@@ -79,6 +77,24 @@ class GetServerDetailsCommand(
                 field {
                     name = "Display Server Description"
                     value = "${serverStatusMonitor.displayServerDescription}"
+                    inline = true
+                }
+
+                field {
+                    name = "Display Clan"
+                    value = "${serverStatusMonitor.displayClan}"
+                    inline = true
+                }
+
+                field {
+                    name = "Display Gear Level"
+                    value = "${serverStatusMonitor.displayGearLevel}"
+                    inline = true
+                }
+
+                field {
+                    name = "Display Number of killed VBloods"
+                    value = "${serverStatusMonitor.displayKilledVBloods}"
                     inline = true
                 }
 

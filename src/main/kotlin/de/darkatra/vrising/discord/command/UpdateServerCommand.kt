@@ -1,12 +1,18 @@
 package de.darkatra.vrising.discord.command
 
 import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayClanParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayGearLevelParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayKilledVBloodsParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorStatusParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayClanParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayGearLevelParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayKilledVBloodsParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
@@ -45,26 +51,32 @@ class UpdateServerCommand(
             addServerQueryPortParameter(required = false)
             addServerApiPortParameter(required = false)
             addServerStatusMonitorStatusParameter(required = false)
+
             addDisplayServerDescriptionParameter(required = false)
+            addDisplayClanParameter(required = false)
+            addDisplayGearLevelParameter(required = false)
+            addDisplayKilledVBloodsParameter(required = false)
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
-
-        val response = interaction.deferEphemeralResponse()
 
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val hostName = interaction.getServerHostnameParameter()
         val queryPort = interaction.getServerQueryPortParameter()
         val apiPort = interaction.getServerApiPortParameter()
         val status = interaction.getServerStatusMonitorStatusParameter()
+
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
+        val displayClan = interaction.getDisplayClanParameter()
+        val displayGearLevel = interaction.getDisplayGearLevelParameter()
+        val displayKilledVBloods = interaction.getDisplayKilledVBloodsParameter()
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusMonitor = serverStatusMonitorService.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
-            response.respond {
+            interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
             }
             return
@@ -87,10 +99,19 @@ class UpdateServerCommand(
         if (displayServerDescription != null) {
             serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
         }
+        if (displayClan != null) {
+            serverStatusMonitorBuilder.displayClan = displayClan
+        }
+        if (displayGearLevel != null) {
+            serverStatusMonitorBuilder.displayGearLevel = displayGearLevel
+        }
+        if (displayKilledVBloods != null) {
+            serverStatusMonitorBuilder.displayKilledVBloods = displayKilledVBloods
+        }
 
         serverStatusMonitorService.putServerStatusMonitor(serverStatusMonitorBuilder.build())
 
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take some time until the status message is updated."
         }
     }

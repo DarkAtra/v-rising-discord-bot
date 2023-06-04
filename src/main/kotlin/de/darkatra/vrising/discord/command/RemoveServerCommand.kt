@@ -34,14 +34,12 @@ class RemoveServerCommand(
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val response = interaction.deferEphemeralResponse()
-
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
 
-        response.respond {
+        interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {
                 true -> "Removed monitor with id '$serverStatusMonitorId'."
                 false -> "No server with id '$serverStatusMonitorId' was found."

@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.common.entity.Snowflake
 import kotlinx.datetime.toKotlinInstant
 import java.time.Instant
@@ -22,7 +22,10 @@ object ServerStatusMonitorTestUtils {
             hostName = HOST_NAME,
             queryPort = QUERY_PORT,
             status = status,
-            displayServerDescription = false
+            displayServerDescription = true,
+            displayClan = true,
+            displayGearLevel = true,
+            displayKilledVBloods = true
         )
     }
 }

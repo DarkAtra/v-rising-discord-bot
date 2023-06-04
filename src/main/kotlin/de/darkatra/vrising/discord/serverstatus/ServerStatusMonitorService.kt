@@ -5,8 +5,11 @@ import de.darkatra.vrising.discord.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.plus
 import de.darkatra.vrising.discord.serverquery.ServerQueryClient
+import de.darkatra.vrising.discord.serverstatus.model.Error
 import de.darkatra.vrising.discord.serverstatus.model.Player
 import de.darkatra.vrising.discord.serverstatus.model.ServerInfo
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
@@ -123,7 +126,11 @@ class ServerStatusMonitorService(
                         },
                         rules = rules
                     ),
+                    serverStatusMonitor.apiPort != null,
                     serverStatusMonitor.displayServerDescription,
+                    serverStatusMonitor.displayClan,
+                    serverStatusMonitor.displayGearLevel,
+                    serverStatusMonitor.displayKilledVBloods,
                     embedBuilder
                 )
             }
