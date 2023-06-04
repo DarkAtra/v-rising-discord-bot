@@ -16,7 +16,7 @@ import org.springframework.http.MediaType
 @DisabledInNativeImage
 class BotCompanionClientTest {
 
-    // workaroun for https://github.com/wiremock/wiremock/issues/2202
+    // workaround for https://github.com/wiremock/wiremock/issues/2202
     companion object {
         private var wireMock: WireMockServer? = null
 
