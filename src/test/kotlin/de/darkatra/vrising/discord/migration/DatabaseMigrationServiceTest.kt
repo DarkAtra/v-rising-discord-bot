@@ -83,6 +83,7 @@ class DatabaseMigrationServiceTest {
         assertThat(newCollection.size()).isEqualTo(1)
 
         val migratedDocument = newCollection.find().first()
+        assertThat(migratedDocument["displayPlayersAsAsciiTable"]).isEqualTo(false)
         assertThat(migratedDocument["displayClan"]).isEqualTo(true)
         assertThat(migratedDocument["displayGearLevel"]).isEqualTo(true)
         assertThat(migratedDocument["displayKilledVBloods"]).isEqualTo(true)

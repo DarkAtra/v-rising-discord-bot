@@ -127,6 +127,7 @@ class ServerStatusMonitorService(
                         rules = rules
                     ),
                     serverStatusMonitor.apiPort != null,
+                    serverStatusMonitor.displayPlayersAsAsciiTable,
                     serverStatusMonitor.displayServerDescription,
                     serverStatusMonitor.displayClan,
                     serverStatusMonitor.displayGearLevel,

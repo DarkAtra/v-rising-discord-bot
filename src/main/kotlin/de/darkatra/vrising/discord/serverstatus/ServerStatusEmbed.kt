@@ -1,5 +1,7 @@
 package de.darkatra.vrising.discord.serverstatus
 
+import com.github.freva.asciitable.AsciiTable
+import de.darkatra.vrising.discord.serverstatus.model.Player
 import de.darkatra.vrising.discord.serverstatus.model.ServerInfo
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
@@ -10,6 +12,7 @@ object ServerStatusEmbed {
     fun buildEmbed(
         serverInfo: ServerInfo,
         apiPortEnabled: Boolean,
+        displayPlayersAsAsciiTable: Boolean,
         displayServerDescription: Boolean,
         displayClan: Boolean,
         displayGearLevel: Boolean,
@@ -63,8 +66,24 @@ object ServerStatusEmbed {
                 inline = true
             }
 
-            if (serverInfo.players.isNotEmpty()) {
-                serverInfo.players.sortedWith(compareBy(CASE_INSENSITIVE_ORDER) { player -> player.name })
+            when (displayPlayersAsAsciiTable) {
+                true -> buildAsciiPlayerList(serverInfo.players, apiPortEnabled, displayClan, displayGearLevel, displayKilledVBloods, embedBuilder)
+                false -> buildPlainPlayerList(serverInfo.players, apiPortEnabled, displayClan, displayGearLevel, displayKilledVBloods, embedBuilder)
+            }
+        }
+    }
+
+    private fun buildPlainPlayerList(
+        players: List<Player>,
+        apiPortEnabled: Boolean,
+        displayClan: Boolean,
+        displayGearLevel: Boolean,
+        displayKilledVBloods: Boolean,
+        embedBuilder: EmbedBuilder
+    ) {
+        embedBuilder.apply {
+            if (players.isNotEmpty()) {
+                players.sortedWith(compareBy(CASE_INSENSITIVE_ORDER) { player -> player.name })
                     .chunked(20)
                     .forEach { chunk ->
                         field {
@@ -73,21 +92,73 @@ object ServerStatusEmbed {
                                 buildList {
                                     add("**${player.name}**")
                                     if (apiPortEnabled) {
-                                        if (displayGearLevel) {
-                                            add("Gear Level: ${player.gearLevel ?: 0}")
-                                        }
                                         if (displayClan) {
                                             add("Clan: ${player.clan ?: "-"}")
                                         }
+                                        if (displayGearLevel) {
+                                            add("Gear Level: ${player.gearLevel ?: 0}")
+                                        }
                                         if (displayKilledVBloods) {
-                                            add("Killed VBloods: ${player.killedVBloods?.size ?: 0}")
+                                            add("VBloods: ${player.killedVBloods?.size ?: 0}")
                                         }
                                     }
-                                }.joinToString(" - ")
+                                }.joinToString(" | ")
                             }
                             inline = true
                         }
                     }
+            }
+        }
+    }
+
+    private fun buildAsciiPlayerList(
+        players: List<Player>,
+        apiPortEnabled: Boolean,
+        displayClan: Boolean,
+        displayGearLevel: Boolean,
+        displayKilledVBloods: Boolean,
+        embedBuilder: EmbedBuilder
+    ) {
+        val sortedPlayers = players.sortedWith(compareBy(CASE_INSENSITIVE_ORDER) { player -> player.name })
+        embedBuilder.apply {
+            if (players.isNotEmpty()) {
+                field {
+                    name = "Online players"
+                    value = "```\n" + AsciiTable.getTable(
+                        AsciiTable.BASIC_ASCII,
+                        buildList {
+                            add("Name")
+                            if (apiPortEnabled) {
+                                if (displayClan) {
+                                    add("Clan")
+                                }
+                                if (displayGearLevel) {
+                                    add("Gear Level")
+                                }
+                                if (displayKilledVBloods) {
+                                    add("VBloods")
+                                }
+                            }
+                        }.toTypedArray(),
+                        emptyArray(),
+                        sortedPlayers.map { player ->
+                            buildList {
+                                add(player.name)
+                                if (apiPortEnabled) {
+                                    if (displayClan) {
+                                        add(player.clan ?: "-")
+                                    }
+                                    if (displayGearLevel) {
+                                        add("${player.gearLevel ?: 0}")
+                                    }
+                                    if (displayKilledVBloods) {
+                                        add("${player.killedVBloods?.size ?: 0}")
+                                    }
+                                }
+                            }.toTypedArray()
+                        }.toTypedArray()
+                    ) + "\n```"
+                }
             }
         }
     }

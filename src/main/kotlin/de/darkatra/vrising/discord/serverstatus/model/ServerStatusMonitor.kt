@@ -22,6 +22,7 @@ data class ServerStatusMonitor(
     val apiPort: Int? = null,
     val status: ServerStatusMonitorStatus,
 
+    val displayPlayersAsAsciiTable: Boolean,
     val displayServerDescription: Boolean,
     val displayClan: Boolean,
     val displayGearLevel: Boolean,
@@ -42,6 +43,7 @@ data class ServerStatusMonitor(
             queryPort = queryPort,
             apiPort = apiPort,
             status = status,
+            displayPlayersAsAsciiTable = displayPlayersAsAsciiTable,
             displayServerDescription = displayServerDescription,
             displayClan = displayClan,
             displayGearLevel = displayGearLevel,

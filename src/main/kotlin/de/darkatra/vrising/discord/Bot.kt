@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord
 
+import de.darkatra.vrising.discord.botcompanion.model.CharacterResponse
 import de.darkatra.vrising.discord.command.Command
 import de.darkatra.vrising.discord.command.ValidationException
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
@@ -35,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class)
+@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class, CharacterResponse::class)
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,

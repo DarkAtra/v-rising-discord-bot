@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayClanParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayKilledVBloodsParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayPlayersAsAsciiTable
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
@@ -13,6 +14,7 @@ import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorStatu
 import de.darkatra.vrising.discord.command.parameter.getDisplayClanParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayKilledVBloodsParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayPlayersAsAsciiTable
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
@@ -52,6 +54,7 @@ class UpdateServerCommand(
             addServerApiPortParameter(required = false)
             addServerStatusMonitorStatusParameter(required = false)
 
+            addDisplayPlayersAsAsciiTable(required = false)
             addDisplayServerDescriptionParameter(required = false)
             addDisplayClanParameter(required = false)
             addDisplayGearLevelParameter(required = false)
@@ -67,6 +70,7 @@ class UpdateServerCommand(
         val apiPort = interaction.getServerApiPortParameter()
         val status = interaction.getServerStatusMonitorStatusParameter()
 
+        val displayPlayersAsAsciiTable = interaction.getDisplayPlayersAsAsciiTable()
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
         val displayClan = interaction.getDisplayClanParameter()
         val displayGearLevel = interaction.getDisplayGearLevelParameter()
@@ -95,6 +99,9 @@ class UpdateServerCommand(
         }
         if (status != null) {
             serverStatusMonitorBuilder.status = status
+        }
+        if (displayPlayersAsAsciiTable != null) {
+            serverStatusMonitorBuilder.displayPlayersAsAsciiTable = displayPlayersAsAsciiTable
         }
         if (displayServerDescription != null) {
             serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
