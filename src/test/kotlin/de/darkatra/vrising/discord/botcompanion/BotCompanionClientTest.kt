@@ -1,28 +1,45 @@
 package de.darkatra.vrising.discord.botcompanion
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
-import com.github.tomakehurst.wiremock.junit5.WireMockTest
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import de.darkatra.vrising.discord.botcompanion.model.VBlood
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@WireMockTest
 @DisabledInNativeImage
 class BotCompanionClientTest {
+
+    // workaroun for https://github.com/wiremock/wiremock/issues/2202
+    companion object {
+        private var wireMock: WireMockServer? = null
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            wireMock = WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort())
+            wireMock!!.start()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            wireMock?.stop()
+        }
+    }
 
     private val botCompanionClient = BotCompanionClient()
 
     @Test
-    fun `should get characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+    fun `should get characters`() {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMock!!.stubFor(
             WireMock.get("/v-rising-discord-bot/characters")
                 .willReturn(
                     WireMock.aResponse()
@@ -45,7 +62,7 @@ class BotCompanionClientTest {
                 )
         )
 
-        val characters = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+        val characters = botCompanionClient.getCharacters("localhost", wireMock!!.port())
         assertThat(characters).isNotEmpty()
 
         val character = characters.first()
@@ -56,11 +73,9 @@ class BotCompanionClientTest {
     }
 
     @Test
-    fun `should handle errors getting characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+    fun `should handle errors getting characters`() {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMock!!.stubFor(
             WireMock.get("/v-rising-discord-bot/characters")
                 .willReturn(
                     WireMock.aResponse()
@@ -76,7 +91,7 @@ class BotCompanionClientTest {
                 )
         )
 
-        val characters = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+        val characters = botCompanionClient.getCharacters("localhost", wireMock!!.port())
         assertThat(characters).isEmpty()
     }
 }
