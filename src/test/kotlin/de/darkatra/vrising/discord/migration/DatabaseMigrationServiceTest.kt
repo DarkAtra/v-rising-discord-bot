@@ -72,7 +72,11 @@ class DatabaseMigrationServiceTest {
         val oldCollection = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor")
         val newCollection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
 
-        oldCollection.insert(arrayOf(Document.createDocument("test", "test")))
+        oldCollection.insert(
+            arrayOf(
+                Document.createDocument("hostName", "test-hostname")
+            )
+        )
 
         assertThat(oldCollection.size()).isEqualTo(1)
         assertThat(newCollection.size()).isEqualTo(0)
@@ -83,10 +87,8 @@ class DatabaseMigrationServiceTest {
         assertThat(newCollection.size()).isEqualTo(1)
 
         val migratedDocument = newCollection.find().first()
-        assertThat(migratedDocument["displayPlayersAsAsciiTable"]).isEqualTo(false)
-        assertThat(migratedDocument["displayClan"]).isEqualTo(true)
-        assertThat(migratedDocument["displayGearLevel"]).isEqualTo(true)
-        assertThat(migratedDocument["displayKilledVBloods"]).isEqualTo(true)
+        assertThat(migratedDocument["hostname"]).isEqualTo(migratedDocument["hostName"])
+        assertThat(migratedDocument["displayPlayerGearLevel"]).isEqualTo(true)
 
         val schemas = repository.find().toList()
         assertThat(schemas).hasSize(2)

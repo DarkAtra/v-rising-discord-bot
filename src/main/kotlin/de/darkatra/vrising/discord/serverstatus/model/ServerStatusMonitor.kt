@@ -17,16 +17,14 @@ data class ServerStatusMonitor(
     val discordServerId: String,
     val discordChannelId: String,
 
-    val hostName: String,
+    val hostname: String,
     val queryPort: Int,
+    val apiHostname: String? = null,
     val apiPort: Int? = null,
     val status: ServerStatusMonitorStatus,
 
-    val displayPlayersAsAsciiTable: Boolean,
     val displayServerDescription: Boolean,
-    val displayClan: Boolean,
-    val displayGearLevel: Boolean,
-    val displayKilledVBloods: Boolean,
+    val displayPlayerGearLevel: Boolean,
 
     val currentEmbedMessageId: String? = null,
     val currentFailedAttempts: Int = 0,
@@ -34,20 +32,20 @@ data class ServerStatusMonitor(
     val recentErrors: List<Error> = emptyList()
 ) {
 
+    val apiEnabled = apiHostname != null && apiPort != null
+
     fun builder(): ServerStatusMonitorBuilder {
         return ServerStatusMonitorBuilder(
             id = id,
             discordServerId = discordServerId,
             discordChannelId = discordChannelId,
-            hostName = hostName,
+            hostname = hostname,
             queryPort = queryPort,
+            apiHostname = apiHostname,
             apiPort = apiPort,
             status = status,
-            displayPlayersAsAsciiTable = displayPlayersAsAsciiTable,
             displayServerDescription = displayServerDescription,
-            displayClan = displayClan,
-            displayGearLevel = displayGearLevel,
-            displayKilledVBloods = displayKilledVBloods,
+            displayPlayerGearLevel = displayPlayerGearLevel,
             currentEmbedMessageId = currentEmbedMessageId,
             currentFailedAttempts = currentFailedAttempts,
             recentErrors = recentErrors.toMutableList()

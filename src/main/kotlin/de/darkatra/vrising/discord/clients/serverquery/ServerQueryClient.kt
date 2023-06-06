@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.serverquery
+package de.darkatra.vrising.discord.clients.serverquery
 
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryClient

@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.botcompanion.model.CharacterResponse
+import de.darkatra.vrising.discord.clients.botcompanion.model.CharacterResponse
 import de.darkatra.vrising.discord.command.Command
 import de.darkatra.vrising.discord.command.ValidationException
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
@@ -99,7 +99,7 @@ class Bot(
         taskRegistrar.addFixedDelayTask(IntervalTask({
             if (isReady.get() && kord.isActive) {
                 runBlocking {
-                    serverStatusMonitorService.updateServerStatusMonitor(kord)
+                    serverStatusMonitorService.updateServerStatusMonitors(kord)
                 }
             }
         }, botProperties.updateDelay, Duration.ofSeconds(5)))

@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.botcompanion.model
+package de.darkatra.vrising.discord.clients.botcompanion.model
 
 data class CharacterResponse(
     val name: String,

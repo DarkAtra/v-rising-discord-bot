@@ -1,24 +1,21 @@
 package de.darkatra.vrising.discord.command
 
 import com.fasterxml.uuid.Generators
+import de.darkatra.vrising.discord.command.parameter.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayClanParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayGearLevelParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayKilledVBloodsParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayPlayersAsAsciiTable
+import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.addServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayClanParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayGearLevelParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayKilledVBloodsParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayPlayersAsAsciiTable
+import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.getServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.core.Kord
@@ -29,7 +26,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AddServerCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
 ) : Command {
 
     private val name: String = "add-server"
@@ -49,53 +46,48 @@ class AddServerCommand(
 
             addServerHostnameParameter()
             addServerQueryPortParameter()
+            addServerApiHostnameParameter(required = false)
             addServerApiPortParameter(required = false)
 
-            addDisplayPlayersAsAsciiTable(required = false)
             addDisplayServerDescriptionParameter(required = false)
-            addDisplayClanParameter(required = false)
-            addDisplayGearLevelParameter(required = false)
-            addDisplayKilledVBloodsParameter(required = false)
+            addDisplayPlayerGearLevelParameter(required = false)
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val hostName = interaction.getServerHostnameParameter()!!
+        val hostname = interaction.getServerHostnameParameter()!!
         val queryPort = interaction.getServerQueryPortParameter()!!
+        val apiHostname = interaction.getServerApiHostnameParameter()
         val apiPort = interaction.getServerApiPortParameter()
 
-        val displayPlayersAsAsciiTable = interaction.getDisplayPlayersAsAsciiTable() ?: false
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
-        val displayClan = interaction.getDisplayClanParameter() ?: true
-        val displayGearLevel = interaction.getDisplayGearLevelParameter() ?: true
-        val displayKilledVBloods = interaction.getDisplayKilledVBloodsParameter() ?: true
+        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: true
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
 
-        ServerHostnameParameter.validate(hostName)
+        ServerHostnameParameter.validate(hostname)
+        ServerApiHostnameParameter.validate(apiHostname)
 
         val serverStatusMonitorId = Generators.timeBasedGenerator().generate()
-        serverStatusMonitorService.putServerStatusMonitor(
+        serverStatusMonitorRepository.putServerStatusMonitor(
             ServerStatusMonitor(
                 id = serverStatusMonitorId.toString(),
                 discordServerId = discordServerId.toString(),
                 discordChannelId = channelId.toString(),
-                hostName = hostName,
+                hostname = hostname,
                 queryPort = queryPort,
+                apiHostname = apiHostname,
                 apiPort = apiPort,
                 status = ServerStatusMonitorStatus.ACTIVE,
-                displayPlayersAsAsciiTable = displayPlayersAsAsciiTable,
                 displayServerDescription = displayServerDescription,
-                displayClan = displayClan,
-                displayGearLevel = displayGearLevel,
-                displayKilledVBloods = displayKilledVBloods
+                displayPlayerGearLevel = displayPlayerGearLevel,
             )
         )
 
         interaction.deferEphemeralResponse().respond {
-            content = """Added monitor with id '${serverStatusMonitorId}' for '${hostName}:${queryPort}' to channel '$channelId'.
+            content = """Added monitor with id '${serverStatusMonitorId}' for '${hostname}:${queryPort}' to channel '$channelId'.
                 |It may take some time until the status message appears.""".trimMargin()
         }
     }

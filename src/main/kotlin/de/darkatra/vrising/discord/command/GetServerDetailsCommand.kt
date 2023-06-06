@@ -3,7 +3,7 @@ package de.darkatra.vrising.discord.command
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils
 
 @Component
 class GetServerDetailsCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
     private val botProperties: BotProperties
 ) : Command {
 
@@ -41,7 +41,7 @@ class GetServerDetailsCommand(
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val serverStatusMonitor = serverStatusMonitorService.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
+        val serverStatusMonitor = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
             interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
@@ -55,13 +55,21 @@ class GetServerDetailsCommand(
 
                 field {
                     name = "Hostname"
-                    value = serverStatusMonitor.hostName
+                    value = serverStatusMonitor.hostname
                     inline = true
                 }
 
                 field {
                     name = "Query Port"
                     value = "${serverStatusMonitor.queryPort}"
+                    inline = true
+                }
+                field {
+                    name = "Api Hostname"
+                    value = when (serverStatusMonitor.apiHostname != null) {
+                        true -> "${serverStatusMonitor.apiHostname}"
+                        false -> "-"
+                    }
                     inline = true
                 }
 
@@ -75,32 +83,14 @@ class GetServerDetailsCommand(
                 }
 
                 field {
-                    name = "Display Players as ASCII Table"
-                    value = "${serverStatusMonitor.displayPlayersAsAsciiTable}"
-                    inline = true
-                }
-
-                field {
                     name = "Display Server Description"
                     value = "${serverStatusMonitor.displayServerDescription}"
                     inline = true
                 }
 
                 field {
-                    name = "Display Clan"
-                    value = "${serverStatusMonitor.displayClan}"
-                    inline = true
-                }
-
-                field {
-                    name = "Display Gear Level"
-                    value = "${serverStatusMonitor.displayGearLevel}"
-                    inline = true
-                }
-
-                field {
-                    name = "Display Number of killed VBloods"
-                    value = "${serverStatusMonitor.displayKilledVBloods}"
+                    name = "Display Player Gear Level"
+                    value = "${serverStatusMonitor.displayPlayerGearLevel}"
                     inline = true
                 }
 
