@@ -19,14 +19,11 @@ object ServerStatusMonitorTestUtils {
             id = ID,
             discordServerId = DISCORD_SERVER_ID,
             discordChannelId = DISCORD_CHANNEL_ID,
-            hostName = HOST_NAME,
+            hostname = HOST_NAME,
             queryPort = QUERY_PORT,
             status = status,
-            displayPlayersAsAsciiTable = false,
             displayServerDescription = true,
-            displayClan = true,
-            displayGearLevel = true,
-            displayKilledVBloods = true
+            displayPlayerGearLevel = true
         )
     }
 }

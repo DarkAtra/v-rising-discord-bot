@@ -1,6 +1,6 @@
-package de.darkatra.vrising.discord.botcompanion
+package de.darkatra.vrising.discord.clients.botcompanion
 
-import de.darkatra.vrising.discord.botcompanion.model.CharacterResponse
+import de.darkatra.vrising.discord.clients.botcompanion.model.CharacterResponse
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service

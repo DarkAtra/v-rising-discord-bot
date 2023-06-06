@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.command
 
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ListServersCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
 ) : Command {
 
     private val name: String = "list-servers"
@@ -32,13 +32,13 @@ class ListServersCommand(
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val serverStatusConfigurations = serverStatusMonitorService.getServerStatusMonitors(discordServerId.toString())
+        val serverStatusConfigurations = serverStatusMonitorRepository.getServerStatusMonitors(discordServerId.toString())
 
         interaction.deferEphemeralResponse().respond {
             content = when (serverStatusConfigurations.isEmpty()) {
                 true -> "No servers found."
                 false -> serverStatusConfigurations.joinToString(separator = "\n") { serverStatusConfiguration ->
-                    "${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostName}:${serverStatusConfiguration.queryPort} - ${serverStatusConfiguration.status.name}"
+                    "${serverStatusConfiguration.id} - ${serverStatusConfiguration.hostname}:${serverStatusConfiguration.queryPort} - ${serverStatusConfiguration.status.name}"
                 }
             }
         }
