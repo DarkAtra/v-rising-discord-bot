@@ -29,7 +29,7 @@ Adds a server to the status monitor.
 | `server-api-hostname`        | The hostname to use when querying the server's api. Use `~` to set the value to `null`. This is required to integrate with [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) | `false`  | `null`        |
 | `server-api-port`            | The api port of the server. Use `-1` to set the value to `null`. This is required to integrate with [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion)                        | `false`  | `null`        |
 | `display-server-description` | Whether or not to display the v rising server description on discord.                                                                                                                                                   | `false`  | `true`        |
-| `display-player-gear-level`  | Whether or not to display each player's gear level. Only honored if the `server-api-port` is set.                                                                                                                       | `false`  | `true`        |
+| `display-player-gear-level`  | Whether or not to display each player's gear level. Only honored if the `server-api-hostname` and `server-api-port` are set.                                                                                            | `false`  | `true`        |
 
 ### `/update-server`
 
@@ -45,7 +45,7 @@ untouched.
 | `server-api-port`            | The api port of the server. Use `-1` to set the value to `null`. This is required to integrate with [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion)                        | `false`  | `null`        |
 | `status`                     | The status of the server status monitor. Either `ACTIVE` or `INACTIVE`.                                                                                                                                                 | `false`  | `null`        |
 | `display-server-description` | Whether or not to display the v rising server description on discord.                                                                                                                                                   | `false`  | `null`        |
-| `display-player-gear-level`  | Whether or not to display each player's gear level. Only honored if the `server-api-port` is set.                                                                                                                       | `false`  | `null`        |
+| `display-player-gear-level`  | Whether or not to display each player's gear level. Only honored if the `server-api-hostname` and `server-api-port` are set.                                                                                            | `false`  | `null`        |
 
 ### `/remove-server`
 
