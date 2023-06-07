@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.command.parameter.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.addServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
@@ -47,6 +48,7 @@ class UpdateServerCommand(
 
             addServerHostnameParameter(required = false)
             addServerQueryPortParameter(required = false)
+            addServerApiHostnameParameter(required = false)
             addServerApiPortParameter(required = false)
             addServerStatusMonitorStatusParameter(required = false)
 
