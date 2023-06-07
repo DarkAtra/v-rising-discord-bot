@@ -1,9 +1,13 @@
 package de.darkatra.vrising.discord
 
+import de.darkatra.vrising.discord.clients.botcompanion.model.CharacterResponse
 import de.darkatra.vrising.discord.command.Command
 import de.darkatra.vrising.discord.command.ValidationException
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.migration.Schema
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.model.Error
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
@@ -32,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class)
+@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class, CharacterResponse::class)
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,
@@ -95,7 +99,7 @@ class Bot(
         taskRegistrar.addFixedDelayTask(IntervalTask({
             if (isReady.get() && kord.isActive) {
                 runBlocking {
-                    serverStatusMonitorService.updateServerStatusMonitor(kord)
+                    serverStatusMonitorService.updateServerStatusMonitors(kord)
                 }
             }
         }, botProperties.updateDelay, Duration.ofSeconds(5)))

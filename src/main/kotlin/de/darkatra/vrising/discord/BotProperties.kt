@@ -32,4 +32,12 @@ class BotProperties {
     @field:Min(0)
     @field:NotNull
     var maxFailedAttempts: Int = 0
+
+    @field:Min(0)
+    @field:NotNull
+    var maxRecentErrors: Int = 5
+
+    @field:Min(1)
+    @field:NotNull
+    var maxCharactersPerError: Int = 200
 }

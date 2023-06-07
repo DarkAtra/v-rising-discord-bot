@@ -1,8 +1,8 @@
 package de.darkatra.vrising.discord.command
 
-import de.darkatra.vrising.discord.ServerStatusMonitorService
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class RemoveServerCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
 ) : Command {
 
     private val name: String = "remove-server"
@@ -37,7 +37,7 @@ class RemoveServerCommand(
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val wasSuccessful = serverStatusMonitorService.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
+        val wasSuccessful = serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
 
         interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {

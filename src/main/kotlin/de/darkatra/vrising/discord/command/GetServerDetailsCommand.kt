@@ -1,18 +1,21 @@
 package de.darkatra.vrising.discord.command
 
-import de.darkatra.vrising.discord.ServerStatusMonitorService
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.message.modify.embed
 import org.springframework.stereotype.Component
+import org.springframework.util.StringUtils
 
 @Component
 class GetServerDetailsCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
+    private val botProperties: BotProperties
 ) : Command {
 
     private val name: String = "get-server-details"
@@ -38,7 +41,7 @@ class GetServerDetailsCommand(
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val serverStatusMonitor = serverStatusMonitorService.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
+        val serverStatusMonitor = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
             interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
@@ -52,7 +55,7 @@ class GetServerDetailsCommand(
 
                 field {
                     name = "Hostname"
-                    value = serverStatusMonitor.hostName
+                    value = serverStatusMonitor.hostname
                     inline = true
                 }
 
@@ -61,10 +64,33 @@ class GetServerDetailsCommand(
                     value = "${serverStatusMonitor.queryPort}"
                     inline = true
                 }
+                field {
+                    name = "Api Hostname"
+                    value = when (serverStatusMonitor.apiHostname != null) {
+                        true -> "${serverStatusMonitor.apiHostname}"
+                        false -> "-"
+                    }
+                    inline = true
+                }
+
+                field {
+                    name = "Api Port"
+                    value = when (serverStatusMonitor.apiPort != null) {
+                        true -> "${serverStatusMonitor.apiPort}"
+                        false -> "-"
+                    }
+                    inline = true
+                }
 
                 field {
                     name = "Display Server Description"
                     value = "${serverStatusMonitor.displayServerDescription}"
+                    inline = true
+                }
+
+                field {
+                    name = "Display Player Gear Level"
+                    value = "${serverStatusMonitor.displayPlayerGearLevel}"
                     inline = true
                 }
 
@@ -96,6 +122,16 @@ class GetServerDetailsCommand(
                     name = "Current Failed Attempts"
                     value = "${serverStatusMonitor.currentFailedAttempts}"
                     inline = true
+                }
+
+                field {
+                    name = "Most recent Errors"
+                    value = when (serverStatusMonitor.recentErrors.isEmpty()) {
+                        true -> "-"
+                        false -> serverStatusMonitor.recentErrors.joinToString("\n") {
+                            "${it.timestamp}```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
+                        }
+                    }
                 }
             }
         }

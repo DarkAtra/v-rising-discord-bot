@@ -1,16 +1,23 @@
 package de.darkatra.vrising.discord.command
 
 import com.fasterxml.uuid.Generators
-import de.darkatra.vrising.discord.ServerStatusMonitor
-import de.darkatra.vrising.discord.ServerStatusMonitorService
-import de.darkatra.vrising.discord.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.command.parameter.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.addServerApiHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
+import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.getServerApiHostnameParameter
+import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
+import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -19,7 +26,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AddServerCommand(
-    private val serverStatusMonitorService: ServerStatusMonitorService,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
 ) : Command {
 
     private val name: String = "add-server"
@@ -39,36 +46,49 @@ class AddServerCommand(
 
             addServerHostnameParameter()
             addServerQueryPortParameter()
+            addServerApiHostnameParameter(required = false)
+            addServerApiPortParameter(required = false)
 
             addDisplayServerDescriptionParameter(required = false)
+            addDisplayPlayerGearLevelParameter(required = false)
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val hostName = interaction.getServerHostnameParameter()!!
+        val hostname = interaction.getServerHostnameParameter()!!
         val queryPort = interaction.getServerQueryPortParameter()!!
-        val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: false
+        val apiHostname = interaction.getServerApiHostnameParameter()
+        val apiPort = interaction.getServerApiPortParameter()
+
+        val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
+        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: true
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
 
-        ServerHostnameParameter.validate(hostName)
+        ServerHostnameParameter.validate(hostname)
+        ServerApiHostnameParameter.validate(apiHostname)
 
-        serverStatusMonitorService.putServerStatusMonitor(
+        val serverStatusMonitorId = Generators.timeBasedGenerator().generate()
+        serverStatusMonitorRepository.putServerStatusMonitor(
             ServerStatusMonitor(
-                id = Generators.timeBasedGenerator().generate().toString(),
+                id = serverStatusMonitorId.toString(),
                 discordServerId = discordServerId.toString(),
                 discordChannelId = channelId.toString(),
-                hostName = hostName,
+                hostname = hostname,
                 queryPort = queryPort,
+                apiHostname = apiHostname,
+                apiPort = apiPort,
                 status = ServerStatusMonitorStatus.ACTIVE,
-                displayServerDescription = displayServerDescription
+                displayServerDescription = displayServerDescription,
+                displayPlayerGearLevel = displayPlayerGearLevel,
             )
         )
 
         interaction.deferEphemeralResponse().respond {
-            content = "Added monitor for '${hostName}:${queryPort}' to channel '$channelId'. It may take some time until the status message appears."
+            content = """Added monitor with id '${serverStatusMonitorId}' for '${hostname}:${queryPort}' to channel '$channelId'.
+                |It may take some time until the status message appears.""".trimMargin()
         }
     }
 }

@@ -16,3 +16,6 @@ bot:
   database-username: v-rising-discord-bot
   database-password: ~
   update-delay: 1m
+  max-failed-attempts: 0
+  max-recent-errors: 5
+  max-characters-per-error: 200
