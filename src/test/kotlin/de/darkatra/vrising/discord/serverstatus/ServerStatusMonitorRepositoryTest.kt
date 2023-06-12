@@ -68,7 +68,7 @@ class ServerStatusMonitorRepositoryTest {
 
         serverStatusMonitorRepository.updateServerStatusMonitor(update1)
 
-        val e = assertThrows<IllegalStateException> {
+        val e = assertThrows<OutdatedServerStatusMonitorException> {
             serverStatusMonitorRepository.updateServerStatusMonitor(update2)
         }
 

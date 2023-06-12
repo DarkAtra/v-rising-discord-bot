@@ -46,16 +46,17 @@ class DatabaseMigrationServiceTest {
         repository.insert(Schema(appVersion = "V1.6.0"))
         repository.insert(Schema(appVersion = "V1.8.0"))
         repository.insert(Schema(appVersion = "V2.2.0"))
+        repository.insert(Schema(appVersion = "V2.3.0"))
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
-            appVersionFromPom = "2.2.0"
+            appVersionFromPom = "2.3.0"
         )
 
         assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse()
 
         val schemas = repository.find().toList()
-        assertThat(schemas).hasSize(5)
+        assertThat(schemas).hasSize(6)
     }
 
     @Test
