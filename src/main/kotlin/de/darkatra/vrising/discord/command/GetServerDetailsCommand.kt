@@ -64,6 +64,7 @@ class GetServerDetailsCommand(
                     value = "${serverStatusMonitor.queryPort}"
                     inline = true
                 }
+
                 field {
                     name = "Api Hostname"
                     value = when (serverStatusMonitor.apiHostname != null) {
@@ -109,6 +110,12 @@ class GetServerDetailsCommand(
                 field {
                     name = "Discord Channel Id"
                     value = serverStatusMonitor.discordChannelId
+                    inline = true
+                }
+
+                field {
+                    name = "Player Activity Feed Channel Id"
+                    value = serverStatusMonitor.playerActivityDiscordChannelId ?: "-"
                     inline = true
                 }
 

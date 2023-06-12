@@ -5,12 +5,14 @@ import de.darkatra.vrising.discord.command.parameter.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.addPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.command.parameter.getPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiHostnameParameter
 import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
 import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
@@ -51,6 +53,8 @@ class AddServerCommand(
 
             addDisplayServerDescriptionParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
+
+            addPlayerActivityFeedChannelIdParameter(required = false)
         }
     }
 
@@ -64,6 +68,8 @@ class AddServerCommand(
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: true
 
+        val playerActivityFeedChannelId = interaction.getPlayerActivityFeedChannelIdParameter()
+
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
 
@@ -71,11 +77,12 @@ class AddServerCommand(
         ServerApiHostnameParameter.validate(apiHostname)
 
         val serverStatusMonitorId = Generators.timeBasedGenerator().generate()
-        serverStatusMonitorRepository.putServerStatusMonitor(
+        serverStatusMonitorRepository.addServerStatusMonitor(
             ServerStatusMonitor(
                 id = serverStatusMonitorId.toString(),
                 discordServerId = discordServerId.toString(),
                 discordChannelId = channelId.toString(),
+                playerActivityDiscordChannelId = playerActivityFeedChannelId,
                 hostname = hostname,
                 queryPort = queryPort,
                 apiHostname = apiHostname,

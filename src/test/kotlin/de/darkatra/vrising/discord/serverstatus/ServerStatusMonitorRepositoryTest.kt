@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 
 @DisabledInNativeImage
@@ -24,7 +25,7 @@ class ServerStatusMonitorRepositoryTest {
     @Test
     fun `should get active server status monitors`() {
 
-        serverStatusMonitorRepository.putServerStatusMonitor(
+        serverStatusMonitorRepository.addServerStatusMonitor(
             ServerStatusMonitorTestUtils.getServerStatusMonitor(ServerStatusMonitorStatus.ACTIVE)
         )
 
@@ -43,12 +44,34 @@ class ServerStatusMonitorRepositoryTest {
     @Test
     fun `should get no active server status monitors`() {
 
-        serverStatusMonitorRepository.putServerStatusMonitor(
+        serverStatusMonitorRepository.addServerStatusMonitor(
             ServerStatusMonitorTestUtils.getServerStatusMonitor(ServerStatusMonitorStatus.INACTIVE)
         )
 
         val serverStatusMonitors = serverStatusMonitorRepository.getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE)
 
         assertThat(serverStatusMonitors).hasSize(0)
+    }
+
+    @Test
+    fun `should not update server status monitor with higher version`() {
+
+        val serverStatusMonitor = ServerStatusMonitorTestUtils.getServerStatusMonitor(ServerStatusMonitorStatus.ACTIVE)
+        serverStatusMonitorRepository.addServerStatusMonitor(serverStatusMonitor)
+
+        val update1 = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitor.id, serverStatusMonitor.discordServerId)!!.apply {
+            status = ServerStatusMonitorStatus.INACTIVE
+        }
+        val update2 = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitor.id, serverStatusMonitor.discordServerId)!!.apply {
+            status = ServerStatusMonitorStatus.ACTIVE
+        }
+
+        serverStatusMonitorRepository.updateServerStatusMonitor(update1)
+
+        val e = assertThrows<IllegalStateException> {
+            serverStatusMonitorRepository.updateServerStatusMonitor(update2)
+        }
+
+        assertThat(e.message).isEqualTo("Monitor with id '${serverStatusMonitor.id}' was already updated by another thread.")
     }
 }
