@@ -5,11 +5,13 @@ import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.string
 
-private const val PARAMETER_NAME = "status"
+object ServerStatusMonitorStatusParameter {
+    const val NAME = "status"
+}
 
 fun GlobalChatInputCreateBuilder.addServerStatusMonitorStatusParameter(required: Boolean = true) {
     string(
-        name = PARAMETER_NAME,
+        name = ServerStatusMonitorStatusParameter.NAME,
         description = "Determines if a server status monitor should be updated or not."
     ) {
         this.required = required
@@ -21,5 +23,5 @@ fun GlobalChatInputCreateBuilder.addServerStatusMonitorStatusParameter(required:
 }
 
 fun ChatInputCommandInteraction.getServerStatusMonitorStatusParameter(): ServerStatusMonitorStatus? {
-    return command.strings[PARAMETER_NAME]?.let { ServerStatusMonitorStatus.valueOf(it) }
+    return command.strings[ServerStatusMonitorStatusParameter.NAME]?.let { ServerStatusMonitorStatus.valueOf(it) }
 }
