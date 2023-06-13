@@ -1,9 +1,8 @@
-package de.darkatra.vrising.discord.botcompanion
+package de.darkatra.vrising.discord.clients.botcompanion
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll

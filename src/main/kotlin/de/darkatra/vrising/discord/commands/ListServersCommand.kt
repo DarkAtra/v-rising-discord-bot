@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.command
+package de.darkatra.vrising.discord.commands
 
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord

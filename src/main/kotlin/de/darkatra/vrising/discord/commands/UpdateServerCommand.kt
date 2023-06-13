@@ -1,23 +1,25 @@
-package de.darkatra.vrising.discord.command
+package de.darkatra.vrising.discord.commands
 
-import de.darkatra.vrising.discord.command.parameter.ServerApiHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.ServerHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayPlayerGearLevelParameter
-import de.darkatra.vrising.discord.command.parameter.addDisplayServerDescriptionParameter
-import de.darkatra.vrising.discord.command.parameter.addServerApiHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.addServerApiPortParameter
-import de.darkatra.vrising.discord.command.parameter.addServerHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.addServerQueryPortParameter
-import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorStatusParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayPlayerGearLevelParameter
-import de.darkatra.vrising.discord.command.parameter.getDisplayServerDescriptionParameter
-import de.darkatra.vrising.discord.command.parameter.getServerApiHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.getServerApiPortParameter
-import de.darkatra.vrising.discord.command.parameter.getServerHostnameParameter
-import de.darkatra.vrising.discord.command.parameter.getServerQueryPortParameter
-import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorStatusParameter
+import de.darkatra.vrising.discord.commands.parameters.ServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.ServerHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
+import de.darkatra.vrising.discord.commands.parameters.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.commands.parameters.addPlayerActivityFeedChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorStatusParameter
+import de.darkatra.vrising.discord.commands.parameters.getDisplayPlayerGearLevelParameter
+import de.darkatra.vrising.discord.commands.parameters.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.commands.parameters.getPlayerActivityFeedChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorStatusParameter
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -54,6 +56,8 @@ class UpdateServerCommand(
 
             addDisplayServerDescriptionParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
+
+            addPlayerActivityFeedChannelIdParameter(required = false)
         }
     }
 
@@ -69,6 +73,8 @@ class UpdateServerCommand(
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
 
+        val playerActivityFeedChannelId = interaction.getPlayerActivityFeedChannelIdParameter()
+
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         val serverStatusMonitor = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
@@ -79,36 +85,42 @@ class UpdateServerCommand(
             return
         }
 
-        val serverStatusMonitorBuilder = serverStatusMonitor.builder()
         if (hostname != null) {
             ServerHostnameParameter.validate(hostname)
-            serverStatusMonitorBuilder.hostname = hostname
+            serverStatusMonitor.hostname = hostname
         }
         if (queryPort != null) {
-            serverStatusMonitorBuilder.queryPort = queryPort
+            serverStatusMonitor.queryPort = queryPort
         }
         if (apiHostname != null) {
             if (apiHostname == "~") {
-                serverStatusMonitorBuilder.apiHostname = null
+                serverStatusMonitor.apiHostname = null
             } else {
                 ServerApiHostnameParameter.validate(apiHostname)
-                serverStatusMonitorBuilder.apiHostname = apiHostname
+                serverStatusMonitor.apiHostname = apiHostname
             }
         }
         if (apiPort != null) {
-            serverStatusMonitorBuilder.apiPort = if (apiPort == -1) null else apiPort
+            serverStatusMonitor.apiPort = if (apiPort == -1) null else apiPort
         }
         if (status != null) {
-            serverStatusMonitorBuilder.status = status
+            serverStatusMonitor.status = status
         }
         if (displayServerDescription != null) {
-            serverStatusMonitorBuilder.displayServerDescription = displayServerDescription
+            serverStatusMonitor.displayServerDescription = displayServerDescription
         }
         if (displayPlayerGearLevel != null) {
-            serverStatusMonitorBuilder.displayPlayerGearLevel = displayPlayerGearLevel
+            serverStatusMonitor.displayPlayerGearLevel = displayPlayerGearLevel
+        }
+        if (playerActivityFeedChannelId != null) {
+            if (apiHostname == "~") {
+                serverStatusMonitor.playerActivityDiscordChannelId = null
+            } else {
+                serverStatusMonitor.playerActivityDiscordChannelId = playerActivityFeedChannelId
+            }
         }
 
-        serverStatusMonitorRepository.putServerStatusMonitor(serverStatusMonitorBuilder.build())
+        serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
 
         interaction.deferEphemeralResponse().respond {
             content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take some time until the status message is updated."

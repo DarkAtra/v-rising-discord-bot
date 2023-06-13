@@ -1,8 +1,8 @@
 package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.clients.botcompanion.model.CharacterResponse
-import de.darkatra.vrising.discord.command.Command
-import de.darkatra.vrising.discord.command.ValidationException
+import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.migration.Schema
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class, CharacterResponse::class)
+@RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class, Error::class, CharacterResponse::class, PlayerActivity::class)
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,
@@ -69,7 +69,7 @@ class Bot(
 
             try {
                 command.handle(interaction)
-            } catch (e: ValidationException) {
+            } catch (e: BotException) {
                 interaction.deferEphemeralResponse().respond {
                     content = "Could not perform command. Cause: ${e.message}"
                 }

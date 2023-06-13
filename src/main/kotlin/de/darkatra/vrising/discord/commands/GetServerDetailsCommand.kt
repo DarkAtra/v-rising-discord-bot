@@ -1,8 +1,8 @@
-package de.darkatra.vrising.discord.command
+package de.darkatra.vrising.discord.commands
 
 import de.darkatra.vrising.discord.BotProperties
-import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -64,6 +64,7 @@ class GetServerDetailsCommand(
                     value = "${serverStatusMonitor.queryPort}"
                     inline = true
                 }
+
                 field {
                     name = "Api Hostname"
                     value = when (serverStatusMonitor.apiHostname != null) {
@@ -109,6 +110,12 @@ class GetServerDetailsCommand(
                 field {
                     name = "Discord Channel Id"
                     value = serverStatusMonitor.discordChannelId
+                    inline = true
+                }
+
+                field {
+                    name = "Player Activity Feed Channel Id"
+                    value = serverStatusMonitor.playerActivityDiscordChannelId ?: "-"
                     inline = true
                 }
 
