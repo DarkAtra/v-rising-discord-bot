@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.plus
+import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import org.dizitart.kno2.filters.and

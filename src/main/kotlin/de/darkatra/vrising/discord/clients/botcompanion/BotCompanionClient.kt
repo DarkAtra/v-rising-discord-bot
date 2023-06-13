@@ -17,8 +17,8 @@ class BotCompanionClient {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val restTemplate: RestTemplate = RestTemplateBuilder()
-        .setConnectTimeout(Duration.ofSeconds(10))
-        .setReadTimeout(Duration.ofSeconds(10))
+        .setConnectTimeout(Duration.ofSeconds(5))
+        .setReadTimeout(Duration.ofSeconds(5))
         .build()
 
     fun getCharacters(serverHostName: String, serverApiPort: Int): List<CharacterResponse> {

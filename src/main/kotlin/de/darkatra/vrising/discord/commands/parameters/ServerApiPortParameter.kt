@@ -1,14 +1,16 @@
-package de.darkatra.vrising.discord.command.parameter
+package de.darkatra.vrising.discord.commands.parameters
 
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.integer
 
-private const val PARAMETER_NAME = "server-api-port"
+object ServerApiPortParameter {
+    const val NAME = "server-api-port"
+}
 
 fun GlobalChatInputCreateBuilder.addServerApiPortParameter(required: Boolean = true) {
     integer(
-        name = PARAMETER_NAME,
+        name = ServerApiPortParameter.NAME,
         description = "The api port of the server."
     ) {
         this.required = required
@@ -16,5 +18,5 @@ fun GlobalChatInputCreateBuilder.addServerApiPortParameter(required: Boolean = t
 }
 
 fun ChatInputCommandInteraction.getServerApiPortParameter(): Int? {
-    return command.integers[PARAMETER_NAME]?.let { Math.toIntExact(it) }
+    return command.integers[ServerApiPortParameter.NAME]?.let { Math.toIntExact(it) }
 }

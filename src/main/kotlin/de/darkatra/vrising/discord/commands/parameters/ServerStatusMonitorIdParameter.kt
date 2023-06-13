@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.command.parameter
+package de.darkatra.vrising.discord.commands.parameters
 
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder

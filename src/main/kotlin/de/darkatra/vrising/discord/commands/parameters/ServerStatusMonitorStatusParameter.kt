@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.command.parameter
+package de.darkatra.vrising.discord.commands.parameters
 
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -10,9 +10,13 @@ private const val PARAMETER_NAME = "status"
 fun GlobalChatInputCreateBuilder.addServerStatusMonitorStatusParameter(required: Boolean = true) {
     string(
         name = PARAMETER_NAME,
-        description = "The status of the server status monitor. Either ACTIVE or INACTIVE."
+        description = "Determines if a server status monitor should be updated or not."
     ) {
         this.required = required
+        this.autocomplete = true
+
+        choice("ACTIVE", "ACTIVE")
+        choice("INACTIVE", "INACTIVE")
     }
 }
 

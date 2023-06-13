@@ -2,6 +2,7 @@ package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
 import de.darkatra.vrising.discord.ServerStatusMonitorTestUtils
+import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite

@@ -1,7 +1,7 @@
-package de.darkatra.vrising.discord.command
+package de.darkatra.vrising.discord.commands
 
-import de.darkatra.vrising.discord.command.parameter.addServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.command.parameter.getServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond

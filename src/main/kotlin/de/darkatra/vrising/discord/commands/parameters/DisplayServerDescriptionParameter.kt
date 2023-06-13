@@ -1,14 +1,16 @@
-package de.darkatra.vrising.discord.command.parameter
+package de.darkatra.vrising.discord.commands.parameters
 
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.boolean
 
-private const val PARAMETER_NAME = "display-server-description"
+object DisplayServerDescriptionParameter {
+    const val NAME = "display-server-description"
+}
 
 fun GlobalChatInputCreateBuilder.addDisplayServerDescriptionParameter(required: Boolean = true) {
     boolean(
-        name = PARAMETER_NAME,
+        name = DisplayServerDescriptionParameter.NAME,
         description = "Whether or not to display the v rising server description on discord. Defaults to true."
     ) {
         this.required = required
@@ -16,5 +18,5 @@ fun GlobalChatInputCreateBuilder.addDisplayServerDescriptionParameter(required: 
 }
 
 fun ChatInputCommandInteraction.getDisplayServerDescriptionParameter(): Boolean? {
-    return command.booleans[PARAMETER_NAME]
+    return command.booleans[DisplayServerDescriptionParameter.NAME]
 }

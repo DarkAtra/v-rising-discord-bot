@@ -1,14 +1,16 @@
-package de.darkatra.vrising.discord.command.parameter
+package de.darkatra.vrising.discord.commands.parameters
 
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.integer
 
-private const val PARAMETER_NAME = "server-query-port"
+object ServerQueryPortParameter {
+    const val NAME = "server-query-port"
+}
 
 fun GlobalChatInputCreateBuilder.addServerQueryPortParameter(required: Boolean = true) {
     integer(
-        name = PARAMETER_NAME,
+        name = ServerQueryPortParameter.NAME,
         description = "The query port of the server to add a status monitor for."
     ) {
         this.required = required
@@ -16,5 +18,5 @@ fun GlobalChatInputCreateBuilder.addServerQueryPortParameter(required: Boolean =
 }
 
 fun ChatInputCommandInteraction.getServerQueryPortParameter(): Int? {
-    return command.integers[PARAMETER_NAME]?.let { Math.toIntExact(it) }
+    return command.integers[ServerQueryPortParameter.NAME]?.let { Math.toIntExact(it) }
 }

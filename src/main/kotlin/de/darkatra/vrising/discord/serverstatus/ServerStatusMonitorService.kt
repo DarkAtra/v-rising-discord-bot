@@ -2,6 +2,8 @@ package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.serverstatus.exceptions.InvalidDiscordChannelException
+import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import de.darkatra.vrising.discord.serverstatus.model.Error
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
