@@ -114,8 +114,10 @@ services:
     restart: unless-stopped
 ```
 
-Please note that the container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
-case `/opt/v-rising-discord-bot`.
+> **Note**
+> The container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
+> case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the example above with any valid window path,
+> e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.
 
 ## How to run it yourself without docker
 
