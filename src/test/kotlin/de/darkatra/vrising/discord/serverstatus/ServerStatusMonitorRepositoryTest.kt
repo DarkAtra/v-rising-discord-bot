@@ -1,9 +1,9 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
-import de.darkatra.vrising.discord.ServerStatusMonitorTestUtils
 import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
@@ -74,5 +74,17 @@ class ServerStatusMonitorRepositoryTest {
         }
 
         assertThat(e.message).isEqualTo("Monitor with id '${serverStatusMonitor.id}' was already updated by another thread.")
+    }
+
+    @Test
+    fun `should not insert server status monitor when using updateServerStatusMonitor`() {
+
+        val e = assertThrows<OutdatedServerStatusMonitorException> {
+            serverStatusMonitorRepository.updateServerStatusMonitor(
+                ServerStatusMonitorTestUtils.getServerStatusMonitor(ServerStatusMonitorStatus.ACTIVE)
+            )
+        }
+
+        assertThat(e.message).isEqualTo("Monitor with id '${ServerStatusMonitorTestUtils.ID}' not found.")
     }
 }
