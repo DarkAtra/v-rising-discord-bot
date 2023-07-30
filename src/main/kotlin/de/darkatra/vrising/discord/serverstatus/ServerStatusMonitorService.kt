@@ -2,6 +2,7 @@ package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import de.darkatra.vrising.discord.serverstatus.exceptions.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import de.darkatra.vrising.discord.serverstatus.model.Error
@@ -32,6 +33,7 @@ class ServerStatusMonitorService(
         serverStatusMonitorRepository.getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusMonitor ->
             updateServerStatusMonitor(kord, serverStatusMonitor)
             updatePlayerActivityFeed(kord, serverStatusMonitor)
+            updatePvpKillFeed(kord, serverStatusMonitor)
             try {
                 serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
             } catch (e: OutdatedServerStatusMonitorException) {
@@ -140,6 +142,32 @@ class ServerStatusMonitorService(
             serverStatusMonitor.playerActivityDiscordChannelId = null
         } catch (e: Exception) {
             logger.error("Exception updating the player activity feed of ${serverStatusMonitor.id}", e)
+        }
+    }
+
+    suspend fun updatePvpKillFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+
+        try {
+            val pvpKillFeedDiscordChannelId = serverStatusMonitor.pvpKillFeedDiscordChannelId ?: return
+            val pvpKillFeedChannel = getDiscordChannel(kord, pvpKillFeedDiscordChannelId)
+            val pvpKills = serverInfoResolver.getPvpKills(serverStatusMonitor)
+
+            pvpKills
+                .filter { pvpKill -> pvpKill.occurred.isAfter(serverStatusMonitor.lastUpdated) }
+                .sortedWith(Comparator.comparing(PvpKill::occurred))
+                .forEach { pvpKill ->
+                    pvpKillFeedChannel.createMessage(
+                        "<t:${pvpKill.occurred.epochSecond}>: ${pvpKill.killer.name} (${pvpKill.killer.gearLevel}) killed ${pvpKill.victim.name} (${pvpKill.victim.gearLevel})."
+                    )
+                }
+
+            logger.debug("Successfully updated the pvp kill feed of server monitor: ${serverStatusMonitor.id}")
+
+        } catch (e: InvalidDiscordChannelException) {
+            logger.debug("Disabling pvp kill feed for server monitor '${serverStatusMonitor.id}' because the channel '${e.discordChannelId}' does not seem to exist")
+            serverStatusMonitor.pvpKillFeedDiscordChannelId = null
+        } catch (e: Exception) {
+            logger.error("Exception updating the pvp kill feed of ${serverStatusMonitor.id}", e)
         }
     }
 

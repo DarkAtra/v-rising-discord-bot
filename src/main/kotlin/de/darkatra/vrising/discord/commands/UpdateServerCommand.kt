@@ -5,6 +5,7 @@ import de.darkatra.vrising.discord.commands.parameters.ServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.commands.parameters.addPlayerActivityFeedChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiPortParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
@@ -14,6 +15,7 @@ import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorSta
 import de.darkatra.vrising.discord.commands.parameters.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.getDisplayServerDescriptionParameter
 import de.darkatra.vrising.discord.commands.parameters.getPlayerActivityFeedChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
@@ -58,6 +60,7 @@ class UpdateServerCommand(
             addDisplayPlayerGearLevelParameter(required = false)
 
             addPlayerActivityFeedChannelIdParameter(required = false)
+            addPvpKillFeedChannelIdParameter(required = false)
         }
     }
 
@@ -74,6 +77,7 @@ class UpdateServerCommand(
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
 
         val playerActivityFeedChannelId = interaction.getPlayerActivityFeedChannelIdParameter()
+        val pvpKillFeedChannelId = interaction.getPvpKillFeedChannelIdParameter()
 
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
@@ -111,6 +115,9 @@ class UpdateServerCommand(
         }
         if (playerActivityFeedChannelId != null) {
             serverStatusMonitor.playerActivityDiscordChannelId = determineValueOfNullableStringParameter(playerActivityFeedChannelId)
+        }
+        if (pvpKillFeedChannelId != null) {
+            serverStatusMonitor.pvpKillFeedDiscordChannelId = determineValueOfNullableStringParameter(pvpKillFeedChannelId)
         }
 
         serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
