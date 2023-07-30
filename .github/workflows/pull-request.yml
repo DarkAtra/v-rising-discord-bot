@@ -41,10 +41,10 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - uses: graalvm/setup-graalvm@v1
+      - uses: graalvm/setup-graalvm@v1.0.12
         with:
           java-version: '17'
-          distribution: 'graalvm'
+          # distribution: 'graalvm'
           version: '22.3.2'
           components: 'native-image'
 
