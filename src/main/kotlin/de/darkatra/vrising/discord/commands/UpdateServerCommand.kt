@@ -93,11 +93,8 @@ class UpdateServerCommand(
             serverStatusMonitor.queryPort = queryPort
         }
         if (apiHostname != null) {
-            if (apiHostname == "~") {
-                serverStatusMonitor.apiHostname = null
-            } else {
-                ServerApiHostnameParameter.validate(apiHostname)
-                serverStatusMonitor.apiHostname = apiHostname
+            serverStatusMonitor.apiHostname = determineValueOfNullableStringParameter(apiHostname).also {
+                ServerApiHostnameParameter.validate(it)
             }
         }
         if (apiPort != null) {
@@ -113,17 +110,20 @@ class UpdateServerCommand(
             serverStatusMonitor.displayPlayerGearLevel = displayPlayerGearLevel
         }
         if (playerActivityFeedChannelId != null) {
-            if (apiHostname == "~") {
-                serverStatusMonitor.playerActivityDiscordChannelId = null
-            } else {
-                serverStatusMonitor.playerActivityDiscordChannelId = playerActivityFeedChannelId
-            }
+            serverStatusMonitor.playerActivityDiscordChannelId = determineValueOfNullableStringParameter(playerActivityFeedChannelId)
         }
 
         serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
 
         interaction.deferEphemeralResponse().respond {
             content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take some time until the status message is updated."
+        }
+    }
+
+    private fun determineValueOfNullableStringParameter(value: String): String? {
+        return when (value) {
+            "~" -> null
+            else -> value
         }
     }
 }
