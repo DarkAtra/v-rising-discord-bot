@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.2</version>
         <relativePath/>
     </parent>
 
@@ -32,17 +32,17 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>1.8.22</kotlin.version>
+        <kotlin.version>1.9.0</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.9.0</kord.version>
+        <kord.version>0.10.0</kord.version>
         <agql-source-query.version>1.2.1</agql-source-query.version>
         <java-uuid-generator.version>4.2.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
         <commons-validator.version>1.7</commons-validator.version>
 
         <mockito-kotlin.version>5.0.0</mockito-kotlin.version>
-        <wiremock.version>3.0.0-beta-9</wiremock.version>
+        <wiremock.version>3.0.0-beta-10</wiremock.version>
     </properties>
 
     <dependencies>
