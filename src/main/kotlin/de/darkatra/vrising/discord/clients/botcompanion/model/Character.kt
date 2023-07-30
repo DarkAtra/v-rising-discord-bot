@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.clients.botcompanion.model
 
-data class CharacterResponse(
+data class Character(
     val name: String,
     val gearLevel: Int,
     val clan: String?,

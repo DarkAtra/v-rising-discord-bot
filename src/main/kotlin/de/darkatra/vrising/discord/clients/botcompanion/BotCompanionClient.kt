@@ -1,7 +1,8 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
-import de.darkatra.vrising.discord.clients.botcompanion.model.CharacterResponse
+import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
@@ -21,7 +22,7 @@ class BotCompanionClient {
         .setReadTimeout(Duration.ofSeconds(5))
         .build()
 
-    fun getCharacters(serverHostName: String, serverApiPort: Int): List<CharacterResponse> {
+    fun getCharacters(serverHostName: String, serverApiPort: Int): List<Character> {
 
         val address = InetSocketAddress(serverHostName, serverApiPort)
 
@@ -29,7 +30,7 @@ class BotCompanionClient {
         val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/characters")
 
         return try {
-            restTemplate.getForObject(requestURI, Array<CharacterResponse>::class.java)?.toList() ?: emptyList()
+            restTemplate.getForObject(requestURI, Array<Character>::class.java)?.toList() ?: emptyList()
         } catch (e: RestClientException) {
             logger.warn("Could not resolve characters for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
             emptyList()
@@ -46,7 +47,22 @@ class BotCompanionClient {
         return try {
             restTemplate.getForObject(requestURI, Array<PlayerActivity>::class.java)?.toList() ?: emptyList()
         } catch (e: RestClientException) {
-            logger.warn("Could not resolve player activities for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
+            logger.warn("Could not fetch player activities for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
+            emptyList()
+        }
+    }
+
+    fun getPvpKills(serverHostName: String, serverApiPort: Int): List<PvpKill> {
+
+        val address = InetSocketAddress(serverHostName, serverApiPort)
+
+        @Suppress("HttpUrlsUsage") // the v risings http server does not support https
+        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/pvp-kills")
+
+        return try {
+            restTemplate.getForObject(requestURI, Array<PvpKill>::class.java)?.toList() ?: emptyList()
+        } catch (e: RestClientException) {
+            logger.warn("Could not fetch pvp kills for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
             emptyList()
         }
     }
