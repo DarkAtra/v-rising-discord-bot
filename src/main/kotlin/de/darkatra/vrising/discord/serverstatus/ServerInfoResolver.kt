@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
+import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.clients.serverquery.ServerQueryClient
 import de.darkatra.vrising.discord.serverstatus.model.Player
@@ -42,5 +43,13 @@ class ServerInfoResolver(
             },
             rules = rules
         )
+    }
+
+    suspend fun getPlayerActivities(serverStatusMonitor: ServerStatusMonitor): List<PlayerActivity> {
+
+        return when {
+            serverStatusMonitor.apiEnabled -> botCompanionClient.getPlayerActivities(serverStatusMonitor.apiHostname!!, serverStatusMonitor.apiPort!!)
+            else -> emptyList()
+        }
     }
 }

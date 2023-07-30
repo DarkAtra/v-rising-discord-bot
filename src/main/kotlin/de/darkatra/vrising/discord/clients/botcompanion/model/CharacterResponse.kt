@@ -57,5 +57,8 @@ enum class VBlood(
     CURSED_WITCH("Matka the Curse Weaver"),
     GLOOMROT_RAILGUNSERGEANT("Voltatia the Power Master"),
     BATVAMPIRE("Nightmarshal Styx the Sunderer"),
-    CHURCHOFLIGHT_PALADIN("Solarus the Immaculate")
+    CHURCHOFLIGHT_PALADIN("Solarus the Immaculate"),
+    GLOOMROT_MONSTER("Adam the Firstborn"),
+    CURSED_MOUNTAINBEAST("Gorecrusher the Behemoth"),
+    MANTICORE("The Winged Horror")
 }

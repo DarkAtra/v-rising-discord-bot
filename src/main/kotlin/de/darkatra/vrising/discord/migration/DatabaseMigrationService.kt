@@ -8,6 +8,7 @@ import org.dizitart.no2.util.ObjectUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 @Service
 class DatabaseMigrationService(
@@ -62,6 +63,13 @@ class DatabaseMigrationService(
             documentAction = { document ->
                 document["hostname"] = document["hostName"]
                 document["displayPlayerGearLevel"] = true
+            }
+        ),
+        DatabaseMigration(
+            description = "Set default value for version property.",
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 2) },
+            documentAction = { document ->
+                document["version"] = Instant.now().toEpochMilli()
             }
         )
     )

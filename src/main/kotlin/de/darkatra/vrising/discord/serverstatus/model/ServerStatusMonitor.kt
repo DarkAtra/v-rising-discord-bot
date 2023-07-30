@@ -4,6 +4,7 @@ import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
 import org.dizitart.no2.objects.Index
 import org.dizitart.no2.objects.Indices
+import java.time.Instant
 
 @Indices(
     value = [
@@ -14,41 +15,32 @@ import org.dizitart.no2.objects.Indices
 data class ServerStatusMonitor(
     @Id
     val id: String,
-    val discordServerId: String,
-    val discordChannelId: String,
+    @Deprecated("This field is updated automatically by the ServerStatusMonitorRepository, manually update with caution")
+    var version: Long? = null,
 
-    val hostname: String,
-    val queryPort: Int,
-    val apiHostname: String? = null,
-    val apiPort: Int? = null,
-    val status: ServerStatusMonitorStatus,
+    var discordServerId: String,
+    var discordChannelId: String,
+    var playerActivityDiscordChannelId: String? = null,
 
-    val displayServerDescription: Boolean,
-    val displayPlayerGearLevel: Boolean,
+    var hostname: String,
+    var queryPort: Int,
+    var apiHostname: String? = null,
+    var apiPort: Int? = null,
+    var status: ServerStatusMonitorStatus,
 
-    val currentEmbedMessageId: String? = null,
-    val currentFailedAttempts: Int = 0,
+    var displayServerDescription: Boolean,
+    var displayPlayerGearLevel: Boolean,
 
-    val recentErrors: List<Error> = emptyList()
+    var currentEmbedMessageId: String? = null,
+    var currentFailedAttempts: Int = 0,
+
+    var recentErrors: List<Error> = emptyList()
 ) {
 
-    val apiEnabled = apiHostname != null && apiPort != null
+    val apiEnabled: Boolean
+        get() = apiHostname != null && apiPort != null
 
-    fun builder(): ServerStatusMonitorBuilder {
-        return ServerStatusMonitorBuilder(
-            id = id,
-            discordServerId = discordServerId,
-            discordChannelId = discordChannelId,
-            hostname = hostname,
-            queryPort = queryPort,
-            apiHostname = apiHostname,
-            apiPort = apiPort,
-            status = status,
-            displayServerDescription = displayServerDescription,
-            displayPlayerGearLevel = displayPlayerGearLevel,
-            currentEmbedMessageId = currentEmbedMessageId,
-            currentFailedAttempts = currentFailedAttempts,
-            recentErrors = recentErrors.toMutableList()
-        )
-    }
+    @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
+    val lastUpdated: Instant
+        get() = Instant.ofEpochMilli(version!!)
 }
