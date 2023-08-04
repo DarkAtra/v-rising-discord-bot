@@ -37,9 +37,9 @@ class BotCompanionClient {
         }
     }
 
-    fun getPlayerActivities(serverHostName: String, serverApiPort: Int): List<PlayerActivity> {
+    fun getPlayerActivities(serverApiHostName: String, serverApiPort: Int): List<PlayerActivity> {
 
-        val address = InetSocketAddress(serverHostName, serverApiPort)
+        val address = InetSocketAddress(serverApiHostName, serverApiPort)
 
         @Suppress("HttpUrlsUsage") // the v risings http server does not support https
         val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/player-activities")
@@ -52,9 +52,9 @@ class BotCompanionClient {
         }
     }
 
-    fun getPvpKills(serverHostName: String, serverApiPort: Int): List<PvpKill> {
+    fun getPvpKills(serverApiHostName: String, serverApiPort: Int): List<PvpKill> {
 
-        val address = InetSocketAddress(serverHostName, serverApiPort)
+        val address = InetSocketAddress(serverApiHostName, serverApiPort)
 
         @Suppress("HttpUrlsUsage") // the v risings http server does not support https
         val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/pvp-kills")
