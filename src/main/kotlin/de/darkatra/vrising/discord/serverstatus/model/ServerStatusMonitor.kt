@@ -21,6 +21,7 @@ data class ServerStatusMonitor(
     var discordServerId: String,
     var discordChannelId: String,
     var playerActivityDiscordChannelId: String? = null,
+    var pvpKillFeedDiscordChannelId: String? = null,
 
     var hostname: String,
     var queryPort: Int,

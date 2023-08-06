@@ -120,6 +120,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Pvp Kill Feed Channel Id"
+                    value = serverStatusMonitor.pvpKillFeedDiscordChannelId ?: "-"
+                    inline = true
+                }
+
+                field {
                     name = "Current Embed Message Id"
                     value = serverStatusMonitor.currentEmbedMessageId ?: "-"
                     inline = true
