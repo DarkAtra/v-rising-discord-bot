@@ -81,6 +81,8 @@ Gets all the configuration details for the specified server.
 
 ## [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
+<img alt="Companion Preview" src="./docs/companion-preview.png" width="400"/>
+
 The v-rising-discord-bot is able to fetch additional data about players, such as the gear level, if
 the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) is installed on the v rising server and the api port of that
 server is accessible from where the bot is running. **I highly recommend to not expose the api port to the internet.**
