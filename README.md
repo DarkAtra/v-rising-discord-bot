@@ -135,9 +135,9 @@ services:
 3. Run the application using `java -jar v-rising-discord-bot-<version>.jar`
 4. Profit
 
-If you run the application in a Linux environment, make sure that you use a separate user. Also, ensure that you're using at least Java 17.
+If you run the application in a Linux environment, make sure that you use a separate user.
 This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
-applications working directory by default.
+applications working directory by default. Also, ensure that you're using at least Java 17.
 
 You can change the location of the database file by modifying the `application.yml` slightly:
 
