@@ -106,7 +106,7 @@ version of this bot, remove the `-native` suffix from the `image` name in the ex
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:2.2.0-native
+    image: ghcr.io/darkatra/v-rising-discord-bot:2.5.0-native
     command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
