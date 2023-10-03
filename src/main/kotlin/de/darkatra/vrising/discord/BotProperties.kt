@@ -40,4 +40,6 @@ class BotProperties {
     @field:Min(1)
     @field:NotNull
     var maxCharactersPerError: Int = 200
+
+    var allowLocalAddressRanges: Boolean = true
 }

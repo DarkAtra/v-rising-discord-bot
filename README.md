@@ -68,16 +68,17 @@ Gets all the configuration details for the specified server.
 
 ## Configuration Properties
 
-| Property                       | Type     | Description                                                                                                                      | Default value          |
-|--------------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
-| `bot.discord-bot-token`        | String   | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
-| `bot.database-path`            | Path     | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
-| `bot.database-username`        | String   | The username for the database.                                                                                                   | `v-rising-discord-bot` |
-| `bot.database-password`        | String   | The password for the database.                                                                                                   | `null`                 |
-| `bot.update-delay`             | Duration | The delay between status monitor updates. At least 30 seconds.                                                                   | `1m`                   |
-| `bot.max-failed-attempts`      | Int      | The maximum number of attempts to be made until a server is disabled. Use `0` if you don't want to use this feature.             | `0`                    |
-| `bot.max-recent-errors`        | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `5`                    |
-| `bot.max-characters-per-error` | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `200`                  |
+| Property                         | Type     | Description                                                                                                                      | Default value          |
+|----------------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| `bot.discord-bot-token`          | String   | The token for the discord bot. You can find this in the [discord developer portal](https://discord.com/developers/applications). | `null`                 |
+| `bot.database-path`              | Path     | The path to the database file. Should be overwritten when running inside a docker container.                                     | `./bot.db`             |
+| `bot.database-username`          | String   | The username for the database.                                                                                                   | `v-rising-discord-bot` |
+| `bot.database-password`          | String   | The password for the database.                                                                                                   | `null`                 |
+| `bot.update-delay`               | Duration | The delay between status monitor updates. At least 30 seconds.                                                                   | `1m`                   |
+| `bot.max-failed-attempts`        | Int      | The maximum number of attempts to be made until a server is disabled. Use `0` if you don't want to use this feature.             | `0`                    |
+| `bot.max-recent-errors`          | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `5`                    |
+| `bot.max-characters-per-error`   | Int      | The maximum number of errors to keep for debugging via `/get-server-details`. Use `0` if you don't want to use this feature.     | `200`                  |
+| `bot.allow-local-address-ranges` | Boolean  | Whether or not addresses from reserved ip ranges are permitted when adding or updating status monitors.                          | `true`                 |
 
 ## [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
