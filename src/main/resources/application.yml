@@ -19,3 +19,4 @@ bot:
   max-failed-attempts: 0
   max-recent-errors: 5
   max-characters-per-error: 200
+  allow-local-address-ranges: true

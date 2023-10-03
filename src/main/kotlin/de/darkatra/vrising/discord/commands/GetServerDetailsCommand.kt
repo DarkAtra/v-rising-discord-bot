@@ -9,10 +9,12 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.message.modify.embed
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 
 @Component
+@EnableConfigurationProperties(BotProperties::class)
 class GetServerDetailsCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
     private val botProperties: BotProperties

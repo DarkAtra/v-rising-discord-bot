@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.commands
 
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.commands.parameters.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.ServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
@@ -27,11 +28,14 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
+@EnableConfigurationProperties(BotProperties::class)
 class UpdateServerCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
+    private val botProperties: BotProperties
 ) : Command {
 
     private val name: String = "update-server"
@@ -90,7 +94,7 @@ class UpdateServerCommand(
         }
 
         if (hostname != null) {
-            ServerHostnameParameter.validate(hostname)
+            ServerHostnameParameter.validate(hostname, botProperties.allowLocalAddressRanges)
             serverStatusMonitor.hostname = hostname
         }
         if (queryPort != null) {
@@ -98,7 +102,7 @@ class UpdateServerCommand(
         }
         if (apiHostname != null) {
             serverStatusMonitor.apiHostname = determineValueOfNullableStringParameter(apiHostname).also {
-                ServerApiHostnameParameter.validate(it)
+                ServerApiHostnameParameter.validate(it, botProperties.allowLocalAddressRanges)
             }
         }
         if (apiPort != null) {

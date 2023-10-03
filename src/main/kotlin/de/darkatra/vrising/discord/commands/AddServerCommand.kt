@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord.commands
 
 import com.fasterxml.uuid.Generators
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.commands.parameters.ServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.ServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
@@ -26,11 +27,14 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
+@EnableConfigurationProperties(BotProperties::class)
 class AddServerCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
+    private val botProperties: BotProperties
 ) : Command {
 
     private val name: String = "add-server"
@@ -77,8 +81,8 @@ class AddServerCommand(
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
         val channelId = interaction.channelId
 
-        ServerHostnameParameter.validate(hostname)
-        ServerApiHostnameParameter.validate(apiHostname)
+        ServerHostnameParameter.validate(hostname, botProperties.allowLocalAddressRanges)
+        ServerApiHostnameParameter.validate(apiHostname, botProperties.allowLocalAddressRanges)
 
         val serverStatusMonitorId = Generators.timeBasedGenerator().generate()
         serverStatusMonitorRepository.addServerStatusMonitor(
