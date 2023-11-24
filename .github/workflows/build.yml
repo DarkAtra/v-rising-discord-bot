@@ -58,8 +58,7 @@ jobs:
       - uses: graalvm/setup-graalvm@v1.1.5
         with:
           java-version: '17'
-          # distribution: 'graalvm'
-          version: '22.3.2'
+          distribution: 'graalvm'
           components: 'native-image'
 
       - name: Run tests
