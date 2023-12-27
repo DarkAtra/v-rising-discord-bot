@@ -13,7 +13,6 @@ We use GitHub issues to track bugs and enhancements.
 
 * If you have a general usage question please ask on [Discord](https://discord.gg/KcMcYKa6Nt).
 * If you are reporting a bug, please help to speed up problem diagnosis by providing as much information as possible.
-  Ideally, that would include a small sample project that reproduces the issue.
 
 ## Code Conventions and Housekeeping
 
