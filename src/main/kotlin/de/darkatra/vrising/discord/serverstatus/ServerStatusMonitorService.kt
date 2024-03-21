@@ -15,7 +15,7 @@ import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.edit
 import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.rest.builder.message.EmbedBuilder
-import dev.kord.rest.builder.message.modify.embed
+import dev.kord.rest.builder.message.embed
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
