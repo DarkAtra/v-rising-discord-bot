@@ -16,8 +16,6 @@ import dev.kord.core.cache.data.ThreadMemberData
 import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
 import dev.kord.core.cache.data.WebhookData
-import io.ktor.network.selector.InterestSuspensionsMap
-import io.ktor.utils.io.pool.DefaultPool
 import org.dizitart.no2.Document
 import org.dizitart.no2.Index
 import org.dizitart.no2.NitriteId
@@ -90,8 +88,5 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType(StickerPackData::class.java)
             // required by kotlin coroutines (dependency of kord)
             .registerType(TypeReference.of("kotlin.internal.jdk8.JDK8PlatformImplementations"), MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
-            // required by ktor (dependency of kord)
-            .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(InterestSuspensionsMap::class.java, MemberCategory.DECLARED_FIELDS)
     }
 }

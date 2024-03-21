@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.3</version>
         <relativePath/>
     </parent>
 
@@ -32,17 +32,17 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>1.9.21</kotlin.version>
+        <kotlin.version>1.9.23</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.12.0</kord.version>
-        <agql-source-query.version>1.2.1</agql-source-query.version>
-        <java-uuid-generator.version>4.3.0</java-uuid-generator.version>
+        <kord.version>0.13.1</kord.version>
+        <agql-source-query.version>1.2.2</agql-source-query.version>
+        <java-uuid-generator.version>5.0.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
-        <commons-validator.version>1.7</commons-validator.version>
+        <commons-validator.version>1.8.0</commons-validator.version>
 
-        <mockito-kotlin.version>5.1.0</mockito-kotlin.version>
-        <wiremock.version>3.3.1</wiremock.version>
+        <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
+        <wiremock.version>3.4.2</wiremock.version>
     </properties>
 
     <dependencies>
@@ -188,7 +188,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
+                        <builder>paketobuildpacks/builder-jammy-tiny:0.0.237</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                         </env>
