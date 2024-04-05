@@ -86,6 +86,19 @@ class BotPropertiesTest {
         assertThat(result).hasSize(1)
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = ["", "  ", "\t"])
+    fun `should be invalid if adminUserIds contains blank string`(adminUserId: String) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.adminUserIds = setOf(adminUserId)
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
     private fun getValidBotProperties(): BotProperties {
         return BotProperties().apply {
             discordBotToken = "discord-token"
@@ -94,6 +107,7 @@ class BotPropertiesTest {
             databasePassword = "password"
             updateDelay = Duration.ofSeconds(30)
             maxFailedAttempts = 5
+            adminUserIds = setOf("test-admin-id")
         }
     }
 }

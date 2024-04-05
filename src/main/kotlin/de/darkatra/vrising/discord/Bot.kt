@@ -65,7 +65,7 @@ class Bot(
 
         kord.on<ChatInputCommandInteractionCreateEvent> {
 
-            val command = commands.find { command -> command.isSupported(interaction) }
+            val command = commands.find { command -> command.isSupported(interaction, botProperties.adminUserIds) }
             if (command == null) {
                 interaction.deferEphemeralResponse().respond {
                     content = """This command is not supported here, please refer to the documentation.

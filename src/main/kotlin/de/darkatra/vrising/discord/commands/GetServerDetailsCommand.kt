@@ -7,6 +7,7 @@ import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.message.modify.embed
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -41,9 +42,12 @@ class GetServerDetailsCommand(
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
-        val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val serverStatusMonitor = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
+        val serverStatusMonitor = when (interaction) {
+            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, interaction.guildId.toString())
+            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId)
+        }
+
         if (serverStatusMonitor == null) {
             interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
