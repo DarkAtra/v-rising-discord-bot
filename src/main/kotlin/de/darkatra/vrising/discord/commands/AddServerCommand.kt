@@ -26,6 +26,7 @@ import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
@@ -63,6 +64,13 @@ class AddServerCommand(
             addPlayerActivityFeedChannelIdParameter(required = false)
             addPvpKillFeedChannelIdParameter(required = false)
         }
+    }
+
+    override fun isSupported(interaction: ChatInputCommandInteraction, adminUserIds: Set<String>): Boolean {
+        if (interaction is GlobalChatInputCommandInteraction) {
+            return false
+        }
+        return super.isSupported(interaction, adminUserIds)
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {

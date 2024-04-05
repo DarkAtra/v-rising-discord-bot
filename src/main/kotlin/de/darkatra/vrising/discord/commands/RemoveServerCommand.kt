@@ -6,12 +6,13 @@ import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import org.springframework.stereotype.Component
 
 @Component
 class RemoveServerCommand(
-    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
+    private val serverStatusMonitorRepository: ServerStatusMonitorRepository
 ) : Command {
 
     private val name: String = "remove-server"
@@ -25,7 +26,7 @@ class RemoveServerCommand(
             name = name,
             description = description
         ) {
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerStatusMonitorIdParameter()
@@ -35,9 +36,15 @@ class RemoveServerCommand(
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
-        val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
-        val wasSuccessful = serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
+        val wasSuccessful = when (interaction) {
+            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.removeServerStatusMonitor(
+                serverStatusMonitorId,
+                interaction.guildId.toString()
+            )
+
+            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitorId)
+        }
 
         interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {
