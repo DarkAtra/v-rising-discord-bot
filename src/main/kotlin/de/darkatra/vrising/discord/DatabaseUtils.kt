@@ -3,12 +3,9 @@ package de.darkatra.vrising.discord
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.objects.ObjectFilter
 
-operator fun ObjectFilter?.plus(other: ObjectFilter?): ObjectFilter? {
-    if (this == null && other == null) {
-        return null
+operator fun ObjectFilter.plus(other: ObjectFilter?): ObjectFilter {
+    if (other == null) {
+        return this
     }
-    if (this != null && other != null) {
-        return this.and(other)
-    }
-    return this ?: other
+    return this.and(other)
 }

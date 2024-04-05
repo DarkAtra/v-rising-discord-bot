@@ -41,5 +41,9 @@ class BotProperties {
     @field:NotNull
     var maxCharactersPerError: Int = 200
 
+    @field:NotNull
     var allowLocalAddressRanges: Boolean = true
+
+    @field:NotNull
+    var adminUserIds: Set<@NotBlank String> = emptySet()
 }

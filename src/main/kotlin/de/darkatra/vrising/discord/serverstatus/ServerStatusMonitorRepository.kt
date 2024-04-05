@@ -43,26 +43,39 @@ class ServerStatusMonitorRepository(
         repository.update(updateVersion(serverStatusMonitor))
     }
 
-    fun removeServerStatusMonitor(id: String, discordServerId: String): Boolean {
-        return repository.remove(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).affectedCount > 0
+    fun removeServerStatusMonitor(id: String, discordServerId: String? = null): Boolean {
+        var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
+
+        if (discordServerId != null) {
+            objectFilter += ObjectFilters.eq("discordServerId", discordServerId)
+        }
+
+        return repository.remove(objectFilter).affectedCount > 0
     }
 
-    fun getServerStatusMonitor(id: String, discordServerId: String): ServerStatusMonitor? {
-        return repository.find(ObjectFilters.eq("id", id).and(ObjectFilters.eq("discordServerId", discordServerId))).firstOrNull()
+    fun getServerStatusMonitor(id: String, discordServerId: String? = null): ServerStatusMonitor? {
+
+        var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
+
+        if (discordServerId != null) {
+            objectFilter += ObjectFilters.eq("discordServerId", discordServerId)
+        }
+
+        return repository.find(objectFilter).firstOrNull()
     }
 
     fun getServerStatusMonitors(discordServerId: String? = null, status: ServerStatusMonitorStatus? = null): List<ServerStatusMonitor> {
 
-        var objectFilter: ObjectFilter? = null
-
-        // apply filters
-        if (discordServerId != null) {
-            objectFilter = ObjectFilters.eq("discordServerId", discordServerId)
+        val filters = buildList<ObjectFilter> {
+            if (discordServerId != null) {
+                add(ObjectFilters.eq("discordServerId", discordServerId))
+            }
+            if (status != null) {
+                add(ObjectFilters.eq("status", status))
+            }
         }
-        if (status != null) {
-            objectFilter += ObjectFilters.eq("status", status)
-        }
 
+        val objectFilter = filters.reduceOrNull { acc: ObjectFilter, objectFilter: ObjectFilter -> acc.and(objectFilter) }
         return when {
             objectFilter != null -> repository.find(objectFilter).toList()
             else -> repository.find().toList()

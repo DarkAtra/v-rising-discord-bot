@@ -27,6 +27,7 @@ import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
@@ -49,7 +50,7 @@ class UpdateServerCommand(
             name = name,
             description = description
         ) {
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerStatusMonitorIdParameter()
@@ -83,9 +84,11 @@ class UpdateServerCommand(
         val playerActivityFeedChannelId = interaction.getPlayerActivityFeedChannelIdParameter()
         val pvpKillFeedChannelId = interaction.getPvpKillFeedChannelIdParameter()
 
-        val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
+        val serverStatusMonitor = when (interaction) {
+            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, interaction.guildId.toString())
+            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId)
+        }
 
-        val serverStatusMonitor = serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, discordServerId.toString())
         if (serverStatusMonitor == null) {
             interaction.deferEphemeralResponse().respond {
                 content = "No server with id '$serverStatusMonitorId' was found."
