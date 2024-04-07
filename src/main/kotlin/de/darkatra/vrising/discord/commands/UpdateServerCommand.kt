@@ -50,7 +50,7 @@ class UpdateServerCommand(
             name = name,
             description = description
         ) {
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerStatusMonitorIdParameter()

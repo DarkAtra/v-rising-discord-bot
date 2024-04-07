@@ -28,7 +28,7 @@ class ListServersCommand(
             name = name,
             description = description
         ) {
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
         }
     }

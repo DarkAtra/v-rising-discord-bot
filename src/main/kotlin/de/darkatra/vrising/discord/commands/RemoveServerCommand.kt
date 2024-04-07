@@ -26,7 +26,7 @@ class RemoveServerCommand(
             name = name,
             description = description
         ) {
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerStatusMonitorIdParameter()
