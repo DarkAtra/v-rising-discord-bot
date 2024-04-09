@@ -3,7 +3,9 @@ package de.darkatra.vrising.discord.serverstatus
 import de.darkatra.vrising.discord.serverstatus.model.ServerInfo
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
+import kotlinx.datetime.toKotlinInstant
 import java.lang.String.CASE_INSENSITIVE_ORDER
+import java.time.Instant
 
 object ServerStatusEmbed {
 
@@ -79,6 +81,8 @@ object ServerStatusEmbed {
                         }
                     }
             }
+
+            timestamp = Instant.now().toKotlinInstant()
         }
     }
 }
