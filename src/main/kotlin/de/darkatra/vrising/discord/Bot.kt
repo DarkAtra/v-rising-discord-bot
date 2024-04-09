@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import org.dizitart.no2.Nitrite
+import org.slf4j.LoggerFactory
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.ApplicationArguments
@@ -52,6 +53,8 @@ class Bot(
     private val serverStatusMonitorService: ServerStatusMonitorService
 ) : ApplicationRunner, DisposableBean, SchedulingConfigurer {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     private var isReady = AtomicBoolean(false)
     private lateinit var kord: Kord
 
@@ -77,8 +80,14 @@ class Bot(
             try {
                 command.handle(interaction)
             } catch (e: BotException) {
+                logger.error("Could not perform command '${command.getCommandName()}'.", e)
                 interaction.deferEphemeralResponse().respond {
                     content = "Could not perform command. Cause: ${e.message}"
+                }
+            } catch (t: Throwable) {
+                logger.error("An unexpected error occurred.", t)
+                interaction.deferEphemeralResponse().respond {
+                    content = "An unexpected error occurred."
                 }
             }
         }

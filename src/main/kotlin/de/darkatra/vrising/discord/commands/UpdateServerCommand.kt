@@ -29,6 +29,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
+import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
@@ -38,6 +39,8 @@ class UpdateServerCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
     private val botProperties: BotProperties
 ) : Command {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     private val name: String = "update-server"
     private val description: String = "Updates the given server status monitor."
@@ -128,6 +131,8 @@ class UpdateServerCommand(
         }
 
         serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
+
+        logger.info("Successfully updated monitor with id '${serverStatusMonitorId}'.")
 
         interaction.deferEphemeralResponse().respond {
             content = "Updated server status monitor with id '${serverStatusMonitorId}'. It may take some time until the status message is updated."
