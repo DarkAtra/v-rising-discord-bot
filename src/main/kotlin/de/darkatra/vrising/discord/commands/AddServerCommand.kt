@@ -28,6 +28,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
+import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
@@ -37,6 +38,8 @@ class AddServerCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
     private val botProperties: BotProperties
 ) : Command {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     private val name: String = "add-server"
     private val description: String = "Adds a server to the status monitor."
@@ -109,6 +112,8 @@ class AddServerCommand(
                 displayPlayerGearLevel = displayPlayerGearLevel,
             )
         )
+
+        logger.info("Successfully added monitor with id '${serverStatusMonitorId}' for '${hostname}:${queryPort}' to channel '$channelId'.")
 
         interaction.deferEphemeralResponse().respond {
             content = """Added monitor with id '${serverStatusMonitorId}' for '${hostname}:${queryPort}' to channel '$channelId'.

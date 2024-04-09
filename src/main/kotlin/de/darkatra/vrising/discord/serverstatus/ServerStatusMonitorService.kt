@@ -101,7 +101,7 @@ class ServerStatusMonitorService(
             }
 
             if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
-                logger.debug("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
+                logger.warn("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
                 serverStatusMonitor.status = ServerStatusMonitorStatus.INACTIVE
 
                 val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
