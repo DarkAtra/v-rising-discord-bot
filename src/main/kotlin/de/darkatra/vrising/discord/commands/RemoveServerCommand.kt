@@ -8,12 +8,15 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class RemoveServerCommand(
     private val serverStatusMonitorRepository: ServerStatusMonitorRepository
 ) : Command {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     private val name: String = "remove-server"
     private val description: String = "Removes a server from the status monitor."
@@ -45,6 +48,8 @@ class RemoveServerCommand(
 
             is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitorId)
         }
+
+        logger.info("Successfully removed monitor with id '${serverStatusMonitorId}'.")
 
         interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {
