@@ -36,8 +36,8 @@ class ServerStatusEmbedTest {
         assertThat(fieldByName(embedBuilder, "Days running").value).isEqualTo(ServerInfoTestUtils.DAYS_RUNNING.toString())
         assertThat(fieldByName(embedBuilder, "Online players").value).isEqualTo("**Atra**")
         assertThat(embedBuilder.timestamp).isNotNull
-        assertThat(embedBuilder.timestamp!!.toJavaInstant()).isAfter(timestampBeforeEmbed)
-        assertThat(embedBuilder.timestamp!!.toJavaInstant()).isBefore(timestampAfterEmbed)
+        assertThat(embedBuilder.timestamp!!.toJavaInstant()).isAfterOrEqualTo(timestampBeforeEmbed)
+        assertThat(embedBuilder.timestamp!!.toJavaInstant()).isBeforeOrEqualTo(timestampAfterEmbed)
     }
 
     private fun fieldByName(embedBuilder: EmbedBuilder, fieldName: String): EmbedBuilder.Field {
