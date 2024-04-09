@@ -35,7 +35,9 @@
                         "path": "target/v-rising-discord-bot-*.jar",
                         "label": "v-rising-discord-bot-${nextRelease.version}.jar"
                     }
-                ]
+                ],
+                "successComment": false,
+                "releasedLabels": false
             }
         ]
     ]
