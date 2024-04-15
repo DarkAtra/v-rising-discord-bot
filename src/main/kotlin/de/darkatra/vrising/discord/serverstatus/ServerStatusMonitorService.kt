@@ -100,6 +100,14 @@ class ServerStatusMonitorService(
                     }
             }
 
+            if (serverStatusMonitor.currentEmbedMessageId == null && serverStatusMonitor.currentFailedAttempts == 1) {
+                val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
+                channel.createMessage(
+                    """The status check for your status monitor '${serverStatusMonitor.id}' failed.
+                        |Please check the detailed error message using the get-server-details command.""".trimMargin()
+                )
+            }
+
             if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
                 logger.warn("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
                 serverStatusMonitor.status = ServerStatusMonitorStatus.INACTIVE

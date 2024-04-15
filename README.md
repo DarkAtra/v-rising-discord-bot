@@ -61,9 +61,11 @@ bot:
 
 ### Using the bot as a service
 
-Since most people were having issues hosting the bot, i decided to provide it as a free service going forward.
+Since most people were having issues hosting the bot, I decided to provide it as a free service going forward.
 Feel free to invite the bot to your discord server and use it as you please: https://discord.com/oauth2/authorize?client_id=982682186207592470.
 Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for you.
+
+If your server is unreachable for more than 180 attempts, with 1 attempt per minute, your status monitor is automatically deactivated.
 
 > **Disclaimer**
 > This service is provided to the best of my ability. I can not guarantee that the bot is available 24/7.
