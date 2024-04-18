@@ -9,14 +9,3 @@ logging:
     com.ibasco.agql: warn
 
 version: @project.version@
-
-bot:
-  discord-bot-token: ~
-  database-path: ./bot.db
-  database-username: v-rising-discord-bot
-  database-password: ~
-  update-delay: 1m
-  max-failed-attempts: 0
-  max-recent-errors: 5
-  max-characters-per-error: 200
-  allow-local-address-ranges: true

@@ -42,7 +42,15 @@ class ServerStatusMonitorService(
         }
     }
 
-    suspend fun updateServerStatusMonitor(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+    suspend fun cleanupInactiveServerStatusMonitors(kord: Kord) {
+        val inactiveServerStatusMonitors = serverStatusMonitorRepository.getServerStatusMonitors(status = ServerStatusMonitorStatus.INACTIVE)
+        inactiveServerStatusMonitors.forEach { serverStatusMonitor ->
+            serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitor.id)
+        }
+        logger.info("Successfully removed ${inactiveServerStatusMonitors.count()} inactive server status monitors.")
+    }
+
+    private suspend fun updateServerStatusMonitor(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
 
         try {
             val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
@@ -123,7 +131,7 @@ class ServerStatusMonitorService(
         }
     }
 
-    suspend fun updatePlayerActivityFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+    private suspend fun updatePlayerActivityFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
 
         try {
             val playerActivityDiscordChannelId = serverStatusMonitor.playerActivityDiscordChannelId ?: return
@@ -153,7 +161,7 @@ class ServerStatusMonitorService(
         }
     }
 
-    suspend fun updatePvpKillFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+    private suspend fun updatePvpKillFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
 
         try {
             val pvpKillFeedDiscordChannelId = serverStatusMonitor.pvpKillFeedDiscordChannelId ?: return

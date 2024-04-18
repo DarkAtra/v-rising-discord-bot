@@ -17,17 +17,17 @@ class BotProperties {
     lateinit var discordBotToken: String
 
     @field:NotNull
-    lateinit var databasePath: Path
+    var databasePath: Path = Path.of("./bot.db")
 
     @field:NotBlank
-    lateinit var databaseUsername: String
+    var databaseUsername: String = "v-rising-discord-bot"
 
     @field:NotBlank
     lateinit var databasePassword: String
 
     @field:NotNull
     @field:DurationMin(seconds = 30)
-    lateinit var updateDelay: Duration
+    var updateDelay: Duration = Duration.ofMinutes(1)
 
     @field:Min(0)
     @field:NotNull
@@ -46,4 +46,7 @@ class BotProperties {
 
     @field:NotNull
     var adminUserIds: Set<@NotBlank String> = emptySet()
+
+    @field:NotNull
+    var cleanupJobEnabled: Boolean = false
 }
