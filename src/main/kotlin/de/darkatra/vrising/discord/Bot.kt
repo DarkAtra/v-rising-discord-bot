@@ -28,9 +28,12 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.SchedulingConfigurer
+import org.springframework.scheduling.config.CronTask
 import org.springframework.scheduling.config.IntervalTask
 import org.springframework.scheduling.config.ScheduledTaskRegistrar
+import org.springframework.scheduling.support.CronTrigger
 import java.time.Duration
+import java.time.ZoneOffset
 import java.util.concurrent.atomic.AtomicBoolean
 
 @EnableScheduling
@@ -112,13 +115,34 @@ class Bot(
     }
 
     override fun configureTasks(taskRegistrar: ScheduledTaskRegistrar) {
-        taskRegistrar.addFixedDelayTask(IntervalTask({
-            if (isReady.get() && kord.isActive) {
-                runBlocking {
-                    serverStatusMonitorService.updateServerStatusMonitors(kord)
-                }
-            }
-        }, botProperties.updateDelay, Duration.ofSeconds(5)))
+        taskRegistrar.addFixedDelayTask(
+            IntervalTask(
+                {
+                    if (isReady.get() && kord.isActive) {
+                        runBlocking {
+                            serverStatusMonitorService.updateServerStatusMonitors(kord)
+                        }
+                    }
+                },
+                botProperties.updateDelay,
+                Duration.ofSeconds(5)
+            )
+        )
+
+        if (botProperties.cleanupJobEnabled) {
+            taskRegistrar.addCronTask(
+                CronTask(
+                    {
+                        if (isReady.get() && kord.isActive) {
+                            runBlocking {
+                                serverStatusMonitorService.cleanupInactiveServerStatusMonitors(kord)
+                            }
+                        }
+                    },
+                    CronTrigger("0 0 0 * * *", ZoneOffset.UTC)
+                )
+            )
+        }
     }
 }
 

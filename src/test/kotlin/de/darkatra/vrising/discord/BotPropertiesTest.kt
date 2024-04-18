@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.nio.file.Path
 import java.time.Duration
 
 class BotPropertiesTest {
@@ -74,8 +73,21 @@ class BotPropertiesTest {
     }
 
     @ParameterizedTest
+    @ValueSource(ints = [0, 1, 5])
+    fun `should be valid if maxFailedAttempts is positive or zero`(maxFailedAttempts: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxFailedAttempts = maxFailedAttempts
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
+    }
+
+    @ParameterizedTest
     @ValueSource(ints = [-99, -1])
-    fun `should be invalid if maxFailedAttempts is below 1`(maxFailedAttempts: Int) {
+    fun `should be invalid if maxFailedAttempts is negative`(maxFailedAttempts: Int) {
 
         val botProperties = getValidBotProperties().apply {
             this.maxFailedAttempts = maxFailedAttempts
@@ -84,6 +96,70 @@ class BotPropertiesTest {
         val result = validator.validate(botProperties)
 
         assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 5])
+    fun `should be valid if maxRecentErrors is positive or zero`(maxRecentErrors: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxRecentErrors = maxRecentErrors
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [-99, -1])
+    fun `should be invalid if maxRecentErrors is negative`(maxRecentErrors: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxRecentErrors = maxRecentErrors
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [1, 200])
+    fun `should be valid if maxCharactersPerError is positive`(maxCharactersPerError: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxCharactersPerError = maxCharactersPerError
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [-99, -1, 0])
+    fun `should be invalid if maxCharactersPerError is negative or zero`(maxCharactersPerError: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxCharactersPerError = maxCharactersPerError
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @Test
+    fun `should be valid with adminUserIds`() {
+
+        val botProperties = getValidBotProperties().apply {
+            this.adminUserIds = setOf("test-admin-id")
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
     }
 
     @ParameterizedTest
@@ -102,12 +178,7 @@ class BotPropertiesTest {
     private fun getValidBotProperties(): BotProperties {
         return BotProperties().apply {
             discordBotToken = "discord-token"
-            databasePath = Path.of("test.db")
-            databaseUsername = "username"
             databasePassword = "password"
-            updateDelay = Duration.ofSeconds(30)
-            maxFailedAttempts = 5
-            adminUserIds = setOf("test-admin-id")
         }
     }
 }
