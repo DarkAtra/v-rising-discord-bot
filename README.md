@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
 ```
 
-> **Note**
+> [!NOTE]
 > The container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
 > case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the example above with any valid window path,
 > e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.
@@ -67,7 +67,7 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
 
 If your server is unreachable for more than 180 attempts, with 1 attempt per minute, your status monitor is automatically deactivated.
 
-> **Disclaimer**
+> [!NOTE]
 > This service is provided to the best of my ability. I can not guarantee that the bot is available 24/7.
 > I also reserve the right to prohibit you from using the bot at any time if there is any suspicion of misuse.
 
@@ -167,7 +167,7 @@ The v-rising-discord-bot is able to fetch additional data about players, such as
 the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) is installed on the v rising server and the api port of that
 server is accessible from where the bot is running. **I highly recommend to not expose the api port to the internet.**
 
-> **Note**
+> [!NOTE]
 > You're required to host the bot yourself in order to use the v-rising-discord-bot-companion.
 
 ### Enabling the v-rising-discord-bot-companion integration
