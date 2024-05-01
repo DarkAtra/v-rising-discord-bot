@@ -8,7 +8,9 @@ import de.darkatra.vrising.discord.commands.parameters.addDisplayServerDescripti
 import de.darkatra.vrising.discord.commands.parameters.addPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
@@ -18,7 +20,9 @@ import de.darkatra.vrising.discord.commands.parameters.getDisplayServerDescripti
 import de.darkatra.vrising.discord.commands.parameters.getPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
@@ -60,8 +64,12 @@ class UpdateServerCommand(
 
             addServerHostnameParameter(required = false)
             addServerQueryPortParameter(required = false)
+
             addServerApiHostnameParameter(required = false)
             addServerApiPortParameter(required = false)
+            addServerApiUsernameParameter(required = false)
+            addServerApiPasswordParameter(required = false)
+
             addServerStatusMonitorStatusParameter(required = false)
 
             addDisplayServerDescriptionParameter(required = false)
@@ -77,8 +85,12 @@ class UpdateServerCommand(
         val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
         val hostname = interaction.getServerHostnameParameter()
         val queryPort = interaction.getServerQueryPortParameter()
+
         val apiHostname = interaction.getServerApiHostnameParameter()
         val apiPort = interaction.getServerApiPortParameter()
+        val apiUsername = interaction.getServerApiUsernameParameter()
+        val apiPassword = interaction.getServerApiPasswordParameter()
+
         val status = interaction.getServerStatusMonitorStatusParameter()
 
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter()
@@ -113,6 +125,12 @@ class UpdateServerCommand(
         }
         if (apiPort != null) {
             serverStatusMonitor.apiPort = if (apiPort == -1) null else apiPort
+        }
+        if (apiUsername != null) {
+            serverStatusMonitor.apiUsername = determineValueOfNullableStringParameter(apiUsername)
+        }
+        if (apiPassword != null) {
+            serverStatusMonitor.apiPassword = determineValueOfNullableStringParameter(apiPassword)
         }
         if (status != null) {
             serverStatusMonitor.status = status
