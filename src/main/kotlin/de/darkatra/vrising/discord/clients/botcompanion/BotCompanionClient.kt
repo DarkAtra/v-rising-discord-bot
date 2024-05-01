@@ -5,6 +5,7 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
@@ -17,53 +18,54 @@ class BotCompanionClient {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val restTemplate: RestTemplate = RestTemplateBuilder()
-        .setConnectTimeout(Duration.ofSeconds(5))
-        .setReadTimeout(Duration.ofSeconds(5))
-        .build()
+    fun getCharacters(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): List<Character> {
 
-    fun getCharacters(serverHostName: String, serverApiPort: Int): List<Character> {
-
-        val address = InetSocketAddress(serverHostName, serverApiPort)
-
-        @Suppress("HttpUrlsUsage") // the v risings http server does not support https
-        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/characters")
+        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
 
         return try {
-            restTemplate.getForObject(requestURI, Array<Character>::class.java)?.toList() ?: emptyList()
+            restTemplate.getForObject("/characters", Array<Character>::class.java)?.toList() ?: emptyList()
         } catch (e: RestClientException) {
-            logger.warn("Could not resolve characters for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
+            logger.warn("Could not resolve characters for '${serverApiHostName}:${serverApiPort}'. Falling back to an empty list.", e)
             emptyList()
         }
     }
 
-    fun getPlayerActivities(serverApiHostName: String, serverApiPort: Int): List<PlayerActivity> {
+    fun getPlayerActivities(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): List<PlayerActivity> {
 
-        val address = InetSocketAddress(serverApiHostName, serverApiPort)
-
-        @Suppress("HttpUrlsUsage") // the v risings http server does not support https
-        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/player-activities")
+        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
 
         return try {
-            restTemplate.getForObject(requestURI, Array<PlayerActivity>::class.java)?.toList() ?: emptyList()
+            restTemplate.getForObject("/player-activities", Array<PlayerActivity>::class.java)?.toList() ?: emptyList()
         } catch (e: RestClientException) {
-            logger.warn("Could not fetch player activities for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
+            logger.warn("Could not fetch player activities for '${serverApiHostName}:${serverApiPort}'. Falling back to an empty list.", e)
             emptyList()
         }
     }
 
-    fun getPvpKills(serverApiHostName: String, serverApiPort: Int): List<PvpKill> {
+    fun getPvpKills(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): List<PvpKill> {
+
+        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
+
+        return try {
+            restTemplate.getForObject("/pvp-kills", Array<PvpKill>::class.java)?.toList() ?: emptyList()
+        } catch (e: RestClientException) {
+            logger.warn("Could not fetch pvp kills for '${serverApiHostName}:${serverApiPort}'. Falling back to an empty list.", e)
+            emptyList()
+        }
+    }
+
+    private fun getRestTemplate(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): RestTemplate {
 
         val address = InetSocketAddress(serverApiHostName, serverApiPort)
 
         @Suppress("HttpUrlsUsage") // the v risings http server does not support https
-        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot/pvp-kills")
+        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot")
 
-        return try {
-            restTemplate.getForObject(requestURI, Array<PvpKill>::class.java)?.toList() ?: emptyList()
-        } catch (e: RestClientException) {
-            logger.warn("Could not fetch pvp kills for '${address.hostString}:${address.port}'. Falling back to an empty list.", e)
-            emptyList()
-        }
+        return RestTemplateBuilder()
+            .setConnectTimeout(Duration.ofSeconds(5))
+            .setReadTimeout(Duration.ofSeconds(5))
+            .rootUri(requestURI.toString())
+            .interceptors(interceptors)
+            .build()
     }
 }

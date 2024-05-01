@@ -9,7 +9,9 @@ import de.darkatra.vrising.discord.commands.parameters.addDisplayServerDescripti
 import de.darkatra.vrising.discord.commands.parameters.addPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getDisplayPlayerGearLevelParameter
@@ -17,7 +19,9 @@ import de.darkatra.vrising.discord.commands.parameters.getDisplayServerDescripti
 import de.darkatra.vrising.discord.commands.parameters.getPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
@@ -58,8 +62,11 @@ class AddServerCommand(
 
             addServerHostnameParameter()
             addServerQueryPortParameter()
+
             addServerApiHostnameParameter(required = false)
             addServerApiPortParameter(required = false)
+            addServerApiUsernameParameter(required = false)
+            addServerApiPasswordParameter(required = false)
 
             addDisplayServerDescriptionParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
@@ -80,8 +87,11 @@ class AddServerCommand(
 
         val hostname = interaction.getServerHostnameParameter()!!
         val queryPort = interaction.getServerQueryPortParameter()!!
+
         val apiHostname = interaction.getServerApiHostnameParameter()
         val apiPort = interaction.getServerApiPortParameter()
+        val apiUsername = interaction.getServerApiUsernameParameter()
+        val apiPassword = interaction.getServerApiPasswordParameter()
 
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: true
@@ -107,6 +117,8 @@ class AddServerCommand(
                 queryPort = queryPort,
                 apiHostname = apiHostname,
                 apiPort = apiPort,
+                apiUsername = apiUsername,
+                apiPassword = apiPassword,
                 status = ServerStatusMonitorStatus.ACTIVE,
                 displayServerDescription = displayServerDescription,
                 displayPlayerGearLevel = displayPlayerGearLevel,

@@ -25,8 +25,12 @@ data class ServerStatusMonitor(
 
     var hostname: String,
     var queryPort: Int,
+
     var apiHostname: String? = null,
     var apiPort: Int? = null,
+    var apiUsername: String? = null,
+    var apiPassword: String? = null,
+
     var status: ServerStatusMonitorStatus,
 
     var displayServerDescription: Boolean,

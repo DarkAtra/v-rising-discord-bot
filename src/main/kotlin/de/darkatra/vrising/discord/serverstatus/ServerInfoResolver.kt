@@ -8,6 +8,8 @@ import de.darkatra.vrising.discord.clients.serverquery.ServerQueryClient
 import de.darkatra.vrising.discord.serverstatus.model.Player
 import de.darkatra.vrising.discord.serverstatus.model.ServerInfo
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +24,12 @@ class ServerInfoResolver(
         val players = serverQueryClient.getPlayerList(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
         val rules = serverQueryClient.getRules(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
         val characters = when {
-            serverStatusMonitor.apiEnabled -> botCompanionClient.getCharacters(serverStatusMonitor.apiHostname!!, serverStatusMonitor.apiPort!!)
+            serverStatusMonitor.apiEnabled -> botCompanionClient.getCharacters(
+                serverStatusMonitor.apiHostname!!,
+                serverStatusMonitor.apiPort!!,
+                getInterceptors(serverStatusMonitor)
+            )
+
             else -> emptyList()
         }
 
@@ -49,7 +56,12 @@ class ServerInfoResolver(
     suspend fun getPlayerActivities(serverStatusMonitor: ServerStatusMonitor): List<PlayerActivity> {
 
         return when {
-            serverStatusMonitor.apiEnabled -> botCompanionClient.getPlayerActivities(serverStatusMonitor.apiHostname!!, serverStatusMonitor.apiPort!!)
+            serverStatusMonitor.apiEnabled -> botCompanionClient.getPlayerActivities(
+                serverStatusMonitor.apiHostname!!,
+                serverStatusMonitor.apiPort!!,
+                getInterceptors(serverStatusMonitor)
+            )
+
             else -> emptyList()
         }
     }
@@ -57,8 +69,23 @@ class ServerInfoResolver(
     suspend fun getPvpKills(serverStatusMonitor: ServerStatusMonitor): List<PvpKill> {
 
         return when {
-            serverStatusMonitor.apiEnabled -> botCompanionClient.getPvpKills(serverStatusMonitor.apiHostname!!, serverStatusMonitor.apiPort!!)
+            serverStatusMonitor.apiEnabled -> botCompanionClient.getPvpKills(
+                serverStatusMonitor.apiHostname!!,
+                serverStatusMonitor.apiPort!!,
+                getInterceptors(serverStatusMonitor)
+            )
+
             else -> emptyList()
+        }
+    }
+
+    private fun getInterceptors(serverStatusMonitor: ServerStatusMonitor): List<ClientHttpRequestInterceptor> {
+
+        val (_, _, _, _, _, _, _, _, _, _, apiUsername, apiPassword, _, _, _, _, _, _) = serverStatusMonitor
+
+        return when (apiUsername != null && apiPassword != null) {
+            true -> listOf(BasicAuthenticationInterceptor(apiUsername, apiPassword))
+            false -> emptyList()
         }
     }
 }
