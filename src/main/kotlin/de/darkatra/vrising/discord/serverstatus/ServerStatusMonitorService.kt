@@ -91,7 +91,7 @@ class ServerStatusMonitorService(
             serverStatusMonitor.status = ServerStatusMonitorStatus.INACTIVE
         } catch (e: Exception) {
 
-            logger.error("Exception fetching the status of ${serverStatusMonitor.id}", e)
+            logger.error("Exception fetching the status of '${serverStatusMonitor.id}'", e)
             serverStatusMonitor.currentFailedAttempts += 1
 
             if (botProperties.maxRecentErrors > 0) {
@@ -108,25 +108,30 @@ class ServerStatusMonitorService(
                     }
             }
 
-            if (serverStatusMonitor.currentEmbedMessageId == null && serverStatusMonitor.currentFailedAttempts == 1) {
-                val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
-                channel.createMessage(
-                    """The status check for your status monitor '${serverStatusMonitor.id}' failed.
+            try {
+
+                if (serverStatusMonitor.currentEmbedMessageId == null && serverStatusMonitor.currentFailedAttempts == 1) {
+                    val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
+                    channel.createMessage(
+                        """The status check for your status monitor '${serverStatusMonitor.id}' failed.
                         |Please check the detailed error message using the get-server-details command.""".trimMargin()
-                )
-            }
+                    )
+                }
 
-            if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
-                logger.warn("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
-                serverStatusMonitor.status = ServerStatusMonitorStatus.INACTIVE
+                if (botProperties.maxFailedAttempts != 0 && serverStatusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
+                    logger.warn("Disabling server monitor '${serverStatusMonitor.id}' because it exceeded the max failed attempts.")
+                    serverStatusMonitor.status = ServerStatusMonitorStatus.INACTIVE
 
-                val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
-                channel.createMessage(
-                    """Disabled server status monitor '${serverStatusMonitor.id}' because the server did not
+                    val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
+                    channel.createMessage(
+                        """Disabled server status monitor '${serverStatusMonitor.id}' because the server did not
                         |respond after ${botProperties.maxFailedAttempts} attempts.
                         |Please make sure the server is running and is accessible from the internet to use this bot.
                         |You can re-enable the server status monitor with the update-server command.""".trimMargin()
-                )
+                    )
+                }
+            } catch (e: Exception) {
+                logger.error("Could not post status message for monitor '${serverStatusMonitor.id}'", e)
             }
         }
     }
