@@ -83,7 +83,8 @@ class BotCompanionClientTest {
                                 "clan": "Test",
                                 "killedVBloods": [
                                   "FOREST_WOLF",
-                                  "BANDIT_STONEBREAKER"
+                                  "BANDIT_STONEBREAKER",
+                                  "DRACULA"
                                 ]
                               }
                             ]""".trimIndent()
@@ -102,7 +103,7 @@ class BotCompanionClientTest {
         assertThat(character.name).isEqualTo("Atra")
         assertThat(character.gearLevel).isEqualTo(83)
         assertThat(character.clan).isEqualTo("Test")
-        assertThat(character.killedVBloods).containsExactlyInAnyOrder(VBlood.FOREST_WOLF, VBlood.BANDIT_STONEBREAKER)
+        assertThat(character.killedVBloods).containsExactlyInAnyOrder(VBlood.FOREST_WOLF, VBlood.BANDIT_STONEBREAKER, VBlood.DRACULA)
     }
 
     @Test
