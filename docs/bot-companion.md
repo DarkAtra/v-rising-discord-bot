@@ -12,7 +12,7 @@ the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discor
 server is accessible from where the bot is running.
 
 {: .warning }
-> **I highly recommend not exposing the api port to the internet in an unprotected manner.**
+> I highly recommend not exposing the api port to the internet in an unprotected manner.
 
 ## Enabling the v-rising-discord-bot-companion integration
 
