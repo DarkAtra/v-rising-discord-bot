@@ -52,6 +52,10 @@ class ServerStatusMonitorService(
 
     private suspend fun updateServerStatusMonitor(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
 
+        if (!serverStatusMonitor.embedEnabled) {
+            return
+        }
+
         try {
             val channel = getDiscordChannel(kord, serverStatusMonitor.discordChannelId)
             val serverInfo = serverInfoResolver.getServerInfo(serverStatusMonitor)
@@ -138,6 +142,10 @@ class ServerStatusMonitorService(
 
     private suspend fun updatePlayerActivityFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
 
+        if (!serverStatusMonitor.apiEnabled) {
+            return
+        }
+
         try {
             val playerActivityDiscordChannelId = serverStatusMonitor.playerActivityDiscordChannelId ?: return
             val playerActivityChannel = getDiscordChannel(kord, playerActivityDiscordChannelId)
@@ -167,6 +175,10 @@ class ServerStatusMonitorService(
     }
 
     private suspend fun updatePvpKillFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
+
+        if (!serverStatusMonitor.apiEnabled) {
+            return
+        }
 
         try {
             val pvpKillFeedDiscordChannelId = serverStatusMonitor.pvpKillFeedDiscordChannelId ?: return

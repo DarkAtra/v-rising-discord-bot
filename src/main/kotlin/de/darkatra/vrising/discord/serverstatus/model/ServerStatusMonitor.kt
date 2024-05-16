@@ -33,6 +33,7 @@ data class ServerStatusMonitor(
 
     var status: ServerStatusMonitorStatus,
 
+    var embedEnabled: Boolean = true,
     var displayServerDescription: Boolean,
     var displayPlayerGearLevel: Boolean,
 

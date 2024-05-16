@@ -71,6 +71,13 @@ class DatabaseMigrationService(
             documentAction = { document ->
                 document["version"] = Instant.now().toEpochMilli()
             }
+        ),
+        DatabaseMigration(
+            description = "Make it possible to disable the discord embed and only use the activity or kill feed.",
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 8) },
+            documentAction = { document ->
+                document["embedEnabled"] = true
+            }
         )
     )
 

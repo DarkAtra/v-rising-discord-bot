@@ -72,6 +72,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Status"
+                    value = serverStatusMonitor.status.name
+                    inline = true
+                }
+
+                field {
                     name = "Api Hostname"
                     value = when (serverStatusMonitor.apiHostname != null) {
                         true -> "${serverStatusMonitor.apiHostname}"
@@ -90,6 +96,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Embed Enabled"
+                    value = "${serverStatusMonitor.embedEnabled}"
+                    inline = true
+                }
+
+                field {
                     name = "Display Server Description"
                     value = "${serverStatusMonitor.displayServerDescription}"
                     inline = true
@@ -98,12 +110,6 @@ class GetServerDetailsCommand(
                 field {
                     name = "Display Player Gear Level"
                     value = "${serverStatusMonitor.displayPlayerGearLevel}"
-                    inline = true
-                }
-
-                field {
-                    name = "Status"
-                    value = serverStatusMonitor.status.name
                     inline = true
                 }
 
@@ -140,6 +146,12 @@ class GetServerDetailsCommand(
                 field {
                     name = "Current Failed Attempts"
                     value = "${serverStatusMonitor.currentFailedAttempts}"
+                    inline = true
+                }
+
+                field {
+                    name = "Last Update Attempt"
+                    value = "<t:${serverStatusMonitor.lastUpdated.epochSecond}:R>"
                     inline = true
                 }
 
