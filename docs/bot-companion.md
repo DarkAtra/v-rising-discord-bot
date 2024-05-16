@@ -11,7 +11,7 @@ The bot is able to fetch additional data about players, such as the gear level, 
 the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) is installed on the v rising server and the api port of that
 server is accessible from where the bot is running.
 
-> [!WARNING]
+{: .warning }
 > **I highly recommend not exposing the api port to the internet in an unprotected manner.**
 
 ## Enabling the v-rising-discord-bot-companion integration

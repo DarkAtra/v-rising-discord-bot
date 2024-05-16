@@ -5,7 +5,7 @@ nav_order: 3
 
 # Self-hosting the bot
 
-> [!WARNING]
+{: .warning }
 > I only recommend self-hosting the bot if you are experienced in running and maintaining software.
 
 You have two options for running the bot, using docker and running on bare metal. I generally recommend running it as a docker container as it reduces the
@@ -16,7 +16,7 @@ maintenance effort and simplifies the configuration on your end.
 Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot).
 You can also build it from scratch by cloning the repository and then running `mvn clean package spring-boot:build-image`.
 
-> [!NOTE]
+{: .note }
 > There are two docker images available. The docker image with the `-native` suffix is a highly optimized version of the bot that runs with a lower
 > memory footprint as it does not require a JVM. The image was generated using GraalVM and currently only supports the `x64` architecture.
 > I generally recommend you to use that version if you can.
@@ -39,7 +39,7 @@ services:
 ```
 [//]: # (@formatter:on)
 
-> [!NOTE]
+{: .note }
 > The container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
 > case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the example above with any valid window path,
 > e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.

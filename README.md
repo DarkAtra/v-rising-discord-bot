@@ -6,4 +6,4 @@ This bot allows you to display some information about your v rising server on di
 
 <img alt="Preview" src="docs/assets/preview.png" width="400"/>
 
-[Refer to the documentation for details on how to use the bot.](docs/index.md)
+[Refer to the documentation for details on how to use the bot.](https://darkatra.github.io/v-rising-discord-bot/)
