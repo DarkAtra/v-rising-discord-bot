@@ -5,7 +5,7 @@ nav_order: 1
 
 # V Rising Discord Bot
 
-Welcome to the documentation for V Rising Discord Bot.
+Welcome to the documentation for the [v-rising-discord-bot](https://github.com/DarkAtra/v-rising-discord-bot).
 The bot allows you to display some information about your v rising server on discord.
 
 This is what an embed looks like:
