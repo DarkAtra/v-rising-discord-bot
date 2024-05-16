@@ -150,6 +150,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Last Update Attempt"
+                    value = "<t:${serverStatusMonitor.lastUpdated.epochSecond}:R>"
+                    inline = true
+                }
+
+                field {
                     name = "Most recent Errors"
                     value = when (serverStatusMonitor.recentErrors.isEmpty()) {
                         true -> "-"
