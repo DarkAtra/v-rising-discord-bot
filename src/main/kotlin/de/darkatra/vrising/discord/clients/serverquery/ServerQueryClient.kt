@@ -40,3 +40,8 @@ class ServerQueryClient : DisposableBean {
         client.close()
     }
 }
+
+fun main() {
+    // https://www.battlemetrics.com/servers/vrising/27556679
+    ServerQueryClient().getServerInfo("185.200.246.67", 9877)
+}
