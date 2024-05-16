@@ -6,6 +6,7 @@ import de.darkatra.vrising.discord.commands.parameters.ServerApiHostnameParamete
 import de.darkatra.vrising.discord.commands.parameters.ServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.addDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.commands.parameters.addEmbedEnabledParameter
 import de.darkatra.vrising.discord.commands.parameters.addPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiHostnameParameter
@@ -16,6 +17,7 @@ import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParamete
 import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.getDisplayServerDescriptionParameter
+import de.darkatra.vrising.discord.commands.parameters.getEmbedEnabledParameter
 import de.darkatra.vrising.discord.commands.parameters.getPlayerActivityFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getPvpKillFeedChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
@@ -68,6 +70,7 @@ class AddServerCommand(
             addServerApiUsernameParameter(required = false)
             addServerApiPasswordParameter(required = false)
 
+            addEmbedEnabledParameter(required = false)
             addDisplayServerDescriptionParameter(required = false)
             addDisplayPlayerGearLevelParameter(required = false)
 
@@ -93,6 +96,7 @@ class AddServerCommand(
         val apiUsername = interaction.getServerApiUsernameParameter()
         val apiPassword = interaction.getServerApiPasswordParameter()
 
+        val embedEnabled = interaction.getEmbedEnabledParameter() ?: true
         val displayServerDescription = interaction.getDisplayServerDescriptionParameter() ?: true
         val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter() ?: true
 
@@ -120,6 +124,7 @@ class AddServerCommand(
                 apiUsername = apiUsername,
                 apiPassword = apiPassword,
                 status = ServerStatusMonitorStatus.ACTIVE,
+                embedEnabled = embedEnabled,
                 displayServerDescription = displayServerDescription,
                 displayPlayerGearLevel = displayPlayerGearLevel,
             )

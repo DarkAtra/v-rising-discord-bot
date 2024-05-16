@@ -47,16 +47,17 @@ class DatabaseMigrationServiceTest {
         repository.insert(Schema(appVersion = "V1.8.0"))
         repository.insert(Schema(appVersion = "V2.2.0"))
         repository.insert(Schema(appVersion = "V2.3.0"))
+        repository.insert(Schema(appVersion = "V2.9.0"))
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
-            appVersionFromPom = "2.3.0"
+            appVersionFromPom = "2.9.0"
         )
 
         assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse()
 
         val schemas = repository.find().toList()
-        assertThat(schemas).hasSize(6)
+        assertThat(schemas).hasSize(7)
     }
 
     @Test
@@ -67,7 +68,7 @@ class DatabaseMigrationServiceTest {
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
-            appVersionFromPom = "2.2.0"
+            appVersionFromPom = "2.9.0"
         )
 
         val oldCollection = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor")
@@ -90,6 +91,7 @@ class DatabaseMigrationServiceTest {
         val migratedDocument = newCollection.find().first()
         assertThat(migratedDocument["hostname"]).isEqualTo(migratedDocument["hostName"])
         assertThat(migratedDocument["displayPlayerGearLevel"]).isEqualTo(true)
+        assertThat(migratedDocument["embedEnabled"]).isEqualTo(true)
 
         val schemas = repository.find().toList()
         assertThat(schemas).hasSize(2)
