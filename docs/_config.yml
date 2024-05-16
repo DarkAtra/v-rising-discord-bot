@@ -16,7 +16,7 @@ description: The documentation for the V Rising Discord Bot.
 
 gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub."
-gh_edit_repository: "https://github.com/DarkAtra/v-rising-discord-bot"
+gh_edit_repository: "https://github.com/DarkAtra/v-rising-discord-bot/docs"
 gh_edit_branch: "main"
 gh_edit_view_mode: "edit"
 
@@ -37,4 +37,4 @@ callouts:
     color: red
   note:
     title: Note
-    color: purple
+    color: blue
