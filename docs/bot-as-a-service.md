@@ -10,7 +10,7 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
 
 ## Setup Guide
 
-1. [Invite the bot to your discord server](https://discord.com/oauth2/authorize?client_id=982682186207592470)
+1. [Invite Jarvis (the bot) to your discord server](https://discord.com/oauth2/authorize?client_id=982682186207592470).
 2. Create a new channel that is dedicated for the status embed.
 3. Restrict the permissions for the new channel so that members of your server can read messages but can not post anything in there.
    This includes the following permissions:
