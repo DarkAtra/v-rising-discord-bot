@@ -49,13 +49,11 @@ services:
 1. Install a Java Virtual Machine. You'll need at least Java 17.
 2. Find the latest jar [here](https://github.com/DarkAtra/v-rising-discord-bot/releases) or build the application yourself using `mvn clean verify`
 3. Copy the jar file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
-   [//]: # (@formatter:off)
    ```yaml
    bot:
      discord-bot-token: <your-discord-bot-token>
      database-password: <the-database-password>
    ```
-   [//]: # (@formatter:on)
 4. Run the application using `java -jar v-rising-discord-bot-<version>.jar`
 
 If you run the application in a Linux environment, make sure that you use a separate user.
