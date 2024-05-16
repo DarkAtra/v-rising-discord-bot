@@ -75,7 +75,7 @@ bot:
 
 ## Discord Commands
 
-Refer to [the commands documentation](./commands.md) for a list of all available discord commands.
+Refer to [the commands documentation](commands.md) for a list of all available discord commands.
 
 ## Required Discord Permissions
 

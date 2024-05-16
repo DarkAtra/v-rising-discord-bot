@@ -36,7 +36,7 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
 {: .note }
 > If no status embed appears after 2 minutes, use the `/get-server-details` command with the id that `Jarvis` gave you in step 7.
 > This will give you a detailed error message of what went wrong. In most cases, it simply means that the `IP Address` or `Query Port` are incorrect.
-> You can always change them using the `/update-server` command. Feel free to check [the commands documentation](./commands.md) for details.
+> You can always change them using the `/update-server` command. Feel free to check [the commands documentation](commands.md) for details.
 
 ## Support
 
