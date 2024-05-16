@@ -1,6 +1,6 @@
 # Self-hosting the bot
 
-> ![WARNING]
+> [!WARNING]
 > I only recommend self-hosting the bot if you are experienced in running and maintaining software.
 
 You have two options for running the bot, using docker and running on bare metal. I generally recommend running it as a docker container as it reduces the
