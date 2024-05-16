@@ -1,3 +1,8 @@
+---
+title: Introduction
+nav_order: 1
+---
+
 # V Rising Discord Bot
 
 Welcome to the documentation for V Rising Discord Bot.
