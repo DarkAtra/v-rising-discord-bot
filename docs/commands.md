@@ -1,3 +1,8 @@
+---
+title: Discord Commands
+nav_order: 4
+---
+
 # Discord Commands
 
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific by default.

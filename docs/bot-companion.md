@@ -1,4 +1,9 @@
-## [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
+---
+title: Bot companion integration
+nav_order: 5
+---
+
+# [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
 <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
 
@@ -9,7 +14,7 @@ server is accessible from where the bot is running.
 > [!WARNING]
 > **I highly recommend not exposing the api port to the internet in an unprotected manner.**
 
-### Enabling the v-rising-discord-bot-companion integration
+## Enabling the v-rising-discord-bot-companion integration
 
 1. Update your v-rising-discord-bot to [the latest version](https://github.com/DarkAtra/v-rising-discord-bot/releases).
 2. [Install the v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion#installing-this-bepinex-plugin-on-your-v-rising-server)

@@ -1,3 +1,8 @@
+---
+title: Using the bot as a service
+nav_order: 2
+---
+
 # Using the bot as a service
 
 I decided to provide the bot as a free service going forward. Feel free

@@ -1,3 +1,8 @@
+---
+title: Configuration Properties
+nav_order: 6
+---
+
 # Configuration Properties
 
 | Property                         | Type        | Description                                                                                                                                                                                                                                                                                                                     | Default value          |
