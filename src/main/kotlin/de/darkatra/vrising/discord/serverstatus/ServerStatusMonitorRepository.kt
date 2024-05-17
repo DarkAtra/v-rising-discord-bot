@@ -5,6 +5,7 @@ import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusM
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import org.dizitart.kno2.filters.and
+import org.dizitart.no2.FindOptions
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.ObjectFilter
 import org.dizitart.no2.objects.filters.ObjectFilters
@@ -64,21 +65,48 @@ class ServerStatusMonitorRepository(
         return repository.find(objectFilter).firstOrNull()
     }
 
-    fun getServerStatusMonitors(discordServerId: String? = null, status: ServerStatusMonitorStatus? = null): List<ServerStatusMonitor> {
+    fun getServerStatusMonitors(
+        discordServerId: String? = null,
+        status: ServerStatusMonitorStatus? = null,
+        offset: Int? = null,
+        limit: Int? = null
+    ): List<ServerStatusMonitor> {
 
-        val filters = buildList<ObjectFilter> {
+        val objectFilter = buildList<ObjectFilter> {
             if (discordServerId != null) {
                 add(ObjectFilters.eq("discordServerId", discordServerId))
             }
             if (status != null) {
                 add(ObjectFilters.eq("status", status))
             }
+        }.reduceOrNull { acc: ObjectFilter, objectFilter: ObjectFilter -> acc.and(objectFilter) }
+
+        if (offset != null && limit != null) {
+
+            if (offset >= repository.size()) {
+                return emptyList()
+            }
+
+            val findOptions = FindOptions.limit(offset, limit)
+            return when {
+                objectFilter != null -> repository.find(objectFilter, findOptions).toList()
+                else -> repository.find(findOptions).toList()
+            }
         }
 
-        val objectFilter = filters.reduceOrNull { acc: ObjectFilter, objectFilter: ObjectFilter -> acc.and(objectFilter) }
         return when {
             objectFilter != null -> repository.find(objectFilter).toList()
             else -> repository.find().toList()
+        }
+    }
+
+    fun count(
+        discordServerId: String? = null,
+    ): Int {
+
+        return when {
+            discordServerId != null -> repository.find(ObjectFilters.eq("discordServerId", discordServerId)).size()
+            else -> repository.find().size()
         }
     }
 
