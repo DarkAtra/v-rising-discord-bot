@@ -8,12 +8,16 @@ nav_order: 4
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific by default.
 All optional command parameters can be reset by passing `~` as an argument.
 
-### `/list-servers`
+## `/list-servers`
 
 Lists all server status monitors.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-### `/add-server`
+| Parameter | Description                        | Required | Default value |
+|-----------|------------------------------------|----------|---------------|
+| `page`    | The page to request. Zero indexed. | `false`  | `0`           |
+
+## `/add-server`
 
 Adds a server to the status monitor.
 
@@ -31,7 +35,7 @@ Adds a server to the status monitor.
 | `player-activity-feed-channel-id` | The id of the channel to post the player activity feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                       | `false`  | `null`        |
 | `pvp-kill-feed-channel-id`        | The id of the channel to post the pvp kill feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set. Requires at least version `0.4.0` of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
 
-### `/update-server`
+## `/update-server`
 
 Updates the given server status monitor. Only parameters specified are updated, all other parameters remain unchanged.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -52,7 +56,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | `player-activity-feed-channel-id` | The id of the channel to post the player activity feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                       | `false`  | `null`        |
 | `pvp-kill-feed-channel-id`        | The id of the channel to post the pvp kill feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set. Requires at least version `0.4.0` of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
 
-### `/remove-server`
+## `/remove-server`
 
 Removes a server from the status monitor.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -61,7 +65,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 |----------------------------|------------------------------------------------|----------|---------------|
 | `server-status-monitor-id` | The id of the server status monitor to remove. | `true`   | `null`        |
 
-### `/get-server-details`
+## `/get-server-details`
 
 Gets all the configuration details for the specified server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
