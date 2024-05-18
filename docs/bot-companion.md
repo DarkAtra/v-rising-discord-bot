@@ -5,16 +5,14 @@ nav_order: 5
 
 # [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
-<img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
+{: .warning }
+> Please note, that modding support for 1.0 is still in its early stages and things are expected to break! Use this mod in production at your own risk.
 
 The bot companion is a server-side mod that allows the bot to fetch additional data about players, such as the gear level.
 It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
 
 {: .warning }
 > I highly recommend not exposing the api port to the internet in an unprotected manner.
-
-{: .warning }
-> Please note, that modding support for 1.0 is still in its early stages and things are expected to break! Use this mod in production at your own risk.
 
 ## Setup Guide
 
@@ -34,11 +32,22 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
    **It is not recommended to expose the api port to the internet in an unprotected manner.**
 5. Start the V Rising server and test if the mod works as expect by running the following command in your
    terminal: `curl http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200` as soon as the server has fully started.
-6. Install the latest version of the discord bot: https://github.com/DarkAtra/v-rising-discord-bot/releases.
-    * **Tip**: You can find the current docker image here: https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot
-7. Use the `/update-server` command to update the status monitor. For example, if the V Rising server and the discord bot are
-   hosted on the same machine, set `server-api-hostname` to `localhost` and `server-api-port` to `25570` if you used the above `ServerHostSettings.json`.
-8. You should now see the additional data the next time the discord embed is updated.
+
+### Connecting the bot companion to the discord bot
+
+1. Make sure you're using the latest version of the discord bot: https://github.com/DarkAtra/v-rising-discord-bot/releases.
+    * **Tip**: You can also find the current docker image here: https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot
+2. Use the `/update-server` command to update the status monitor and set both `server-api-hostname` and `server-api-port`.
+   If the V Rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost` and `server-api-port`
+   to `25570` if you used the above `ServerHostSettings.json`.
+3. You should see the gear level for each player in the status embed the next time it is updated.
+
+### Enabling the activity or kill feed
+
+1. Use the `/update-server` command to update the status monitor and set `player-activity-feed-channel-id` to the id of the discord channel you want the
+   activity feed to appear in. You can do the same for the kill feed by setting `pvp-kill-feed-channel-id`.
+2. The bot will now post a message whenever a player joins or leaves the server or whenever someone was killed in a PvP battle. It looks something like this:
+   <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
 
 ## Endpoints
 
