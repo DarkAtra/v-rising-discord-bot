@@ -29,7 +29,8 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
      "BindPort": 25570
    }
    ```
-   **It is not recommended to expose the api port to the internet in an unprotected manner.**
+   **It is not recommended to expose the api port to the internet in an unprotected manner.** Consider protecting the api port using a reverse proxy that
+   supports basic authentication or firewall rule.
 5. Start the V Rising server and test if the mod works as expect by running the following command in your
    terminal: `curl http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200` as soon as the server has fully started.
 
