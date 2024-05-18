@@ -7,19 +7,121 @@ nav_order: 5
 
 <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
 
-The bot is able to fetch additional data about players, such as the gear level, if
-the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) is installed on the v rising server and the api port of that
-server is accessible from where the bot is running.
+The bot companion is a server-side mod that allows the bot to fetch additional data about players, such as the gear level.
+It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
 
 {: .warning }
 > I highly recommend not exposing the api port to the internet in an unprotected manner.
 
-## Enabling the v-rising-discord-bot-companion integration
+{: .warning }
+> Please note, that modding support for 1.0 is still in its early stages and things are expected to break! Use this mod in production at your own risk.
 
-1. Update your v-rising-discord-bot to [the latest version](https://github.com/DarkAtra/v-rising-discord-bot/releases).
-2. [Install the v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion#installing-this-bepinex-plugin-on-your-v-rising-server)
-   on your V Rising Server.
-3. Update the configuration of your v rising server using the `/update-server` discord command. You should be able to set both the `server-api-hostname` and
-   the `server-api-port`. **It is not recommended to expose the api port to the internet in an unprotected manner.** Ensure that the api port is accessible only
-   by the bot.
-4. You should now see the additional data the next time the discord embed is updated (once every minute by default).
+## Setup Guide
+
+1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases/tag/1.690.2) on your V Rising server.
+2. Download the [v-rising-discord-bot-companion.dll](https://github.com/DarkAtra/v-rising-discord-bot-companion/releases/tag/v0.5.2)
+    * **or** clone [this repo](https://github.com/DarkAtra/v-rising-discord-bot-companion) and build it via `dotnet build`. This
+      requires [dotnet 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+3. Move the `v-rising-discord-bot-companion.dll` to the BepInExp plugin folder. You will also need
+   the [Bloodstone.dll](https://github.com/decaprime/Bloodstone/releases/tag/v0.2.1).
+4. Enable the servers api port by adding the following to your `ServerHostSettings.json`:
+   ```
+   "API": {
+     "Enabled": true,
+     "BindPort": 25570
+   }
+   ```
+   **It is not recommended to expose the api port to the internet in an unprotected manner.**
+5. Start the V Rising server and test if the mod works as expect by running the following command in your
+   terminal: `curl http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200` as soon as the server has fully started.
+6. Install the latest version of the discord bot: https://github.com/DarkAtra/v-rising-discord-bot/releases.
+    * **Tip**: You can find the current docker image here: https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot
+7. Use the `/update-server` command to update the status monitor. For example, if the V Rising server and the discord bot are
+   hosted on the same machine, set `server-api-hostname` to `localhost` and `server-api-port` to `25570` if you used the above `ServerHostSettings.json`.
+8. You should now see the additional data the next time the discord embed is updated.
+
+## Endpoints
+
+### `/v-rising-discord-bot/characters`
+
+Returns information about all characters that exist on the server.
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+[
+  {
+    "name": "Atra",
+    "gearLevel": 83,
+    "clan": "Test",
+    "killedVBloods": [
+      "FOREST_WOLF",
+      "BANDIT_STONEBREAKER"
+    ]
+  },
+  {
+    "name": "Socium",
+    "gearLevel": 84,
+    "killedVBloods": []
+  }
+]
+```
+
+### `/v-rising-discord-bot/player-activities`
+
+Returns a list of connect and disconnect events for the last 10 minutes.
+
+Note that this is not persistent across server restarts.
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+[
+  {
+    "type": "CONNECTED",
+    "playerName": "Atra",
+    "occurred": "2023-01-01T00:00:00Z"
+  },
+  {
+    "type": "DISCONNECTED",
+    "playerName": "Atra",
+    "occurred": "2023-01-01T01:00:00Z"
+  }
+]
+```
+
+### `/v-rising-discord-bot/pvp-kills`
+
+Returns the most recent pvp kills.
+
+Note that this is not persistent across server restarts.
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+[
+  {
+    "killer": {
+      "name": "Atra",
+      "gearLevel": 71
+    },
+    "victim": {
+      "name": "Testi",
+      "gearLevel": 11
+    },
+    "occurred": "2023-01-01T00:00:00Z"
+  }
+]
+```
