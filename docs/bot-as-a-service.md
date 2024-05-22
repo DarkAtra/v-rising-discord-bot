@@ -27,11 +27,12 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
     * `Embed Links`
     * `Manage Messages`
     * `Read Message History`
-5. Find the `IP Address` and `Query Port` of your V Rising server. [Battlemetrics](https://www.battlemetrics.com/servers/vrising) might come in handy here.
-6. Navigate to the channel that you created in step 2 and use the `/add-server` command. Discord will ask you for a `server-hostname` and `server-query-port`.
+5. Ensure that `ListOnSteam` in `ServerHostSettings.json` is set to `true`. This is required for the status embed to work.
+6. Find the `IP Address` and `Query Port` of your V Rising server. [Battlemetrics](https://www.battlemetrics.com/servers/vrising) might come in handy here.
+7. Navigate to the channel that you created in step 2 and use the `/add-server` command. Discord will ask you for a `server-hostname` and `server-query-port`.
    This is where you enter the `IP Address` and `Query Port` that you determined in the previous step.
-7. `Jarvis` will respond with a message telling you that you've successfully added your first status monitor for your V Rising server.
-8. Now you only need to wait a minute for the status display to appear.
+8. `Jarvis` will respond with a message telling you that you've successfully added your first status monitor for your V Rising server.
+9. Now you only need to wait a minute for the status display to appear.
 
 {: .note }
 > If no status embed appears after 2 minutes, use the `/get-server-details` command with the id that `Jarvis` gave you in step 7.
