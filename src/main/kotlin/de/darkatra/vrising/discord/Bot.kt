@@ -2,6 +2,8 @@ package de.darkatra.vrising.discord
 
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
+import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.migration.Schema
@@ -46,7 +48,11 @@ import java.util.concurrent.atomic.AtomicBoolean
     ServerStatusMonitor::class,
     Error::class,
     Character::class,
-    PlayerActivity::class
+    VBlood::class,
+    PlayerActivity::class,
+    PlayerActivity.Type::class,
+    PvpKill::class,
+    PvpKill.Player::class
 )
 class Bot(
     private val database: Nitrite,
