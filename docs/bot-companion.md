@@ -36,8 +36,8 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 
 ### Connecting the bot companion to the discord bot
 
-1. Make sure you're using the latest version of the discord bot: https://github.com/DarkAtra/v-rising-discord-bot/releases.
-    * **Tip**: You can also find the current docker image here: https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot
+1. Make sure you're using [the latest version](https://github.com/DarkAtra/v-rising-discord-bot/releases) of the discord bot.
+   * **Tip**: You can also find the current docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot)
 2. Use the `/update-server` command to update the status monitor and set both `server-api-hostname` and `server-api-port`.
    If the V Rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost` and `server-api-port`
    to `25570` if you used the above `ServerHostSettings.json`.
