@@ -16,12 +16,12 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 
 ## Setup Guide
 
-1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases/tag/1.690.2) on your V Rising server.
-2. Download the [v-rising-discord-bot-companion.dll](https://github.com/DarkAtra/v-rising-discord-bot-companion/releases/tag/v0.5.2)
+1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases) on your V Rising server.
+2. Download the [v-rising-discord-bot-companion.dll](https://github.com/DarkAtra/v-rising-discord-bot-companion/releases)
     * **or** clone [this repo](https://github.com/DarkAtra/v-rising-discord-bot-companion) and build it via `dotnet build`. This
       requires [dotnet 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 3. Move the `v-rising-discord-bot-companion.dll` to the BepInExp plugin folder. You will also need
-   the [Bloodstone.dll](https://github.com/decaprime/Bloodstone/releases/tag/v0.2.1).
+   the [Bloodstone.dll](https://github.com/decaprime/Bloodstone/releases).
 4. Enable the servers api port by adding the following to your `ServerHostSettings.json`:
    ```
    "API": {
