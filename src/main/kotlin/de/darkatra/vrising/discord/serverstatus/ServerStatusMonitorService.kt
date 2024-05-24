@@ -19,6 +19,7 @@ import dev.kord.rest.builder.message.modify.embed
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Service
 class ServerStatusMonitorService(
@@ -43,9 +44,12 @@ class ServerStatusMonitorService(
     }
 
     suspend fun cleanupInactiveServerStatusMonitors(kord: Kord) {
+        val sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS)
         val inactiveServerStatusMonitors = serverStatusMonitorRepository.getServerStatusMonitors(status = ServerStatusMonitorStatus.INACTIVE)
         inactiveServerStatusMonitors.forEach { serverStatusMonitor ->
-            serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitor.id)
+            if (serverStatusMonitor.lastUpdated.isBefore(sevenDaysAgo)) {
+                serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitor.id)
+            }
         }
         logger.info("Successfully removed ${inactiveServerStatusMonitors.count()} inactive server status monitors.")
     }
