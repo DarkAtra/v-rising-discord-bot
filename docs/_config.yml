@@ -14,11 +14,6 @@ color_scheme: my-dark
 title: V Rising Discord Bot
 description: The documentation for the V Rising Discord Bot.
 
-gh_edit_link: true
-gh_edit_link_text: "Edit this page on GitHub."
-gh_edit_repository: "https://github.com/DarkAtra/v-rising-discord-bot"
-gh_edit_branch: "main"
-
 back_to_top: true
 back_to_top_text: "Back to top"
 
