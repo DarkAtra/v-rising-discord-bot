@@ -22,9 +22,7 @@ class BotCompanionClientTest {
     @Test
     fun `should get characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
                 .willReturn(
                     WireMock.aResponse()
@@ -61,12 +59,10 @@ class BotCompanionClientTest {
     @Test
     fun `should get characters with basic authentication`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
         val username = "test"
         val password = "password"
 
-        wireMock.register(
+        wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
                 .withBasicAuth(username, password)
                 .willReturn(
@@ -109,9 +105,7 @@ class BotCompanionClientTest {
     @Test
     fun `should handle errors getting characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
                 .willReturn(
                     WireMock.aResponse()

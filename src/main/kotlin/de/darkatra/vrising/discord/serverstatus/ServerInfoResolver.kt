@@ -20,9 +20,7 @@ class ServerInfoResolver(
 
     suspend fun getServerInfo(serverStatusMonitor: ServerStatusMonitor): ServerInfo {
 
-        val serverInfo = serverQueryClient.getServerInfo(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
-        val players = serverQueryClient.getPlayerList(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
-        val rules = serverQueryClient.getRules(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
+        val serverStatus = serverQueryClient.getServerStatus(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
         val characters = when {
             serverStatusMonitor.apiEnabled -> botCompanionClient.getCharacters(
                 serverStatusMonitor.apiHostname!!,
@@ -34,13 +32,13 @@ class ServerInfoResolver(
         }
 
         return ServerInfo(
-            name = serverInfo.name,
-            ip = serverInfo.hostAddress,
-            gamePort = serverInfo.gamePort,
-            queryPort = serverInfo.port,
-            numberOfPlayers = serverInfo.numOfPlayers,
-            maxPlayers = serverInfo.maxPlayers,
-            players = players.map { sourcePlayer ->
+            name = serverStatus.serverInfo.name,
+            ip = serverStatus.serverInfo.hostAddress,
+            gamePort = serverStatus.serverInfo.gamePort,
+            queryPort = serverStatus.serverInfo.port,
+            numberOfPlayers = serverStatus.serverInfo.numOfPlayers,
+            maxPlayers = serverStatus.serverInfo.maxPlayers,
+            players = serverStatus.players.map { sourcePlayer ->
                 val character = characters.find { character -> character.name == sourcePlayer.name }
                 Player(
                     name = sourcePlayer.name,
@@ -49,7 +47,7 @@ class ServerInfoResolver(
                     killedVBloods = character?.killedVBloods?.map(VBlood::displayName)
                 )
             },
-            rules = rules
+            rules = serverStatus.rules
         )
     }
 
