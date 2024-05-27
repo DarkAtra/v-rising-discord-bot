@@ -35,7 +35,7 @@
         <kotlin.version>1.8.22</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.10.0</kord.version>
+        <kord.version>0.14.0</kord.version>
         <agql-source-query.version>1.2.1</agql-source-query.version>
         <java-uuid-generator.version>5.0.0</java-uuid-generator.version>
         <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
