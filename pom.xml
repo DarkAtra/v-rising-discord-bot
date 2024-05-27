@@ -246,6 +246,23 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <configuration>
+                            <buildArgs combine.children="append">
+                                <!-- Workaround for https://github.com/oracle/graal/issues/6957 -->
+                                <arg>--strict-image-heap</arg>
+                            </buildArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <repositories>
