@@ -160,7 +160,7 @@ class GetServerDetailsCommand(
                     value = when (serverStatusMonitor.recentErrors.isEmpty()) {
                         true -> "-"
                         false -> serverStatusMonitor.recentErrors.joinToString("\n") {
-                            "${it.timestamp}```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
+                            "<t:${it.timestamp}:R>```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
                         }
                     }
                 }

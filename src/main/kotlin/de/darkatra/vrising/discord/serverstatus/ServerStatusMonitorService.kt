@@ -17,6 +17,7 @@ import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.rest.builder.message.embed
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -32,6 +33,9 @@ class ServerStatusMonitorService(
 
     suspend fun updateServerStatusMonitors(kord: Kord) {
         serverStatusMonitorRepository.getServerStatusMonitors(status = ServerStatusMonitorStatus.ACTIVE).forEach { serverStatusMonitor ->
+
+            MDC.put("server-status-monitor-id", serverStatusMonitor.id)
+
             updateServerStatusMonitor(kord, serverStatusMonitor)
             updatePlayerActivityFeed(kord, serverStatusMonitor)
             updatePvpKillFeed(kord, serverStatusMonitor)
@@ -40,6 +44,8 @@ class ServerStatusMonitorService(
             } catch (e: OutdatedServerStatusMonitorException) {
                 logger.debug("Server status monitor was updated or deleted by another thread. Will ignore this exception and proceed as usual.", e)
             }
+
+            MDC.clear()
         }
     }
 
@@ -110,7 +116,7 @@ class ServerStatusMonitorService(
                         add(
                             Error(
                                 message = "${e::class.simpleName}: ${e.message}",
-                                timestamp = Instant.now().toString()
+                                timestamp = Instant.now().epochSecond
                             )
                         )
                     }
