@@ -92,7 +92,7 @@ class DatabaseMigrationService(
                         }
                     }
                 } else {
-                    document["recentErrors"] = emptyList<Error>()
+                    document["recentErrors"] = emptyList<Any>()
                 }
             }
         )
