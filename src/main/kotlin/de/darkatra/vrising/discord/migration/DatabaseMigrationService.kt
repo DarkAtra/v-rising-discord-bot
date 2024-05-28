@@ -2,6 +2,7 @@ package de.darkatra.vrising.discord.migration
 
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
+import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.filters.ObjectFilters
 import org.dizitart.no2.util.ObjectUtils
@@ -77,6 +78,22 @@ class DatabaseMigrationService(
             isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 8) },
             documentAction = { document ->
                 document["embedEnabled"] = true
+            }
+        ),
+        DatabaseMigration(
+            description = "Serialize error timestamp as long (epochSecond).",
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 9) },
+            documentAction = { document ->
+                val recentErrors = document["recentErrors"]
+                if (recentErrors is List<*>) {
+                    recentErrors.filterIsInstance<Document>().forEach { error ->
+                        if (error["timestamp"] is String) {
+                            error["timestamp"] = Instant.parse(error["timestamp"] as String).epochSecond
+                        }
+                    }
+                } else {
+                    document["recentErrors"] = emptyList<Error>()
+                }
             }
         )
     )
