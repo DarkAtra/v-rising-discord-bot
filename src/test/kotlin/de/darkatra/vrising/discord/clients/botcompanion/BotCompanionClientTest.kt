@@ -38,7 +38,8 @@ class BotCompanionClientTest {
                                 "clan": "Test",
                                 "killedVBloods": [
                                   "FOREST_WOLF",
-                                  "BANDIT_STONEBREAKER"
+                                  "BANDIT_STONEBREAKER",
+                                  null
                                 ]
                               }
                             ]""".trimIndent()

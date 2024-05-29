@@ -69,3 +69,7 @@ class BotCompanionClient {
             .build()
     }
 }
+
+fun main() {
+    BotCompanionClient().getCharacters("141.98.19.254", 25570, emptyList())
+}
