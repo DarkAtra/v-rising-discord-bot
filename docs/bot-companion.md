@@ -9,7 +9,8 @@ The bot companion is a server-side mod that allows the bot to fetch additional d
 It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
 
 {: .warning }
-> I highly recommend not exposing the api port to the internet in an unprotected manner. Please see
+> I highly recommend not exposing the api port to the internet in an unprotected manner. The setup guide below explains how the API port can be secured using
+> Basic Authentication.
 
 ## Setup Guide
 
