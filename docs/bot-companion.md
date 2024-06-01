@@ -5,14 +5,11 @@ nav_order: 5
 
 # [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
-{: .warning }
-> Please note, that modding support for 1.0 is still in its early stages and things are expected to break! Use this mod in production at your own risk.
-
 The bot companion is a server-side mod that allows the bot to fetch additional data about players, such as the gear level.
 It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
 
 {: .warning }
-> I highly recommend not exposing the api port to the internet in an unprotected manner.
+> I highly recommend not exposing the api port to the internet in an unprotected manner. Please see
 
 ## Setup Guide
 
@@ -32,15 +29,46 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
    **It is not recommended to expose the api port to the internet in an unprotected manner.** Consider protecting the api port using a reverse proxy that
    supports basic authentication or by using a firewall rule.
 5. Start the V Rising server and test if the mod works as expect by running the following command in your
-   terminal: `curl http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200` as soon as the server has fully started.
+   terminal: `curl -v http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200 OK` as soon as the server has fully started.
+6. Secure the API port using [Basic Authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). Navigate to the `BepInEx/config` folder
+   and open `v-rising-discord-bot-companion.cfg`. The file should look something like this:
+   ```
+   ## Settings file was created by plugin v-rising-discord-bot-companion v0.6.0
+   ## Plugin GUID: v-rising-discord-bot-companion
+
+   [Authentication]
+
+   ## A list of comma separated username:password entries that are allowed to query the HTTP API.
+   # Setting type: String
+   # Default value:
+   BasicAuthUsers =
+   ```
+   Put the desired username and password after `BasicAuthUsers = `. For example the following would configure a user `apirising` with `e15kAly03I2K271b` as its
+   password:
+   ```
+   ## Settings file was created by plugin v-rising-discord-bot-companion v0.6.0
+   ## Plugin GUID: v-rising-discord-bot-companion
+
+   [Authentication]
+
+   ## A list of comma separated username:password entries that are allowed to query the HTTP API.
+   # Setting type: String
+   # Default value:
+   BasicAuthUsers = apirising:e15kAly03I2K271b
+   ```
+   Please choose a password that you have never used before, ensure that it does not contain `,` and try to make it at least 16 characters long.
+7. Restart your server and confirm that the API responds with status code `403 Forbidden` when you
+   execute `curl -v http://localhost:25570/v-rising-discord-bot/characters`. Next confirm that a request with proper authentication succeeds with
+   status code `200 OK`. For the above example the command looks like
+   this: `curl -v -u apirising:e15kAly03I2K271b http://localhost:25570/v-rising-discord-bot/characters`.
 
 ### Connecting the bot companion to the discord bot
 
 1. Make sure you're using [the latest version](https://github.com/DarkAtra/v-rising-discord-bot/releases) of the discord bot.
-   * **Tip**: You can also find the current docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot)
-2. Use the `/update-server` command to update the status monitor and set both `server-api-hostname` and `server-api-port`.
-   If the V Rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost` and `server-api-port`
-   to `25570` if you used the above `ServerHostSettings.json`.
+    * **Tip**: You can also find the current docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot)
+2. Use the `/update-server` command to update the status monitor and set both `server-api-hostname`, `server-api-port`, `server-api-username`
+   and `server-api-password`. If the V Rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost`
+   and `server-api-port` to `25570` if you used the `ServerHostSettings.json` from above.
 3. You should see the gear level for each player in the status embed the next time it is updated.
 
 ### Enabling the activity or kill feed
@@ -48,6 +76,7 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 1. Use the `/update-server` command to update the status monitor and set `player-activity-feed-channel-id` to the id of the discord channel you want the
    activity feed to appear in. You can do the same for the kill feed by setting `pvp-kill-feed-channel-id`.
 2. The bot will now post a message whenever a player joins or leaves the server or whenever someone was killed in a PvP battle. It looks something like this:
+
    <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
 
 ## Endpoints
