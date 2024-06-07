@@ -18,7 +18,7 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
 > identity and add a privacy policy and terms of use for their app. Discord does this to ensure that developers operating software at scale on their platform
 > are real and trustworthy. However, I'm not eager to send discord a qualifying identity document just to provide my little bot as a service. All that just
 > means that you won't be able to add `Jarvis` to your discord server if it's already installed on 100 server. Once that happens, you will have
-> to [self-host](self-hosting.md).
+> to [self-host](self-hosting.md). The bot is currently installed on about 75 servers.
 
 ## Setup Guide
 
