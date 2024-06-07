@@ -5,6 +5,13 @@ nav_order: 2
 
 # Using the bot as a service
 
+{: .warning }
+> Discord only allows an app to be installed on at most 100 discord servers. In order to join more than 100 server, the app developer has to verify their
+> identity and add a privacy policy and terms of use for their app. Discord does this to ensure that developers operating software at scale on their platform
+> are real and trustworthy. However, I'm not eager to send discord a qualifying identity document just to provide my little bot as a service. All that just
+> means that you won't be able to add `Jarvis` to your discord server if it's already installed on 100 server. Once that happens, you will have
+> to [self-host](self-hosting.md).
+
 I decided to provide the bot as a free service going forward. Feel free
 to [invite the bot to your discord server](https://discord.com/oauth2/authorize?client_id=982682186207592470) and use it as you please.
 Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for you.
