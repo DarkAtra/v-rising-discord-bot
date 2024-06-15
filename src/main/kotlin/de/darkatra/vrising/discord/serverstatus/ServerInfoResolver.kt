@@ -22,7 +22,7 @@ class ServerInfoResolver(
 
         val serverStatus = serverQueryClient.getServerStatus(serverStatusMonitor.hostname, serverStatusMonitor.queryPort)
         val characters = when {
-            serverStatusMonitor.apiEnabled -> botCompanionClient.getCharacters(
+            serverStatusMonitor.apiEnabled && serverStatusMonitor.displayPlayerGearLevel -> botCompanionClient.getCharacters(
                 serverStatusMonitor.apiHostname!!,
                 serverStatusMonitor.apiPort!!,
                 getInterceptors(serverStatusMonitor)
