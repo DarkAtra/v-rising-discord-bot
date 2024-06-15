@@ -1,9 +1,9 @@
-package de.darkatra.vrising.discord.serverstatus
+package de.darkatra.vrising.discord.persistence
 
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitorStatus
 import de.darkatra.vrising.discord.plus
 import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.FindOptions
 import org.dizitart.no2.Nitrite

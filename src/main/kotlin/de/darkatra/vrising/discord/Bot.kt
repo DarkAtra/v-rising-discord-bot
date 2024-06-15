@@ -7,9 +7,9 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.migration.Schema
+import de.darkatra.vrising.discord.persistence.model.Error
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
 import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
-import de.darkatra.vrising.discord.serverstatus.model.Error
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
@@ -121,6 +121,7 @@ class Bot(
     }
 
     override fun configureTasks(taskRegistrar: ScheduledTaskRegistrar) {
+
         taskRegistrar.addFixedDelayTask(
             IntervalTask(
                 {

@@ -29,7 +29,7 @@ import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParamete
 import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorStatusParameter
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
+import de.darkatra.vrising.discord.persistence.ServerStatusMonitorRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction

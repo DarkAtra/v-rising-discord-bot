@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitorStatus
 import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.filters.ObjectFilters

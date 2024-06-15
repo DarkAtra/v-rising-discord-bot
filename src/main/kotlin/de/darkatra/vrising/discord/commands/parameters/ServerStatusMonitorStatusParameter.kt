@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.commands.parameters
 
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitorStatus
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.string

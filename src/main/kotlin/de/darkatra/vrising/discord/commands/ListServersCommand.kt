@@ -4,8 +4,8 @@ import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.commands.parameters.PageParameter
 import de.darkatra.vrising.discord.commands.parameters.addPageParameter
 import de.darkatra.vrising.discord.commands.parameters.getPageParameter
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorRepository
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.ServerStatusMonitorRepository
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction

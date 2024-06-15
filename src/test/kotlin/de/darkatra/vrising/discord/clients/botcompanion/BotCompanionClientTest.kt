@@ -47,7 +47,10 @@ class BotCompanionClientTest {
                 )
         )
 
-        val characters = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val charactersResult = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        assertThat(charactersResult.isSuccess).isTrue()
+
+        val characters = charactersResult.getOrThrow()
         assertThat(characters).isNotEmpty()
 
         val character = characters.first()
@@ -89,11 +92,14 @@ class BotCompanionClientTest {
                 )
         )
 
-        val characters = botCompanionClient.getCharacters(
+        val charactersResult = botCompanionClient.getCharacters(
             "localhost",
             wireMockRuntimeInfo.httpPort,
             listOf(BasicAuthenticationInterceptor(username, password))
         )
+        assertThat(charactersResult.isSuccess).isTrue()
+
+        val characters = charactersResult.getOrThrow()
         assertThat(characters).isNotEmpty()
 
         val character = characters.first()
@@ -123,8 +129,8 @@ class BotCompanionClientTest {
                 )
         )
 
-        val characters = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
-        assertThat(characters).isEmpty()
+        val charactersResult = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        assertThat(charactersResult.isFailure).isTrue()
     }
 
     @Test
@@ -157,7 +163,10 @@ class BotCompanionClientTest {
                 )
         )
 
-        val playerActivities = botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val playerActivitiesResult = botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        assertThat(playerActivitiesResult.isSuccess).isTrue()
+
+        val playerActivities = playerActivitiesResult.getOrThrow()
         assertThat(playerActivities).isNotEmpty()
 
         val character = playerActivities.first()
@@ -197,7 +206,10 @@ class BotCompanionClientTest {
                 )
         )
 
-        val pvpKills = botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val pvpKillsResult = botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        assertThat(pvpKillsResult.isSuccess).isTrue()
+
+        val pvpKills = pvpKillsResult.getOrThrow()
         assertThat(pvpKills).isNotEmpty()
 
         val character = pvpKills.first()

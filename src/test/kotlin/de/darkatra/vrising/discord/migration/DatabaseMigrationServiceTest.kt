@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite

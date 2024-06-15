@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.serverstatus.model
+package de.darkatra.vrising.discord.persistence.model
 
 data class Error(
     val message: String,
