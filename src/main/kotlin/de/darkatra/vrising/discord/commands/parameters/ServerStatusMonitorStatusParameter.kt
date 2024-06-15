@@ -15,7 +15,6 @@ fun GlobalChatInputCreateBuilder.addServerStatusMonitorStatusParameter(required:
         description = "Determines if a server status monitor should be updated or not."
     ) {
         this.required = required
-        this.autocomplete = true
 
         choice("ACTIVE", "ACTIVE")
         choice("INACTIVE", "INACTIVE")

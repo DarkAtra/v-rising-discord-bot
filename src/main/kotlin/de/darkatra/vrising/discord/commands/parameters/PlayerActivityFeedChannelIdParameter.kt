@@ -2,21 +2,21 @@ package de.darkatra.vrising.discord.commands.parameters
 
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
-import dev.kord.rest.builder.interaction.string
+import dev.kord.rest.builder.interaction.channel
 
 object PlayerActivityFeedChannelIdParameter {
-    const val NAME = "player-activity-feed-channel-id"
+    const val NAME = "player-activity-feed-channel"
 }
 
 fun GlobalChatInputCreateBuilder.addPlayerActivityFeedChannelIdParameter(required: Boolean = true) {
-    string(
+    channel(
         name = PlayerActivityFeedChannelIdParameter.NAME,
-        description = "The id of the channel to post the player activity feed in."
+        description = "The channel to post the player activity feed in."
     ) {
         this.required = required
     }
 }
 
 fun ChatInputCommandInteraction.getPlayerActivityFeedChannelIdParameter(): String? {
-    return command.strings[PlayerActivityFeedChannelIdParameter.NAME]
+    return command.channels[PlayerActivityFeedChannelIdParameter.NAME]?.id?.toString()
 }
