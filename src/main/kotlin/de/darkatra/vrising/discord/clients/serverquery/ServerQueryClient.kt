@@ -20,7 +20,7 @@ class ServerQueryClient : DisposableBean {
         )
     }
 
-    fun getServerStatus(serverHostName: String, serverQueryPort: Int): ServerStatus {
+    fun getServerStatus(serverHostName: String, serverQueryPort: Int): Result<ServerStatus> {
 
         val address = InetSocketAddress(serverHostName, serverQueryPort)
 
@@ -28,13 +28,19 @@ class ServerQueryClient : DisposableBean {
         val getPlayers = client.getPlayers(address)
         val getRules = client.getRules(address)
 
-        return CompletableFuture.allOf(getInfo, getPlayers, getRules).thenApply {
-            ServerStatus(
-                getInfo.join().result,
-                getPlayers.join().result.filter { player -> player.name.isNotBlank() },
-                getRules.join().result
+        return try {
+            Result.success(
+                CompletableFuture.allOf(getInfo, getPlayers, getRules).thenApply {
+                    ServerStatus(
+                        getInfo.join().result,
+                        getPlayers.join().result.filter { player -> player.name.isNotBlank() },
+                        getRules.join().result
+                    )
+                }.join()
             )
-        }.join()
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override fun destroy() {

@@ -1,5 +1,6 @@
-package de.darkatra.vrising.discord
+package de.darkatra.vrising.discord.persistence
 
+import de.darkatra.vrising.discord.BotProperties
 import org.dizitart.no2.Nitrite
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean

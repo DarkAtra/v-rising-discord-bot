@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
@@ -49,16 +49,17 @@ class DatabaseMigrationServiceTest {
         repository.insert(Schema(appVersion = "V2.3.0"))
         repository.insert(Schema(appVersion = "V2.9.0"))
         repository.insert(Schema(appVersion = "V2.10.0"))
+        repository.insert(Schema(appVersion = "V2.10.2"))
 
         val databaseMigrationService = DatabaseMigrationService(
             database = database,
-            appVersionFromPom = "2.10.0"
+            appVersionFromPom = "2.10.2"
         )
 
         assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse()
 
         val schemas = repository.find().toList()
-        assertThat(schemas).hasSize(8)
+        assertThat(schemas).hasSize(9)
     }
 
     @Test

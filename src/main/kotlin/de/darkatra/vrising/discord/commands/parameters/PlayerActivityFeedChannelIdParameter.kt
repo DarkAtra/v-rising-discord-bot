@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.commands.parameters
 
+import de.darkatra.vrising.discord.getChannelIdFromStringParameter
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.string
@@ -18,5 +19,5 @@ fun GlobalChatInputCreateBuilder.addPlayerActivityFeedChannelIdParameter(require
 }
 
 fun ChatInputCommandInteraction.getPlayerActivityFeedChannelIdParameter(): String? {
-    return command.strings[PlayerActivityFeedChannelIdParameter.NAME]
+    return command.getChannelIdFromStringParameter(PlayerActivityFeedChannelIdParameter.NAME)
 }

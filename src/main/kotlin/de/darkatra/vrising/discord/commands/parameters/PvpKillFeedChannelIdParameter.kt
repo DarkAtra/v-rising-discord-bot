@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.commands.parameters
 
+import de.darkatra.vrising.discord.getChannelIdFromStringParameter
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.string
@@ -18,5 +19,5 @@ fun GlobalChatInputCreateBuilder.addPvpKillFeedChannelIdParameter(required: Bool
 }
 
 fun ChatInputCommandInteraction.getPvpKillFeedChannelIdParameter(): String? {
-    return command.strings[PvpKillFeedChannelIdParameter.NAME]
+    return command.getChannelIdFromStringParameter(PvpKillFeedChannelIdParameter.NAME)
 }

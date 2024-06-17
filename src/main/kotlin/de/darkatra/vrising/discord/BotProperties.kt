@@ -35,6 +35,10 @@ class BotProperties {
 
     @field:Min(0)
     @field:NotNull
+    var maxFailedApiAttempts: Int = 0
+
+    @field:Min(0)
+    @field:NotNull
     var maxRecentErrors: Int = 5
 
     @field:Min(1)

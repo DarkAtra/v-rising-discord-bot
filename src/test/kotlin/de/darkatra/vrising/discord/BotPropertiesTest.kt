@@ -100,6 +100,32 @@ class BotPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(ints = [0, 1, 5])
+    fun `should be valid if maxFailedApiAttempts is positive or zero`(maxFailedApiAttempts: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxFailedApiAttempts = maxFailedApiAttempts
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [-99, -1])
+    fun `should be invalid if maxFailedApiAttempts is negative`(maxFailedApiAttempts: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.maxFailedApiAttempts = maxFailedApiAttempts
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 5])
     fun `should be valid if maxRecentErrors is positive or zero`(maxRecentErrors: Int) {
 
         val botProperties = getValidBotProperties().apply {

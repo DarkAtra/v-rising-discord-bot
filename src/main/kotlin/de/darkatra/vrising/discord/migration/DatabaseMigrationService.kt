@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitorStatus
 import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.objects.filters.ObjectFilters
@@ -94,6 +94,18 @@ class DatabaseMigrationService(
                 } else {
                     document["recentErrors"] = emptyList<Any>()
                 }
+            }
+        ),
+        DatabaseMigration(
+            description = "Migrate the existing ServerStatusMonitor collection to the new collection name introduced by a package change.",
+            isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 10 && currentSchemaVersion.patch <= 1) },
+            databaseAction = { database ->
+                val oldCollection = database.getCollection("de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor")
+                val newCollection = database.getCollection(ObjectUtils.findObjectStoreName(ServerStatusMonitor::class.java))
+                oldCollection.find().forEach { document ->
+                    newCollection.insert(document)
+                }
+                oldCollection.remove(ObjectFilters.ALL)
             }
         )
     )

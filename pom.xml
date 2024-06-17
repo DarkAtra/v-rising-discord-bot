@@ -12,7 +12,7 @@
 
     <groupId>de.darkatra</groupId>
     <artifactId>v-rising-discord-bot</artifactId>
-    <version>2.10.1</version>
+    <version>2.10.2-next.5</version>
     <packaging>jar</packaging>
 
     <licenses>

@@ -1,4 +1,4 @@
-package de.darkatra.vrising.discord.serverstatus.model
+package de.darkatra.vrising.discord.persistence.model
 
 import org.dizitart.no2.IndexType
 import org.dizitart.no2.objects.Id
@@ -39,6 +39,7 @@ data class ServerStatusMonitor(
 
     var currentEmbedMessageId: String? = null,
     var currentFailedAttempts: Int = 0,
+    var currentFailedApiAttempts: Int = 0,
 
     var recentErrors: List<Error> = emptyList()
 ) {
@@ -49,4 +50,18 @@ data class ServerStatusMonitor(
     @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
     val lastUpdated: Instant
         get() = Instant.ofEpochMilli(version!!)
+
+    fun addError(throwable: Throwable, maxErrorsToKeep: Int) {
+        recentErrors = recentErrors
+            .takeLast((maxErrorsToKeep - 1).coerceAtLeast(0))
+            .toMutableList()
+            .apply {
+                add(
+                    Error(
+                        message = "${throwable::class.simpleName}: ${throwable.message}",
+                        timestamp = Instant.now().epochSecond
+                    )
+                )
+            }
+    }
 }
