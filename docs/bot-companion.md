@@ -74,8 +74,8 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 
 ### Enabling the activity or kill feed
 
-1. Use the `/update-server` command to update the status monitor and set `player-activity-feed-channel` to the discord channel you want the activity feed to
-   appear in. You can do the same for the kill feed by setting `pvp-kill-feed-channel`.
+1. Use the `/update-server` command to update the status monitor and set `player-activity-feed-channel-id` to the id of the discord channel you want the
+   activity feed to appear in. You can do the same for the kill feed by setting `pvp-kill-feed-channel-id`.
 2. The bot will now post a message whenever a player joins or leaves the server or whenever someone was killed in a PvP battle. It looks something like this:
 
    <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>

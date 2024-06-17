@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.serverstatus.exceptions.InvalidDiscordChannel
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
+import dev.kord.core.entity.interaction.InteractionCommand
 
 suspend fun Kord.getDiscordChannel(discordChannelId: String): Result<MessageChannelBehavior> {
     val channel = try {
@@ -15,4 +16,12 @@ suspend fun Kord.getDiscordChannel(discordChannelId: String): Result<MessageChan
         return Result.failure(InvalidDiscordChannelException("Discord Channel '$discordChannelId' does not exist."))
     }
     return Result.success(channel)
+}
+
+private val channelPattern = Regex("<#([0-9]+)>")
+
+fun InteractionCommand.getChannelIdFromStringParameter(parameterName: String): String? {
+    val value = strings[parameterName] ?: return null
+    val match = channelPattern.find(value) ?: return value
+    return match.groups[1]!!.value
 }
