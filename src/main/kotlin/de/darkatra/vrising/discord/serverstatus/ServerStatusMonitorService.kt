@@ -145,7 +145,7 @@ class ServerStatusMonitorService(
 
                         channel.createMessage(
                             """Disabled displayPlayerGearLevel for server status monitor '${serverStatusMonitor.id}' because
-                                |the bot companion did not respond successfully after ${botProperties.maxFailedAttempts} attempts.
+                                |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
                                 |Please make sure the server-api-hostname and server-api-port are correct.
                                 |You can re-enable the functionality using the update-server command.""".trimMargin()
                         )
