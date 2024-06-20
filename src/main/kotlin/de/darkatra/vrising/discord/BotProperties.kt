@@ -26,7 +26,7 @@ class BotProperties {
     lateinit var databasePassword: String
 
     @field:NotNull
-    @field:DurationMin(seconds = 30)
+    @field:DurationMin(seconds = 5)
     var updateDelay: Duration = Duration.ofMinutes(1)
 
     @field:Min(0)
