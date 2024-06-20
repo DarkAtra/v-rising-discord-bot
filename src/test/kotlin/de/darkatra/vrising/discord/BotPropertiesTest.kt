@@ -61,10 +61,10 @@ class BotPropertiesTest {
     }
 
     @Test
-    fun `should be invalid if updateDelay is below 30 seconds`() {
+    fun `should be invalid if updateDelay is below 5 seconds`() {
 
         val botProperties = getValidBotProperties().apply {
-            this.updateDelay = Duration.ofSeconds(29)
+            this.updateDelay = Duration.ofSeconds(4)
         }
 
         val result = validator.validate(botProperties)
