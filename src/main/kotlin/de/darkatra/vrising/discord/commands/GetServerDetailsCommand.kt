@@ -150,17 +150,24 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Current Failed Api Attempts"
+                    value = "${serverStatusMonitor.currentFailedApiAttempts}"
+                    inline = true
+                }
+
+                field {
                     name = "Last Update Attempt"
                     value = "<t:${serverStatusMonitor.lastUpdated.epochSecond}:R>"
                     inline = true
                 }
 
-                field {
-                    name = "Most recent Errors"
-                    value = when (serverStatusMonitor.recentErrors.isEmpty()) {
-                        true -> "-"
-                        false -> serverStatusMonitor.recentErrors.joinToString("\n") {
-                            "<t:${it.timestamp}:R>```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
+                if (serverStatusMonitor.recentErrors.isNotEmpty()) {
+                    serverStatusMonitor.recentErrors.chunked(5).forEachIndexed { i, chunk ->
+                        field {
+                            name = "Most recent Errors $i"
+                            value = chunk.joinToString("\n") {
+                                "<t:${it.timestamp}:R>```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
+                            }
                         }
                     }
                 }

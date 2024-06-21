@@ -116,7 +116,7 @@ class ServerStatusMonitorService(
                     )
                 }
             } catch (e: Exception) {
-                logger.error("Could not post status message for monitor '${serverStatusMonitor.id}'.", e)
+                logger.warn("Could not post status message for monitor '${serverStatusMonitor.id}'.", e)
             }
             return
         }
@@ -130,12 +130,11 @@ class ServerStatusMonitorService(
             ).getOrElse { e ->
 
                 logger.warn("Could not resolve characters for server monitor '${serverStatusMonitor.id}'. Player Gear level will not be displayed.", e)
+                serverStatusMonitor.currentFailedApiAttempts += 1
 
                 if (botProperties.maxRecentErrors > 0) {
                     serverStatusMonitor.addError(e, botProperties.maxRecentErrors)
                 }
-
-                serverStatusMonitor.currentFailedApiAttempts += 1
 
                 try {
 
@@ -151,7 +150,7 @@ class ServerStatusMonitorService(
                         )
                     }
                 } catch (e: Exception) {
-                    logger.error("Could not post status message for monitor '${serverStatusMonitor.id}'", e)
+                    logger.warn("Could not post status message for monitor '${serverStatusMonitor.id}'", e)
                 }
                 return
             }
@@ -210,9 +209,33 @@ class ServerStatusMonitorService(
             serverStatusMonitor.apiPort!!,
             getInterceptors(serverStatusMonitor)
         ).getOrElse { e ->
-            logger.error("Exception updating the player activity feed of ${serverStatusMonitor.id}", e)
+
+            logger.error("Exception updating the player activity feed of '${serverStatusMonitor.id}'", e)
+            serverStatusMonitor.currentFailedApiAttempts += 1
+
+            if (botProperties.maxRecentErrors > 0) {
+                serverStatusMonitor.addError(e, botProperties.maxRecentErrors)
+            }
+
+            try {
+                if (botProperties.maxFailedApiAttempts != 0 && serverStatusMonitor.currentFailedApiAttempts >= botProperties.maxFailedApiAttempts) {
+                    logger.warn("Disabling the player activity feed for server monitor '${serverStatusMonitor.id}' because it exceeded the max failed api attempts.")
+                    serverStatusMonitor.playerActivityDiscordChannelId = null
+
+                    playerActivityChannel.createMessage(
+                        """Disabled the player activity feed for server status monitor '${serverStatusMonitor.id}' because
+                            |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
+                            |Please make sure the server-api-hostname and server-api-port are correct.
+                            |You can re-enable the functionality using the update-server command.""".trimMargin()
+                    )
+                }
+            } catch (e: Exception) {
+                logger.warn("Could not post status message for monitor '${serverStatusMonitor.id}'", e)
+            }
             return
         }
+
+        serverStatusMonitor.currentFailedApiAttempts = 0
 
         playerActivities
             .filter { playerActivity -> playerActivity.occurred.isAfter(serverStatusMonitor.lastUpdated) }
@@ -249,9 +272,33 @@ class ServerStatusMonitorService(
             serverStatusMonitor.apiPort!!,
             getInterceptors(serverStatusMonitor)
         ).getOrElse { e ->
+
             logger.error("Exception updating the pvp kill feed of ${serverStatusMonitor.id}", e)
+            serverStatusMonitor.currentFailedApiAttempts += 1
+
+            if (botProperties.maxRecentErrors > 0) {
+                serverStatusMonitor.addError(e, botProperties.maxRecentErrors)
+            }
+
+            try {
+                if (botProperties.maxFailedApiAttempts != 0 && serverStatusMonitor.currentFailedApiAttempts >= botProperties.maxFailedApiAttempts) {
+                    logger.warn("Disabling the pvp kill feed for server monitor '${serverStatusMonitor.id}' because it exceeded the max failed api attempts.")
+                    serverStatusMonitor.pvpKillFeedDiscordChannelId = null
+
+                    pvpKillFeedChannel.createMessage(
+                        """Disabled the pvp kill feed for server status monitor '${serverStatusMonitor.id}' because
+                            |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
+                            |Please make sure the server-api-hostname and server-api-port are correct.
+                            |You can re-enable the functionality using the update-server command.""".trimMargin()
+                    )
+                }
+            } catch (e: Exception) {
+                logger.warn("Could not post status message for monitor '${serverStatusMonitor.id}'", e)
+            }
             return
         }
+
+        serverStatusMonitor.currentFailedApiAttempts = 0
 
         pvpKills
             .filter { pvpKill -> pvpKill.occurred.isAfter(serverStatusMonitor.lastUpdated) }
