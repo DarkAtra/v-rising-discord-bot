@@ -6,6 +6,7 @@ import org.dizitart.no2.Nitrite
 class DatabaseMigration(
     val description: String,
     val isApplicable: (currentSchemaVersion: SemanticVersion) -> Boolean,
+    val documentCollectionName: String,
     val documentAction: (document: Document) -> Unit = {},
     val databaseAction: (database: Nitrite) -> Unit = {}
 )

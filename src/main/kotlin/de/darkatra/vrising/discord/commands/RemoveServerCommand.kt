@@ -1,8 +1,8 @@
 package de.darkatra.vrising.discord.commands
 
-import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.persistence.ServerStatusMonitorRepository
+import de.darkatra.vrising.discord.commands.parameters.addServerIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getServerIdParameter
+import de.darkatra.vrising.discord.persistence.ServerRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class RemoveServerCommand(
-    private val serverStatusMonitorRepository: ServerStatusMonitorRepository
+    private val serverRepository: ServerRepository
 ) : Command {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val name: String = "remove-server"
-    private val description: String = "Removes a server from the status monitor."
+    private val description: String = "Removes a server."
 
     override fun getCommandName(): String = name
 
@@ -32,29 +32,27 @@ class RemoveServerCommand(
             dmPermission = true
             disableCommandInGuilds()
 
-            addServerStatusMonitorIdParameter()
+            addServerIdParameter()
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
+        val serverId = interaction.getServerIdParameter()
 
         val wasSuccessful = when (interaction) {
-            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.removeServerStatusMonitor(
-                serverStatusMonitorId,
-                interaction.guildId.toString()
-            )
-
-            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.removeServerStatusMonitor(serverStatusMonitorId)
+            is GuildChatInputCommandInteraction -> serverRepository.removeServer(serverId, interaction.guildId.toString())
+            is GlobalChatInputCommandInteraction -> serverRepository.removeServer(serverId)
         }
 
-        logger.info("Successfully removed monitor with id '${serverStatusMonitorId}'.")
+        if (wasSuccessful) {
+            logger.info("Successfully removed server with id '$serverId'.")
+        }
 
         interaction.deferEphemeralResponse().respond {
             content = when (wasSuccessful) {
-                true -> "Removed monitor with id '$serverStatusMonitorId'."
-                false -> "No server with id '$serverStatusMonitorId' was found."
+                true -> "Removed server with id '$serverId'."
+                false -> "No server with id '$serverId' was found."
             }
         }
     }

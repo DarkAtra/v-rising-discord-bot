@@ -1,10 +1,11 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.serverstatus.exceptions.InvalidDiscordChannelException
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.MessageChannelBehavior
 import dev.kord.core.entity.interaction.InteractionCommand
+
+private class InvalidDiscordChannelException(message: String, cause: Throwable? = null) : BotException(message, cause)
 
 suspend fun Kord.getDiscordChannel(discordChannelId: String): Result<MessageChannelBehavior> {
     val channel = try {
@@ -24,4 +25,13 @@ fun InteractionCommand.getChannelIdFromStringParameter(parameterName: String): S
     val value = strings[parameterName] ?: return null
     val match = channelPattern.find(value) ?: return value
     return match.groups[1]!!.value
+}
+
+suspend fun MessageChannelBehavior.tryCreateMessage(message: String): Boolean {
+    try {
+        createMessage(message)
+        return true
+    } catch (e: Exception) {
+        return false
+    }
 }

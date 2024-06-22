@@ -1,9 +1,7 @@
 package de.darkatra.vrising.discord.persistence
 
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitorStatus
+import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.plus
-import de.darkatra.vrising.discord.serverstatus.exceptions.OutdatedServerStatusMonitorException
 import org.dizitart.kno2.filters.and
 import org.dizitart.no2.FindOptions
 import org.dizitart.no2.Nitrite
@@ -13,38 +11,39 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
-class ServerStatusMonitorRepository(
+class ServerRepository(
     database: Nitrite,
 ) {
-    private var repository = database.getRepository(ServerStatusMonitor::class.java)
+    private val repository = database.getRepository(Server::class.java)
 
-    fun addServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
+    fun addServer(server: Server) {
 
-        if (repository.find(ObjectFilters.eq("id", serverStatusMonitor.id)).any()) {
-            throw IllegalStateException("Monitor with id '${serverStatusMonitor.id}' already exists.")
+        if (repository.find(ObjectFilters.eq("id", server.id)).any()) {
+            throw IllegalStateException("Server with id '${server.id}' already exists.")
         }
 
-        repository.insert(updateVersion(serverStatusMonitor))
+        repository.insert(updateVersion(server))
     }
 
-    fun updateServerStatusMonitor(serverStatusMonitor: ServerStatusMonitor) {
+    fun updateServer(server: Server) {
 
         @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
-        val newVersion = serverStatusMonitor.version
+        val newVersion = server.version
 
         @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
-        val databaseVersion = (repository.find(ObjectFilters.eq("id", serverStatusMonitor.id)).firstOrNull()
-            ?: throw OutdatedServerStatusMonitorException("Monitor with id '${serverStatusMonitor.id}' not found."))
+        val databaseVersion = (repository.find(ObjectFilters.eq("id", server.id)).firstOrNull()
+            ?: throw OutdatedServerException("Server with id '${server.id}' not found."))
             .version!!
 
         if (newVersion == null || databaseVersion > newVersion) {
-            throw OutdatedServerStatusMonitorException("Monitor with id '${serverStatusMonitor.id}' was already updated by another thread.")
+            throw OutdatedServerException("Server with id '${server.id}' was already updated by another thread.")
         }
 
-        repository.update(updateVersion(serverStatusMonitor))
+        repository.update(updateVersion(server))
     }
 
-    fun removeServerStatusMonitor(id: String, discordServerId: String? = null): Boolean {
+    fun removeServer(id: String, discordServerId: String? = null): Boolean {
+
         var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
 
         if (discordServerId != null) {
@@ -54,7 +53,7 @@ class ServerStatusMonitorRepository(
         return repository.remove(objectFilter).affectedCount > 0
     }
 
-    fun getServerStatusMonitor(id: String, discordServerId: String? = null): ServerStatusMonitor? {
+    fun getServer(id: String, discordServerId: String? = null): Server? {
 
         var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
 
@@ -62,22 +61,16 @@ class ServerStatusMonitorRepository(
             objectFilter += ObjectFilters.eq("discordServerId", discordServerId)
         }
 
-        return repository.find(objectFilter).firstOrNull()
+        return repository.find(objectFilter).firstOrNull().also { server ->
+            server?.linkServerAwareFields()
+        }
     }
 
-    fun getServerStatusMonitors(
-        discordServerId: String? = null,
-        status: ServerStatusMonitorStatus? = null,
-        offset: Int? = null,
-        limit: Int? = null
-    ): List<ServerStatusMonitor> {
+    fun getServers(discordServerId: String? = null, offset: Int? = null, limit: Int? = null): List<Server> {
 
         val objectFilter = buildList<ObjectFilter> {
             if (discordServerId != null) {
                 add(ObjectFilters.eq("discordServerId", discordServerId))
-            }
-            if (status != null) {
-                add(ObjectFilters.eq("status", status))
             }
         }.reduceOrNull { acc: ObjectFilter, objectFilter: ObjectFilter -> acc.and(objectFilter) }
 
@@ -97,12 +90,12 @@ class ServerStatusMonitorRepository(
         return when {
             objectFilter != null -> repository.find(objectFilter).toList()
             else -> repository.find().toList()
+        }.onEach { server ->
+            server.linkServerAwareFields()
         }
     }
 
-    fun count(
-        discordServerId: String? = null,
-    ): Int {
+    fun count(discordServerId: String? = null): Int {
 
         return when {
             discordServerId != null -> repository.find(ObjectFilters.eq("discordServerId", discordServerId)).size()
@@ -110,8 +103,9 @@ class ServerStatusMonitorRepository(
         }
     }
 
-    private fun updateVersion(serverStatusMonitor: ServerStatusMonitor): ServerStatusMonitor {
-        return serverStatusMonitor.apply {
+    private fun updateVersion(server: Server): Server {
+
+        return server.apply {
             @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
             version = Instant.now().toEpochMilli()
         }
