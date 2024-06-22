@@ -4,8 +4,8 @@ import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.commands.parameters.PageParameter
 import de.darkatra.vrising.discord.commands.parameters.addPageParameter
 import de.darkatra.vrising.discord.commands.parameters.getPageParameter
-import de.darkatra.vrising.discord.persistence.ServerStatusMonitorRepository
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
+import de.darkatra.vrising.discord.persistence.ServerRepository
+import de.darkatra.vrising.discord.persistence.model.Server
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -19,11 +19,11 @@ private const val PAGE_SIZE = 10
 @Component
 @EnableConfigurationProperties(BotProperties::class)
 class ListServersCommand(
-    private val serverStatusMonitorRepository: ServerStatusMonitorRepository
+    private val serverRepository: ServerRepository
 ) : Command {
 
     private val name: String = "list-servers"
-    private val description: String = "Lists all server status monitors."
+    private val description: String = "Lists all servers."
 
     override fun getCommandName(): String = name
 
@@ -46,8 +46,8 @@ class ListServersCommand(
         PageParameter.validate(page)
 
         val totalElements = when (interaction) {
-            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.count(interaction.guildId.toString())
-            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.count()
+            is GuildChatInputCommandInteraction -> serverRepository.count(interaction.guildId.toString())
+            is GlobalChatInputCommandInteraction -> serverRepository.count()
         }
         val totalPages = totalElements / PAGE_SIZE + 1
 
@@ -58,24 +58,24 @@ class ListServersCommand(
             return
         }
 
-        val serverStatusMonitors: List<ServerStatusMonitor> = when (interaction) {
-            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitors(
+        val servers: List<Server> = when (interaction) {
+            is GuildChatInputCommandInteraction -> serverRepository.getServers(
                 discordServerId = interaction.guildId.toString(),
                 offset = page * PAGE_SIZE,
                 limit = PAGE_SIZE
             )
 
-            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitors(
+            is GlobalChatInputCommandInteraction -> serverRepository.getServers(
                 offset = page * PAGE_SIZE,
                 limit = PAGE_SIZE
             )
         }
 
         interaction.deferEphemeralResponse().respond {
-            content = when (serverStatusMonitors.isEmpty()) {
+            content = when (servers.isEmpty()) {
                 true -> "No servers found."
-                false -> serverStatusMonitors.joinToString(separator = "\n") { serverStatusMonitor ->
-                    "${serverStatusMonitor.id} - ${serverStatusMonitor.hostname}:${serverStatusMonitor.queryPort} - ${serverStatusMonitor.status.name}"
+                false -> servers.joinToString(separator = "\n") { server ->
+                    "${server.id} - ${server.hostname}:${server.queryPort} - ${server.status.name}"
                 } + "\n*Current Page: $page, Total Pages: $totalPages*"
             }
         }

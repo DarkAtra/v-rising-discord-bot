@@ -1,24 +1,18 @@
 package de.darkatra.vrising.discord.commands
 
-import de.darkatra.vrising.discord.BotProperties
-import de.darkatra.vrising.discord.commands.parameters.addServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.commands.parameters.getServerStatusMonitorIdParameter
-import de.darkatra.vrising.discord.persistence.ServerStatusMonitorRepository
+import de.darkatra.vrising.discord.commands.parameters.addServerIdParameter
+import de.darkatra.vrising.discord.persistence.ServerRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
-import dev.kord.core.entity.interaction.GlobalChatInputCommandInteraction
-import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.message.embed
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
-import org.springframework.util.StringUtils
+import java.util.Objects
+import java.util.stream.Stream
 
 @Component
-@EnableConfigurationProperties(BotProperties::class)
 class GetServerDetailsCommand(
-    private val serverStatusMonitorRepository: ServerStatusMonitorRepository,
-    private val botProperties: BotProperties
+    private val serverRepository: ServerRepository
 ) : Command {
 
     private val name: String = "get-server-details"
@@ -35,52 +29,41 @@ class GetServerDetailsCommand(
             dmPermission = true
             disableCommandInGuilds()
 
-            addServerStatusMonitorIdParameter()
+            addServerIdParameter()
         }
     }
 
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
-        val serverStatusMonitorId = interaction.getServerStatusMonitorIdParameter()
-
-        val serverStatusMonitor = when (interaction) {
-            is GuildChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId, interaction.guildId.toString())
-            is GlobalChatInputCommandInteraction -> serverStatusMonitorRepository.getServerStatusMonitor(serverStatusMonitorId)
-        }
-
-        if (serverStatusMonitor == null) {
-            interaction.deferEphemeralResponse().respond {
-                content = "No server with id '$serverStatusMonitorId' was found."
-            }
-            return
-        }
+        val server = interaction.getServer(serverRepository)
+            ?: return
 
         interaction.deferEphemeralResponse().respond {
             embed {
-                title = "Details for ${serverStatusMonitor.id}"
+                title = "Details for ${server.id}"
 
                 field {
                     name = "Hostname"
-                    value = serverStatusMonitor.hostname
+                    value = server.hostname
                     inline = true
                 }
 
                 field {
                     name = "Query Port"
-                    value = "${serverStatusMonitor.queryPort}"
+                    value = "${server.queryPort}"
                     inline = true
                 }
 
                 field {
-                    name = "Status"
-                    value = serverStatusMonitor.status.name
+                    name = "Discord Server Id"
+                    value = server.discordServerId
                     inline = true
                 }
 
                 field {
                     name = "Api Hostname"
-                    value = when (serverStatusMonitor.apiHostname != null) {
-                        true -> "${serverStatusMonitor.apiHostname}"
+                    value = when (server.apiHostname != null) {
+                        true -> "${server.apiHostname}"
                         false -> "-"
                     }
                     inline = true
@@ -88,88 +71,41 @@ class GetServerDetailsCommand(
 
                 field {
                     name = "Api Port"
-                    value = when (serverStatusMonitor.apiPort != null) {
-                        true -> "${serverStatusMonitor.apiPort}"
+                    value = when (server.apiPort != null) {
+                        true -> "${server.apiPort}"
                         false -> "-"
                     }
                     inline = true
                 }
 
                 field {
-                    name = "Embed Enabled"
-                    value = "${serverStatusMonitor.embedEnabled}"
-                    inline = true
-                }
-
-                field {
-                    name = "Display Server Description"
-                    value = "${serverStatusMonitor.displayServerDescription}"
-                    inline = true
-                }
-
-                field {
-                    name = "Display Player Gear Level"
-                    value = "${serverStatusMonitor.displayPlayerGearLevel}"
-                    inline = true
-                }
-
-                field {
-                    name = "Discord Server Id"
-                    value = serverStatusMonitor.discordServerId
-                    inline = true
-                }
-
-                field {
-                    name = "Discord Channel Id"
-                    value = serverStatusMonitor.discordChannelId
-                    inline = true
-                }
-
-                field {
-                    name = "Player Activity Feed Channel Id"
-                    value = serverStatusMonitor.playerActivityDiscordChannelId ?: "-"
-                    inline = true
-                }
-
-                field {
-                    name = "Pvp Kill Feed Channel Id"
-                    value = serverStatusMonitor.pvpKillFeedDiscordChannelId ?: "-"
-                    inline = true
-                }
-
-                field {
-                    name = "Current Embed Message Id"
-                    value = serverStatusMonitor.currentEmbedMessageId ?: "-"
-                    inline = true
-                }
-
-                field {
-                    name = "Current Failed Attempts"
-                    value = "${serverStatusMonitor.currentFailedAttempts}"
-                    inline = true
-                }
-
-                field {
-                    name = "Current Failed Api Attempts"
-                    value = "${serverStatusMonitor.currentFailedApiAttempts}"
-                    inline = true
-                }
-
-                field {
                     name = "Last Update Attempt"
-                    value = "<t:${serverStatusMonitor.lastUpdated.epochSecond}:R>"
+                    value = "<t:${server.lastUpdated.epochSecond}:R>"
                     inline = true
                 }
 
-                if (serverStatusMonitor.recentErrors.isNotEmpty()) {
-                    serverStatusMonitor.recentErrors.chunked(5).forEachIndexed { i, chunk ->
-                        field {
-                            name = "Most recent Errors $i"
-                            value = chunk.joinToString("\n") {
-                                "<t:${it.timestamp}:R>```${StringUtils.truncate(it.message, botProperties.maxCharactersPerError)}```"
-                            }
-                        }
-                    }
+                field {
+                    name = "Status Monitor Status"
+                    value = server.statusMonitor?.status?.name ?: "-"
+                    inline = true
+                }
+
+                field {
+                    name = "Player Activity Feed Status"
+                    value = server.playerActivityFeed?.status?.name ?: "-"
+                    inline = true
+                }
+
+                field {
+                    name = "Pvp Kill Feed Status"
+                    value = server.pvpKillFeed?.status?.name ?: "-"
+                    inline = true
+                }
+
+                field {
+                    name = "Number of Leaderboards"
+                    value = "${Stream.of(server.pvpKillFeed).filter(Objects::nonNull).count()}"
+                    inline = true
                 }
             }
         }
