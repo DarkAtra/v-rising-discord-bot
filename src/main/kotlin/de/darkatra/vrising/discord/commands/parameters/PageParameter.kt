@@ -8,7 +8,7 @@ import dev.kord.rest.builder.interaction.integer
 object PageParameter {
     const val NAME = "page"
 
-    fun validate(page: Int) {
+    fun validate(page: Long) {
         if (page < 0) {
             throw ValidationException("'$NAME' must be greater than or equal to zero. Rejected: $page")
         }
@@ -24,6 +24,6 @@ fun GlobalChatInputCreateBuilder.addPageParameter(required: Boolean = true) {
     }
 }
 
-fun ChatInputCommandInteraction.getPageParameter(): Int? {
-    return command.integers[PageParameter.NAME]?.let { Math.toIntExact(it) }
+fun ChatInputCommandInteraction.getPageParameter(): Long? {
+    return command.integers[PageParameter.NAME]
 }

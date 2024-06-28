@@ -40,6 +40,50 @@ class ServerRepositoryTest {
     }
 
     @Test
+    fun `should get server`() {
+
+        serverRepository.addServer(
+            ServerTestUtils.getServer()
+        )
+
+        val server = serverRepository.getServer(ServerTestUtils.ID)
+
+        assertThat(server).isNotNull()
+        assertThat(server!!.id).isEqualTo(ServerTestUtils.ID)
+        assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
+        assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
+        assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+    }
+
+    @Test
+    fun `should get server with discordServerId`() {
+
+        serverRepository.addServer(
+            ServerTestUtils.getServer()
+        )
+
+        val server = serverRepository.getServer(ServerTestUtils.ID, ServerTestUtils.DISCORD_SERVER_ID)
+
+        assertThat(server).isNotNull()
+        assertThat(server!!.id).isEqualTo(ServerTestUtils.ID)
+        assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
+        assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
+        assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+    }
+
+    @Test
+    fun `should not get server with non matching discordServerId`() {
+
+        serverRepository.addServer(
+            ServerTestUtils.getServer()
+        )
+
+        val server = serverRepository.getServer(ServerTestUtils.ID, "invalid-discord-server-id")
+
+        assertThat(server).isNull()
+    }
+
+    @Test
     fun `should not update server status monitor with higher version`() {
 
         val serverStatusMonitor = ServerTestUtils.getServer()

@@ -64,7 +64,7 @@ class PvpKillFeedService(
         pvpKillFeed.currentFailedAttempts = 0
 
         pvpKills
-            .filter { pvpKill -> pvpKill.occurred.isAfter(pvpKillFeed.getLastUpdated()) }
+            .filter { pvpKill -> pvpKill.occurred.isAfter(pvpKillFeed.lastUpdated) }
             .sortedWith(Comparator.comparing(PvpKill::occurred))
             .forEach { pvpKill ->
                 pvpKillFeedChannel.tryCreateMessage(
@@ -72,7 +72,7 @@ class PvpKillFeedService(
                 )
             }
 
-        pvpKillFeed.lastUpdated = Instant.now().toEpochMilli()
+        pvpKillFeed.lastUpdated = Instant.now()
 
         logger.debug("Successfully updated the pvp kill feed for server '${pvpKillFeed.getServer().id}'.")
     }

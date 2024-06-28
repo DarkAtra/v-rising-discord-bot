@@ -14,7 +14,7 @@ interface ErrorAware {
                 add(
                     Error(
                         message = "${throwable::class.simpleName}: ${throwable.message}",
-                        timestamp = Instant.now().epochSecond
+                        timestamp = Instant.now()
                     )
                 )
             }

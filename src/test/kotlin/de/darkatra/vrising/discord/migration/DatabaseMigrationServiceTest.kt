@@ -4,7 +4,7 @@ import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
 import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.Status
 import org.assertj.core.api.Assertions.assertThat
-import org.dizitart.no2.Document
+import org.dizitart.no2.collection.Document
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 
@@ -36,17 +36,18 @@ class DatabaseMigrationServiceTest {
 
         DatabaseConfigurationTestUtils.getTestDatabase().use { database ->
 
-            val repository = database.getRepository(Schema::class.java)
-            repository.insert(Schema(appVersion = "V1.4.0"))
-            repository.insert(Schema(appVersion = "V1.5.0"))
-            repository.insert(Schema(appVersion = "V1.6.0"))
-            repository.insert(Schema(appVersion = "V1.8.0"))
-            repository.insert(Schema(appVersion = "V2.2.0"))
-            repository.insert(Schema(appVersion = "V2.3.0"))
-            repository.insert(Schema(appVersion = "V2.9.0"))
-            repository.insert(Schema(appVersion = "V2.10.0"))
-            repository.insert(Schema(appVersion = "V2.10.2"))
-            repository.insert(Schema(appVersion = "V2.11.0"))
+            database.getRepository(Schema::class.java).use { repository ->
+                repository.insert(Schema(appVersion = "V1.4.0"))
+                repository.insert(Schema(appVersion = "V1.5.0"))
+                repository.insert(Schema(appVersion = "V1.6.0"))
+                repository.insert(Schema(appVersion = "V1.8.0"))
+                repository.insert(Schema(appVersion = "V2.2.0"))
+                repository.insert(Schema(appVersion = "V2.3.0"))
+                repository.insert(Schema(appVersion = "V2.9.0"))
+                repository.insert(Schema(appVersion = "V2.10.0"))
+                repository.insert(Schema(appVersion = "V2.10.2"))
+                repository.insert(Schema(appVersion = "V2.11.0"))
+            }
 
             val databaseMigrationService = DatabaseMigrationService(
                 database = database,
@@ -55,7 +56,9 @@ class DatabaseMigrationServiceTest {
 
             assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse()
 
-            val schemas = repository.find().toList()
+            val schemas = database.getRepository(Schema::class.java).use { repository ->
+                repository.find().toList()
+            }
             assertThat(schemas).hasSize(10)
         }
     }
@@ -65,33 +68,41 @@ class DatabaseMigrationServiceTest {
 
         DatabaseConfigurationTestUtils.getTestDatabase().use { database ->
 
-            val repository = database.getRepository(Schema::class.java)
-            repository.insert(Schema(appVersion = "V2.1.0"))
+            database.getRepository(Schema::class.java).use { repository ->
+                repository.insert(Schema(appVersion = "V2.1.0"))
+            }
 
             val databaseMigrationService = DatabaseMigrationService(
                 database = database,
                 appVersionFromPom = "2.9.0"
             )
 
-            val oldCollection = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor")
-            val newCollection = database.getCollection("de.darkatra.vrising.discord.persistence.model.Server")
+            database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
+                oldCollection.insert(
+                    Document.createDocument("hostName", "test-hostname")
+                )
+                assertThat(oldCollection.size()).isEqualTo(1)
+            }
 
-            oldCollection.insert(
-                Document.createDocument("hostName", "test-hostname")
-            )
-
-            assertThat(oldCollection.size()).isEqualTo(1)
-            assertThat(newCollection.size()).isEqualTo(0)
+            database.getCollection("de.darkatra.vrising.discord.persistence.model.Server").use { newCollection ->
+                assertThat(newCollection.size()).isEqualTo(0)
+            }
 
             assertThat(databaseMigrationService.migrateToLatestVersion()).isTrue()
 
-            assertThat(oldCollection.size()).isEqualTo(0)
-            assertThat(newCollection.size()).isEqualTo(1)
+            database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
+                assertThat(oldCollection.size()).isEqualTo(0)
+            }
 
-            val migratedDocument = newCollection.find().first()
+            val migratedDocument = database.getCollection("de.darkatra.vrising.discord.persistence.model.Server").use { newCollection ->
+                assertThat(newCollection.size()).isEqualTo(1)
+                newCollection.find().first()
+            }
             assertThat(migratedDocument["hostname"]).isEqualTo("test-hostname")
 
-            val schemas = repository.find().toList()
+            val schemas = database.getRepository(Schema::class.java).use { repository ->
+                repository.find().toList()
+            }
             assertThat(schemas).hasSize(2)
         }
     }
@@ -106,20 +117,24 @@ class DatabaseMigrationServiceTest {
                 appVersionFromPom = "2.11.0"
             )
 
-            val oldCollection = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor")
-            val serverRepository = database.getRepository(Server::class.java)
-
-            assertThat(oldCollection.size()).isEqualTo(1)
-            assertThat(serverRepository.size()).isEqualTo(0)
-
-            val oldDocument = oldCollection.find().first()
+            val oldDocument = database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
+                assertThat(oldCollection.size()).isEqualTo(1)
+                oldCollection.find().first()
+            }
+            database.getRepository(Server::class.java).use { serverRepository ->
+                assertThat(serverRepository.size()).isEqualTo(0)
+            }
 
             assertThat(databaseMigrationService.migrateToLatestVersion()).isTrue()
 
-            assertThat(oldCollection.size()).isEqualTo(0)
-            assertThat(serverRepository.size()).isEqualTo(1)
+            database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
+                assertThat(oldCollection.size()).isEqualTo(0)
+            }
 
-            val server = serverRepository.find().first()
+            val server = database.getRepository(Server::class.java).use { serverRepository ->
+                assertThat(serverRepository.size()).isEqualTo(1)
+                serverRepository.find().first()
+            }
             assertThat(server.id).isEqualTo(oldDocument["id"])
             assertThat(server.version).isNotNull()
             assertThat(server.discordServerId).isEqualTo(oldDocument["discordServerId"])
@@ -158,20 +173,25 @@ class DatabaseMigrationServiceTest {
                 appVersionFromPom = "2.11.0"
             )
 
-            val oldCollection = database.getCollection("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor")
-            val serverRepository = database.getRepository(Server::class.java)
+            database.getRepository(Server::class.java).use { serverRepository ->
+                assertThat(serverRepository.size()).isEqualTo(0)
+            }
 
-            assertThat(oldCollection.size()).isEqualTo(1)
-            assertThat(serverRepository.size()).isEqualTo(0)
-
-            val oldDocument = oldCollection.find().first()
+            val oldDocument = database.getCollection("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { oldCollection ->
+                assertThat(oldCollection.size()).isEqualTo(1)
+                oldCollection.find().first()
+            }
 
             assertThat(databaseMigrationService.migrateToLatestVersion()).isTrue()
 
-            assertThat(oldCollection.size()).isEqualTo(0)
-            assertThat(serverRepository.size()).isEqualTo(1)
+            database.getCollection("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { oldCollection ->
+                assertThat(oldCollection.size()).isEqualTo(0)
+            }
 
-            val server = serverRepository.find().first()
+            val server = database.getRepository(Server::class.java).use { serverRepository ->
+                assertThat(serverRepository.size()).isEqualTo(1)
+                serverRepository.find().first()
+            }
             assertThat(server.id).isEqualTo(oldDocument["id"])
             assertThat(server.version).isEqualTo(oldDocument["version"])
             assertThat(server.discordServerId).isEqualTo(oldDocument["discordServerId"])
@@ -185,13 +205,13 @@ class DatabaseMigrationServiceTest {
             assertThat(server.playerActivityFeed).isNotNull()
             assertThat(server.playerActivityFeed!!.status).isEqualTo(Status.ACTIVE)
             assertThat(server.playerActivityFeed!!.discordChannelId).isEqualTo(oldDocument["playerActivityDiscordChannelId"])
-            assertThat(server.playerActivityFeed!!.lastUpdated).isNull()
+            assertThat(server.playerActivityFeed!!.lastUpdated).isNotNull()
             assertThat(server.playerActivityFeed!!.currentFailedAttempts).isEqualTo(0)
             assertThat(server.playerActivityFeed!!.recentErrors).isEmpty()
             assertThat(server.pvpKillFeed).isNotNull()
             assertThat(server.pvpKillFeed!!.status).isEqualTo(Status.ACTIVE)
             assertThat(server.pvpKillFeed!!.discordChannelId).isEqualTo(oldDocument["pvpKillFeedDiscordChannelId"])
-            assertThat(server.pvpKillFeed!!.lastUpdated).isNull()
+            assertThat(server.pvpKillFeed!!.lastUpdated).isNotNull()
             assertThat(server.pvpKillFeed!!.currentFailedAttempts).isEqualTo(0)
             assertThat(server.pvpKillFeed!!.recentErrors).isEmpty()
             assertThat(server.statusMonitor).isNotNull()

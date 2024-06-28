@@ -85,7 +85,8 @@ class ConfigurePlayerActivityFeedCommand(
 
             server.playerActivityFeed = PlayerActivityFeed(
                 status = status ?: Status.ACTIVE,
-                discordChannelId = channelId
+                discordChannelId = channelId,
+                lastUpdated = server.lastUpdated
             )
 
             logger.info("Successfully configured the player activity feed for server '$serverId'.")

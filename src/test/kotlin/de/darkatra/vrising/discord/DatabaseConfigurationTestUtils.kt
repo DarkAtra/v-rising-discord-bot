@@ -1,7 +1,8 @@
 package de.darkatra.vrising.discord
 
+import de.darkatra.vrising.discord.persistence.DatabaseConfiguration
 import org.dizitart.no2.Nitrite
-import org.dizitart.no2.objects.filters.ObjectFilters
+import org.dizitart.no2.filters.Filter
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -22,15 +23,14 @@ object DatabaseConfigurationTestUtils {
             fromTemplate.copyTo(databaseFile, overwrite = true)
         }
 
-        return Nitrite.builder()
-            .compressed()
-            .filePath(databaseFile)
-            .openOrCreate()
+        return DatabaseConfiguration.buildNitriteDatabase(databaseFile.toPath())
     }
 
     fun clearDatabase(nitrite: Nitrite) {
         nitrite.listCollectionNames().forEach { collectionName ->
-            nitrite.getCollection(collectionName).remove(ObjectFilters.ALL)
+            nitrite.getCollection(collectionName).use {
+                it.remove(Filter.ALL)
+            }
         }
     }
 }

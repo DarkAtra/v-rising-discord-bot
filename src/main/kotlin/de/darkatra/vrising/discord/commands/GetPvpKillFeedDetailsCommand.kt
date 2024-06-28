@@ -78,7 +78,7 @@ class GetPvpKillFeedDetailsCommand(
 
                 field {
                     name = "Last Updated"
-                    value = "<t:${pvpKillFeed.getLastUpdated().epochSecond}:R>"
+                    value = "<t:${pvpKillFeed.lastUpdated.epochSecond}:R>"
                     inline = true
                 }
 

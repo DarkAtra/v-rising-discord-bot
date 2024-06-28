@@ -1,16 +1,16 @@
 package de.darkatra.vrising.discord.persistence.model
 
-import org.dizitart.no2.IndexType
-import org.dizitart.no2.objects.Id
-import org.dizitart.no2.objects.Index
-import org.dizitart.no2.objects.Indices
+import org.dizitart.no2.index.IndexType
+import org.dizitart.no2.repository.annotations.Id
+import org.dizitart.no2.repository.annotations.Index
+import org.dizitart.no2.repository.annotations.Indices
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import java.time.Instant
 
 @Indices(
     value = [
-        Index(value = "discordServerId", type = IndexType.NonUnique),
+        Index(fields = ["discordServerId"], type = IndexType.NON_UNIQUE),
     ]
 )
 data class Server(

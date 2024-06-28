@@ -11,7 +11,7 @@ fun EmbedBuilder.renderRecentErrors(errorAware: ErrorAware, maxCharactersPerErro
             field {
                 name = "Errors - Page ${i + 1}"
                 value = chunk.joinToString("\n") {
-                    "<t:${it.timestamp}:R>```${StringUtils.truncate(it.message, maxCharactersPerError)}```"
+                    "<t:${it.timestamp.epochSecond}:R>```${StringUtils.truncate(it.message, maxCharactersPerError)}```"
                 }
             }
         }

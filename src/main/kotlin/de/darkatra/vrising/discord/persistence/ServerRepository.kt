@@ -1,12 +1,11 @@
 package de.darkatra.vrising.discord.persistence
 
 import de.darkatra.vrising.discord.persistence.model.Server
-import de.darkatra.vrising.discord.plus
 import org.dizitart.kno2.filters.and
-import org.dizitart.no2.FindOptions
+import org.dizitart.kno2.filters.eq
 import org.dizitart.no2.Nitrite
-import org.dizitart.no2.objects.ObjectFilter
-import org.dizitart.no2.objects.filters.ObjectFilters
+import org.dizitart.no2.collection.FindOptions
+import org.dizitart.no2.filters.Filter
 import org.springframework.stereotype.Service
 import java.time.Instant
 
@@ -18,7 +17,7 @@ class ServerRepository(
 
     fun addServer(server: Server) {
 
-        if (repository.find(ObjectFilters.eq("id", server.id)).any()) {
+        if (repository.find(Server::id eq server.id).any()) {
             throw IllegalStateException("Server with id '${server.id}' already exists.")
         }
 
@@ -31,7 +30,7 @@ class ServerRepository(
         val newVersion = server.version
 
         @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
-        val databaseVersion = (repository.find(ObjectFilters.eq("id", server.id)).firstOrNull()
+        val databaseVersion = (repository.find(Server::id eq server.id).firstOrNull()
             ?: throw OutdatedServerException("Server with id '${server.id}' not found."))
             .version!!
 
@@ -44,63 +43,56 @@ class ServerRepository(
 
     fun removeServer(id: String, discordServerId: String? = null): Boolean {
 
-        var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
+        val filter = Server::id eq id
 
         if (discordServerId != null) {
-            objectFilter += ObjectFilters.eq("discordServerId", discordServerId)
+            filter.and(Server::discordServerId eq discordServerId)
         }
 
-        return repository.remove(objectFilter).affectedCount > 0
+        return repository.remove(filter).affectedCount > 0
     }
 
     fun getServer(id: String, discordServerId: String? = null): Server? {
 
-        var objectFilter: ObjectFilter = ObjectFilters.eq("id", id)
+        val filter = Server::id eq id
 
         if (discordServerId != null) {
-            objectFilter += ObjectFilters.eq("discordServerId", discordServerId)
+            filter.and(Server::discordServerId eq discordServerId)
         }
 
-        return repository.find(objectFilter).firstOrNull().also { server ->
-            server?.linkServerAwareFields()
+        val server = repository.getById(id)
+        if (discordServerId != null && server.discordServerId != discordServerId) {
+            return null
         }
+
+        return server.also { it.linkServerAwareFields() }
     }
 
-    fun getServers(discordServerId: String? = null, offset: Int? = null, limit: Int? = null): List<Server> {
+    fun getServers(discordServerId: String? = null, offset: Long? = null, limit: Long? = null): List<Server> {
 
-        val objectFilter = buildList<ObjectFilter> {
-            if (discordServerId != null) {
-                add(ObjectFilters.eq("discordServerId", discordServerId))
-            }
-        }.reduceOrNull { acc: ObjectFilter, objectFilter: ObjectFilter -> acc.and(objectFilter) }
-
-        if (offset != null && limit != null) {
-
-            if (offset >= repository.size()) {
-                return emptyList()
-            }
-
-            val findOptions = FindOptions.limit(offset, limit)
-            return when {
-                objectFilter != null -> repository.find(objectFilter, findOptions).toList()
-                else -> repository.find(findOptions).toList()
-            }
+        val filter = when (discordServerId != null) {
+            true -> Server::discordServerId eq discordServerId
+            false -> Filter.ALL
         }
 
-        return when {
-            objectFilter != null -> repository.find(objectFilter).toList()
-            else -> repository.find().toList()
-        }.onEach { server ->
+        val findOptions = when (offset != null && limit != null) {
+            true -> FindOptions.skipBy(offset).limit(limit)
+            else -> null
+        }
+
+        return repository.find(filter, findOptions).toList().onEach { server ->
             server.linkServerAwareFields()
         }
     }
 
-    fun count(discordServerId: String? = null): Int {
+    fun count(discordServerId: String? = null): Long {
 
-        return when {
-            discordServerId != null -> repository.find(ObjectFilters.eq("discordServerId", discordServerId)).size()
-            else -> repository.find().size()
+        val filter = when (discordServerId != null) {
+            true -> Server::discordServerId eq discordServerId
+            false -> Filter.ALL
         }
+
+        return repository.find(filter).size()
     }
 
     private fun updateVersion(server: Server): Server {

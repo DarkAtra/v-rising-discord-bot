@@ -14,7 +14,7 @@ import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
-private const val PAGE_SIZE = 10
+private const val PAGE_SIZE = 10L
 
 @Component
 @EnableConfigurationProperties(BotProperties::class)

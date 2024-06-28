@@ -85,7 +85,8 @@ class ConfigurePvpKillFeedCommand(
 
             server.pvpKillFeed = PvpKillFeed(
                 status = status ?: Status.ACTIVE,
-                discordChannelId = channelId
+                discordChannelId = channelId,
+                lastUpdated = server.lastUpdated
             )
 
             logger.info("Successfully configured the pvp kill feed for server '$serverId'.")
