@@ -64,7 +64,7 @@ class PlayerActivityFeedService(
         playerActivityFeed.currentFailedAttempts = 0
 
         playerActivities
-            .filter { playerActivity -> playerActivity.occurred.isAfter(playerActivityFeed.getLastUpdated()) }
+            .filter { playerActivity -> playerActivity.occurred.isAfter(playerActivityFeed.lastUpdated) }
             .sortedWith(Comparator.comparing(PlayerActivity::occurred))
             .forEach { playerActivity ->
                 val action = when (playerActivity.type) {
@@ -76,7 +76,7 @@ class PlayerActivityFeedService(
                 )
             }
 
-        playerActivityFeed.lastUpdated = Instant.now().toEpochMilli()
+        playerActivityFeed.lastUpdated = Instant.now()
 
         logger.debug("Successfully updated the player activity feed for server '${playerActivityFeed.getServer().id}'.")
     }

@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.migration
 
-import org.dizitart.no2.objects.Id
+import org.dizitart.no2.repository.annotations.Id
 
 data class Schema(
     @Id

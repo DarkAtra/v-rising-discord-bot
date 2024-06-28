@@ -1,7 +1,7 @@
 package de.darkatra.vrising.discord.migration
 
-import org.dizitart.no2.Document
 import org.dizitart.no2.Nitrite
+import org.dizitart.no2.collection.Document
 
 class DatabaseMigration(
     val description: String,

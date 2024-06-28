@@ -38,7 +38,7 @@
         <kord.version>0.14.0</kord.version>
         <agql-source-query.version>1.2.1</agql-source-query.version>
         <java-uuid-generator.version>5.0.0</java-uuid-generator.version>
-        <potassium-nitrite.version>3.4.4</potassium-nitrite.version>
+        <potassium-nitrite.version>4.3.0-SNAPSHOT</potassium-nitrite.version>
         <commons-validator.version>1.7</commons-validator.version>
 
         <!-- FIXME: remove coroutines version once spring updated to 1.7.x -->
@@ -110,6 +110,11 @@
         <dependency>
             <groupId>org.dizitart</groupId>
             <artifactId>potassium-nitrite</artifactId>
+            <version>${potassium-nitrite.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dizitart</groupId>
+            <artifactId>nitrite-mvstore-adapter</artifactId>
             <version>${potassium-nitrite.version}</version>
         </dependency>
 

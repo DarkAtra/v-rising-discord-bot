@@ -78,7 +78,7 @@ class GetPlayerActivityFeedDetailsCommand(
 
                 field {
                     name = "Last Updated"
-                    value = "<t:${playerActivityFeed.getLastUpdated().epochSecond}:R>"
+                    value = "<t:${playerActivityFeed.lastUpdated.epochSecond}:R>"
                     inline = true
                 }
 
