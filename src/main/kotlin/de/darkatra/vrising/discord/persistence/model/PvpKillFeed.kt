@@ -4,9 +4,6 @@ import java.time.Instant
 
 data class PvpKillFeed(
     override var status: Status,
-    @Transient
-    private var server: Server? = null,
-
     var discordChannelId: String,
     var lastUpdated: Instant,
 
@@ -14,6 +11,9 @@ data class PvpKillFeed(
 
     override var recentErrors: List<Error> = emptyList()
 ) : ErrorAware, ServerAware, StatusAware {
+
+    @Transient
+    private var server: Server? = null
 
     override fun getServer(): Server {
         return server!!

@@ -36,7 +36,8 @@ class PlayerActivityFeedService(
         val playerActivities = botCompanionClient.getPlayerActivities(
             playerActivityFeed.getServer().apiHostname!!,
             playerActivityFeed.getServer().apiPort!!,
-            playerActivityFeed.getServer().getApiInterceptors()
+            playerActivityFeed.getServer().apiUsername,
+            playerActivityFeed.getServer().apiPassword
         ).getOrElse { e ->
 
             logger.error("Exception updating the player activity feed for server '${playerActivityFeed.getServer().id}'", e)

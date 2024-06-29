@@ -4,8 +4,6 @@ import org.dizitart.no2.index.IndexType
 import org.dizitart.no2.repository.annotations.Id
 import org.dizitart.no2.repository.annotations.Index
 import org.dizitart.no2.repository.annotations.Indices
-import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import java.time.Instant
 
 @Indices(
@@ -59,22 +57,4 @@ data class Server(
                 false -> Status.INACTIVE
             }
         }
-
-    fun linkServerAwareFields() {
-        playerActivityFeed?.setServer(this)
-        pvpKillFeed?.setServer(this)
-        statusMonitor?.setServer(this)
-        pvpLeaderboard?.setServer(this)
-    }
-
-    fun getApiInterceptors(): List<ClientHttpRequestInterceptor> {
-
-        val apiUsername = apiUsername
-        val apiPassword = apiPassword
-
-        return when (apiUsername != null && apiPassword != null) {
-            true -> listOf(BasicAuthenticationInterceptor(apiUsername, apiPassword))
-            false -> emptyList()
-        }
-    }
 }

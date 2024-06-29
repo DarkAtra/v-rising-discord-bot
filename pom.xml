@@ -36,6 +36,8 @@
         <kotlin.code.style>official</kotlin.code.style>
 
         <kord.version>0.14.0</kord.version>
+        <!-- keep the ktor version in sync with what kord uses to avoid unexpected errors -->
+        <ktor.version>2.3.11</ktor.version>
         <agql-source-query.version>1.2.1</agql-source-query.version>
         <java-uuid-generator.version>5.0.0</java-uuid-generator.version>
         <potassium-nitrite.version>4.3.0-SNAPSHOT</potassium-nitrite.version>
@@ -47,6 +49,18 @@
         <mockito-kotlin.version>5.0.0</mockito-kotlin.version>
         <wiremock.version>3.4.2</wiremock.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-bom</artifactId>
+                <version>${ktor.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -83,6 +97,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
+        <!-- Http Client -->
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-okhttp-jvm</artifactId>
         </dependency>
 
         <!-- Discord -->

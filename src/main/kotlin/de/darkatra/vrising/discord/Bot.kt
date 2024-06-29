@@ -51,9 +51,9 @@ import java.util.concurrent.atomic.AtomicBoolean
     // properties
     BotProperties::class,
     // database
+    Schema::class,
     Error::class,
     Leaderboard::class,
-    Schema::class,
     PlayerActivityFeed::class,
     PvpKillFeed::class,
     Server::class,

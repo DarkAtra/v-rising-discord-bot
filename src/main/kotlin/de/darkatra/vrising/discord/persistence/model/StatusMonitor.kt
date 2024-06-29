@@ -2,9 +2,6 @@ package de.darkatra.vrising.discord.persistence.model
 
 data class StatusMonitor(
     override var status: Status,
-    @Transient
-    private var server: Server? = null,
-
     var discordChannelId: String,
 
     var displayServerDescription: Boolean,
@@ -16,6 +13,9 @@ data class StatusMonitor(
 
     override var recentErrors: List<Error> = emptyList()
 ) : ErrorAware, ServerAware, StatusAware {
+
+    @Transient
+    private var server: Server? = null
 
     override fun getServer(): Server {
         return server!!
