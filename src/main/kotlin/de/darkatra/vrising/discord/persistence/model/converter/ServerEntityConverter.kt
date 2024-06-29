@@ -36,7 +36,12 @@ class ServerEntityConverter : EntityConverter<Server> {
             pvpLeaderboard = document.get(Server::pvpLeaderboard.name)?.let { pvpLeaderboard ->
                 nitriteMapper.tryConvert(pvpLeaderboard, Leaderboard::class.java) as Leaderboard
             }
-        )
+        ).also { server ->
+            server.playerActivityFeed?.setServer(server)
+            server.pvpKillFeed?.setServer(server)
+            server.statusMonitor?.setServer(server)
+            server.pvpLeaderboard?.setServer(server)
+        }
     }
 
     override fun toDocument(server: Server, nitriteMapper: NitriteMapper): Document {

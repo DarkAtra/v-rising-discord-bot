@@ -36,7 +36,8 @@ class PvpKillFeedService(
         val pvpKills = botCompanionClient.getPvpKills(
             pvpKillFeed.getServer().apiHostname!!,
             pvpKillFeed.getServer().apiPort!!,
-            pvpKillFeed.getServer().getApiInterceptors()
+            pvpKillFeed.getServer().apiUsername,
+            pvpKillFeed.getServer().apiPassword
         ).getOrElse { e ->
 
             logger.error("Exception updating the pvp kill feed for server ${pvpKillFeed.getServer().id}", e)

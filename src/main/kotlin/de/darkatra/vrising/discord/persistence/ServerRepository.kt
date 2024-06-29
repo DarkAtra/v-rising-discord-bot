@@ -65,7 +65,7 @@ class ServerRepository(
             return null
         }
 
-        return server.also { it.linkServerAwareFields() }
+        return server
     }
 
     fun getServers(discordServerId: String? = null, offset: Long? = null, limit: Long? = null): List<Server> {
@@ -80,9 +80,7 @@ class ServerRepository(
             else -> null
         }
 
-        return repository.find(filter, findOptions).toList().onEach { server ->
-            server.linkServerAwareFields()
-        }
+        return repository.find(filter, findOptions).toList()
     }
 
     fun count(discordServerId: String? = null): Long {

@@ -1,70 +1,111 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.http.client.ClientHttpRequestInterceptor
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.request.accept
+import io.ktor.client.request.basicAuth
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.appendPathSegments
+import io.ktor.http.headers
+import io.ktor.http.userAgent
+import org.springframework.context.ApplicationContext
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import java.net.InetSocketAddress
-import java.net.URI
+import java.net.URL
 import java.time.Duration
 
 @Service
-class BotCompanionClient {
+class BotCompanionClient(
+    private val applicationContext: ApplicationContext
+) {
 
-    fun getCharacters(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): Result<List<Character>> {
-
-        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
-
-        return try {
-            Result.success(
-                restTemplate.getForObject("/characters", Array<Character>::class.java)?.toList() ?: emptyList()
-            )
-        } catch (e: Exception) {
-            Result.failure(e)
+    private val objectMapper by lazy {
+        jacksonObjectMapper().registerModule(JavaTimeModule())
+    }
+    private val httpClient by lazy {
+        HttpClient(OkHttp) {
+            install(HttpTimeout) {
+                connectTimeoutMillis = Duration.ofSeconds(1).toMillis()
+                requestTimeoutMillis = Duration.ofSeconds(5).toMillis()
+                socketTimeoutMillis = Duration.ofSeconds(5).toMillis()
+            }
         }
     }
 
-    fun getPlayerActivities(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): Result<List<PlayerActivity>> {
+    suspend fun getCharacters(
+        serverApiHostName: String,
+        serverApiPort: Int,
+        serverApiUsername: String? = null,
+        serverApiPassword: String? = null
+    ): Result<List<Character>> {
 
-        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
+        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/characters", serverApiUsername, serverApiPassword)
 
-        return try {
-            Result.success(
-                restTemplate.getForObject("/player-activities", Array<PlayerActivity>::class.java)?.toList() ?: emptyList()
-            )
-        } catch (e: Exception) {
-            Result.failure(e)
+        return when (response.status) {
+            HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<Character>>()))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getCharacters request."))
         }
     }
 
-    fun getPvpKills(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): Result<List<PvpKill>> {
+    suspend fun getPlayerActivities(
+        serverApiHostName: String,
+        serverApiPort: Int,
+        serverApiUsername: String? = null,
+        serverApiPassword: String? = null
+    ): Result<List<PlayerActivity>> {
 
-        val restTemplate = getRestTemplate(serverApiHostName, serverApiPort, interceptors)
+        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/player-activities", serverApiUsername, serverApiPassword)
 
-        return try {
-            Result.success(
-                restTemplate.getForObject("/pvp-kills", Array<PvpKill>::class.java)?.toList() ?: emptyList()
-            )
-        } catch (e: Exception) {
-            Result.failure(e)
+        return when (response.status) {
+            HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PlayerActivity>>()))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getPlayerActivities request."))
         }
     }
 
-    private fun getRestTemplate(serverApiHostName: String, serverApiPort: Int, interceptors: List<ClientHttpRequestInterceptor>): RestTemplate {
+    suspend fun getPvpKills(
+        serverApiHostName: String,
+        serverApiPort: Int,
+        serverApiUsername: String? = null,
+        serverApiPassword: String? = null
+    ): Result<List<PvpKill>> {
 
+        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/pvp-kills", serverApiUsername, serverApiPassword)
+
+        return when (response.status) {
+            HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PvpKill>>()))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getPlayerActivities request."))
+        }
+    }
+
+    private suspend fun performRequest(url: URL, path: String, serverApiUsername: String?, serverApiPassword: String?): HttpResponse {
+        return httpClient.get(url) {
+            url {
+                appendPathSegments(path)
+            }
+            headers {
+                accept(ContentType.parse(MediaType.APPLICATION_JSON_VALUE))
+                applicationContext.id?.let { userAgent(it) }
+                if (serverApiUsername != null && serverApiPassword != null) {
+                    basicAuth(serverApiUsername, serverApiPassword)
+                }
+            }
+        }
+    }
+
+    private fun getRequestUrl(serverApiHostName: String, serverApiPort: Int): URL {
         val address = InetSocketAddress(serverApiHostName, serverApiPort)
-
-        @Suppress("HttpUrlsUsage") // the v risings http server does not support https
-        val requestURI = URI.create("http://${address.hostString}:${address.port}/v-rising-discord-bot")
-
-        return RestTemplateBuilder()
-            .setConnectTimeout(Duration.ofSeconds(5))
-            .setReadTimeout(Duration.ofSeconds(5))
-            .rootUri(requestURI.toString())
-            .interceptors(interceptors)
-            .build()
+        return URL("http://${address.hostString}:${address.port}/v-rising-discord-bot")
     }
 }

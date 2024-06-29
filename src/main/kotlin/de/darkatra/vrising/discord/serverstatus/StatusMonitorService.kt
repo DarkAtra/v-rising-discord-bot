@@ -77,7 +77,8 @@ class StatusMonitorService(
             val characters = botCompanionClient.getCharacters(
                 statusMonitor.getServer().apiHostname!!,
                 statusMonitor.getServer().apiPort!!,
-                statusMonitor.getServer().getApiInterceptors()
+                statusMonitor.getServer().apiUsername,
+                statusMonitor.getServer().apiPassword
             ).getOrElse { e ->
 
                 logger.warn("Could not resolve characters for status monitor for server '${statusMonitor.getServer().id}'.", e)

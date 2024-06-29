@@ -32,7 +32,7 @@ class EntityConverterTest {
     @Test
     fun `should not change Server on persistence roundtrip`() {
 
-        val server = Server(
+        val originalServer = Server(
             id = ID,
             version = Instant.now().toEpochMilli(),
             discordServerId = DISCORD_SERVER_ID,
@@ -83,9 +83,10 @@ class EntityConverterTest {
             )
         )
 
-        val document = mapper.tryConvert(server, Document::class.java)
+        val document = mapper.tryConvert(originalServer, Document::class.java) as Document
+        val roundtripServer = mapper.tryConvert(document, Server::class.java) as Server
 
-        assertThat(mapper.tryConvert(document, Server::class.java)).isEqualTo(server)
+        assertThat(roundtripServer).isEqualTo(originalServer)
     }
 
     @Test
