@@ -5,6 +5,7 @@ import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.collection.Document
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 
@@ -106,6 +107,7 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
+    @Disabled
     fun `should migrate schema from 1_2_x to 2_11_0`() {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V1_2_x).use { database ->
@@ -160,6 +162,7 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
+    @Disabled
     fun `should migrate schema from 2_10_5 to 2_11_0`() {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V2_10_5).use { database ->

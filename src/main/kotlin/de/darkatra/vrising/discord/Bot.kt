@@ -6,14 +6,6 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
-import de.darkatra.vrising.discord.migration.Schema
-import de.darkatra.vrising.discord.persistence.model.Error
-import de.darkatra.vrising.discord.persistence.model.Leaderboard
-import de.darkatra.vrising.discord.persistence.model.PlayerActivityFeed
-import de.darkatra.vrising.discord.persistence.model.PvpKillFeed
-import de.darkatra.vrising.discord.persistence.model.Server
-import de.darkatra.vrising.discord.persistence.model.Status
-import de.darkatra.vrising.discord.persistence.model.StatusMonitor
 import de.darkatra.vrising.discord.serverstatus.ServerService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -50,15 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 @RegisterReflectionForBinding(
     // properties
     BotProperties::class,
-    // database
-    Schema::class,
-    Error::class,
-    Leaderboard::class,
-    PlayerActivityFeed::class,
-    PvpKillFeed::class,
-    Server::class,
-    Status::class,
-    StatusMonitor::class,
     // http
     Character::class,
     PlayerActivity::class,
