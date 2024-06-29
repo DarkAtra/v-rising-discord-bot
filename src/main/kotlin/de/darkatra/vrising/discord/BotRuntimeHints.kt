@@ -17,6 +17,10 @@ import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
 import dev.kord.core.cache.data.WebhookData
 import io.ktor.utils.io.pool.DefaultPool
+import org.dizitart.no2.collection.Document
+import org.dizitart.no2.collection.NitriteId
+import org.dizitart.no2.common.meta.Attributes
+import org.dizitart.no2.index.IndexMeta
 import org.springframework.aot.hint.BindingReflectionHintsRegistrar
 import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
@@ -36,16 +40,23 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
         // required by nitrite for serialization
+        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.Security\$UserCredential"))
+        // required by nitrite for serialization
         hints.serialization().registerType(TypeReference.of("java.util.ArrayList"))
+        hints.serialization().registerType(Attributes::class.java)
         hints.serialization().registerType(AtomicBoolean::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.Boolean"))
         hints.serialization().registerType(ConcurrentSkipListSet::class.java)
         hints.serialization().registerType(ConcurrentSkipListMap::class.java)
+        hints.serialization().registerType(Document::class.java)
         hints.serialization().registerType(HashMap::class.java)
+        hints.serialization().registerType(IndexMeta::class.java)
+        hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
         hints.serialization().registerType(TypeReference.of("java.lang.Integer"))
         hints.serialization().registerType(LinkedHashMap::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.Long"))
         hints.serialization().registerType(TypeReference.of("java.lang.Number"))
+        hints.serialization().registerType(NitriteId::class.java)
         hints.serialization().registerType(TypeReference.of("java.lang.String"))
 
         // reflection hints for kord (remove once https://github.com/kordlib/kord/issues/786 is merged)
