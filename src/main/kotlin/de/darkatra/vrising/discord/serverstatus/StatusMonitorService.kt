@@ -24,7 +24,7 @@ class StatusMonitorService(
     private val botCompanionClient: BotCompanionClient
 ) {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     suspend fun updateStatusMonitor(kord: Kord, statusMonitor: StatusMonitor) {
 

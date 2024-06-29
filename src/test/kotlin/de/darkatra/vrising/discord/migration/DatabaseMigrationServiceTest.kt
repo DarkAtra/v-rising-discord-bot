@@ -78,9 +78,7 @@ class DatabaseMigrationServiceTest {
             )
 
             database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
-                oldCollection.insert(
-                    Document.createDocument("hostName", "test-hostname")
-                )
+                oldCollection.insert(Document.createDocument("hostName", "test-hostname"))
                 assertThat(oldCollection.size()).isEqualTo(1)
             }
 

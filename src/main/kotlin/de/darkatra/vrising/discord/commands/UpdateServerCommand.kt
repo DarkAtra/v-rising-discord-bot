@@ -32,7 +32,7 @@ class UpdateServerCommand(
     private val botProperties: BotProperties
 ) : Command {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     private val name: String = "update-server"
     private val description: String = "Updates the given server."

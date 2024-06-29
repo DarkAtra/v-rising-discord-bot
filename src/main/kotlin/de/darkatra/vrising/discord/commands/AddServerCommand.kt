@@ -34,7 +34,7 @@ class AddServerCommand(
     private val botProperties: BotProperties
 ) : Command {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     private val name: String = "add-server"
     private val description: String = "Adds a server."

@@ -23,7 +23,7 @@ class ConfigurePvpKillFeedCommand(
     private val serverRepository: ServerRepository
 ) : Command {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     private val name: String = "configure-pvp-kill-feed"
     private val description: String = "Configures the pvp kill feed for a given server."

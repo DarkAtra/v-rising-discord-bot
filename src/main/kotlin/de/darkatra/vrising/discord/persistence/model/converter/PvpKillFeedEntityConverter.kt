@@ -14,11 +14,11 @@ class PvpKillFeedEntityConverter : EntityConverter<PvpKillFeed> {
 
     override fun fromDocument(document: Document, nitriteMapper: NitriteMapper): PvpKillFeed {
         return PvpKillFeed(
-            status = Status.valueOf(document.get("status", String::class.java)),
-            discordChannelId = document.get("discordChannelId", String::class.java),
-            lastUpdated = document.get("lastUpdated", String::class.java).let(Instant::parse),
-            currentFailedAttempts = document.get("currentFailedAttempts") as Int,
-            recentErrors = (document.get("recentErrors") as List<*>).map { error ->
+            status = Status.valueOf(document.get(PvpKillFeed::status.name, String::class.java)),
+            discordChannelId = document.get(PvpKillFeed::discordChannelId.name, String::class.java),
+            lastUpdated = document.get(PvpKillFeed::lastUpdated.name, String::class.java).let(Instant::parse),
+            currentFailedAttempts = document.get(PvpKillFeed::currentFailedAttempts.name) as Int,
+            recentErrors = (document.get(PvpKillFeed::recentErrors.name) as List<*>).map { error ->
                 nitriteMapper.tryConvert(error, Error::class.java) as Error
             }
         )
@@ -26,11 +26,11 @@ class PvpKillFeedEntityConverter : EntityConverter<PvpKillFeed> {
 
     override fun toDocument(pvpKillFeed: PvpKillFeed, nitriteMapper: NitriteMapper): Document {
         return Document.createDocument().apply {
-            put("status", pvpKillFeed.status.name)
-            put("discordChannelId", pvpKillFeed.discordChannelId)
-            put("lastUpdated", pvpKillFeed.lastUpdated.toString())
-            put("currentFailedAttempts", pvpKillFeed.currentFailedAttempts)
-            put("recentErrors", pvpKillFeed.recentErrors.map { error ->
+            put(PvpKillFeed::status.name, pvpKillFeed.status.name)
+            put(PvpKillFeed::discordChannelId.name, pvpKillFeed.discordChannelId)
+            put(PvpKillFeed::lastUpdated.name, pvpKillFeed.lastUpdated.toString())
+            put(PvpKillFeed::currentFailedAttempts.name, pvpKillFeed.currentFailedAttempts)
+            put(PvpKillFeed::recentErrors.name, pvpKillFeed.recentErrors.map { error ->
                 nitriteMapper.tryConvert(error, Document::class.java)
             })
         }

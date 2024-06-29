@@ -23,7 +23,7 @@ class ConfigurePlayerActivityFeedCommand(
     private val serverRepository: ServerRepository
 ) : Command {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     private val name: String = "configure-player-activity-feed"
     private val description: String = "Configures the player activity feed for a given server."
