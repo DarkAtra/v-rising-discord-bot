@@ -134,6 +134,7 @@ class DatabaseMigrationServiceTest {
                 serverRepository.find().first()
             }
             assertThat(server.id).isEqualTo(oldDocument["id"])
+            @Suppress("DEPRECATION")
             assertThat(server.version).isNotNull()
             assertThat(server.discordServerId).isEqualTo(oldDocument["discordServerId"])
             assertThat(server.hostname).isEqualTo(oldDocument["hostName"])
@@ -191,6 +192,7 @@ class DatabaseMigrationServiceTest {
                 serverRepository.find().first()
             }
             assertThat(server.id).isEqualTo(oldDocument["id"])
+            @Suppress("DEPRECATION")
             assertThat(server.version).isEqualTo(oldDocument["version"])
             assertThat(server.discordServerId).isEqualTo(oldDocument["discordServerId"])
             assertThat(server.hostname).isEqualTo(oldDocument["hostname"])
