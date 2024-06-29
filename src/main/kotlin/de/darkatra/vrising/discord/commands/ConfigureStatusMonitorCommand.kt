@@ -27,7 +27,7 @@ class ConfigureStatusMonitorCommand(
     private val serverRepository: ServerRepository
 ) : Command {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     private val name: String = "configure-status-monitor"
     private val description: String = "Configures the status monitor for a given server."

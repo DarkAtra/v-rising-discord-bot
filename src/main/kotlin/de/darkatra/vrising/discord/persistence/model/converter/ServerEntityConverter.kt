@@ -15,25 +15,25 @@ class ServerEntityConverter : EntityConverter<Server> {
 
     override fun fromDocument(document: Document, nitriteMapper: NitriteMapper): Server {
         return Server(
-            id = document.get("id", String::class.java),
-            version = document.get("version") as Long,
-            discordServerId = document.get("discordServerId", String::class.java),
-            hostname = document.get("hostname", String::class.java),
-            queryPort = document.get("queryPort") as Int,
-            apiHostname = document.get("apiHostname", String::class.java),
-            apiPort = document.get("apiPort") as Int?,
-            apiUsername = document.get("apiUsername", String::class.java),
-            apiPassword = document.get("apiPassword", String::class.java),
-            playerActivityFeed = document.get("playerActivityFeed")?.let { playerActivityFeed ->
+            id = document.get(Server::id.name, String::class.java),
+            version = document.get(Server::version.name) as Long,
+            discordServerId = document.get(Server::discordServerId.name, String::class.java),
+            hostname = document.get(Server::hostname.name, String::class.java),
+            queryPort = document.get(Server::queryPort.name) as Int,
+            apiHostname = document.get(Server::apiHostname.name, String::class.java),
+            apiPort = document.get(Server::apiPort.name) as Int?,
+            apiUsername = document.get(Server::apiUsername.name, String::class.java),
+            apiPassword = document.get(Server::apiPassword.name, String::class.java),
+            playerActivityFeed = document.get(Server::playerActivityFeed.name)?.let { playerActivityFeed ->
                 nitriteMapper.tryConvert(playerActivityFeed, PlayerActivityFeed::class.java) as PlayerActivityFeed
             },
-            pvpKillFeed = document.get("pvpKillFeed")?.let { pvpKillFeed ->
+            pvpKillFeed = document.get(Server::pvpKillFeed.name)?.let { pvpKillFeed ->
                 nitriteMapper.tryConvert(pvpKillFeed, PvpKillFeed::class.java) as PvpKillFeed
             },
-            statusMonitor = document.get("statusMonitor")?.let { statusMonitor ->
+            statusMonitor = document.get(Server::statusMonitor.name)?.let { statusMonitor ->
                 nitriteMapper.tryConvert(statusMonitor, StatusMonitor::class.java) as StatusMonitor
             },
-            pvpLeaderboard = document.get("pvpLeaderboard")?.let { pvpLeaderboard ->
+            pvpLeaderboard = document.get(Server::pvpLeaderboard.name)?.let { pvpLeaderboard ->
                 nitriteMapper.tryConvert(pvpLeaderboard, Leaderboard::class.java) as Leaderboard
             }
         )
@@ -41,34 +41,34 @@ class ServerEntityConverter : EntityConverter<Server> {
 
     override fun toDocument(server: Server, nitriteMapper: NitriteMapper): Document {
         return Document.createDocument().apply {
-            put("id", server.id)
-            put("version", server.version)
-            put("discordServerId", server.discordServerId)
-            put("hostname", server.hostname)
-            put("queryPort", server.queryPort)
+            put(Server::id.name, server.id)
+            put(Server::version.name, server.version)
+            put(Server::discordServerId.name, server.discordServerId)
+            put(Server::hostname.name, server.hostname)
+            put(Server::queryPort.name, server.queryPort)
             server.apiHostname?.let { apiHostname ->
-                put("apiHostname", apiHostname)
+                put(Server::apiHostname.name, apiHostname)
             }
             server.apiPort?.let { apiPort ->
-                put("apiPort", apiPort)
+                put(Server::apiPort.name, apiPort)
             }
             server.apiUsername?.let { apiUsername ->
-                put("apiUsername", apiUsername)
+                put(Server::apiUsername.name, apiUsername)
             }
             server.apiPassword?.let { apiPassword ->
-                put("apiPassword", apiPassword)
+                put(Server::apiPassword.name, apiPassword)
             }
             server.playerActivityFeed?.let { playerActivityFeed ->
-                put("playerActivityFeed", nitriteMapper.tryConvert(playerActivityFeed, Document::class.java))
+                put(Server::playerActivityFeed.name, nitriteMapper.tryConvert(playerActivityFeed, Document::class.java))
             }
             server.pvpKillFeed?.let { pvpKillFeed ->
-                put("pvpKillFeed", nitriteMapper.tryConvert(pvpKillFeed, Document::class.java))
+                put(Server::pvpKillFeed.name, nitriteMapper.tryConvert(pvpKillFeed, Document::class.java))
             }
             server.statusMonitor?.let { statusMonitor ->
-                put("statusMonitor", nitriteMapper.tryConvert(statusMonitor, Document::class.java))
+                put(Server::statusMonitor.name, nitriteMapper.tryConvert(statusMonitor, Document::class.java))
             }
             server.pvpLeaderboard?.let { pvpLeaderboard ->
-                put("pvpLeaderboard", nitriteMapper.tryConvert(pvpLeaderboard, Document::class.java))
+                put(Server::pvpLeaderboard.name, nitriteMapper.tryConvert(pvpLeaderboard, Document::class.java))
             }
         }
     }

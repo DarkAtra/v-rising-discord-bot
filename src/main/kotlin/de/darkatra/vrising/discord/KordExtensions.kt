@@ -19,12 +19,16 @@ suspend fun Kord.getDiscordChannel(discordChannelId: String): Result<MessageChan
     return Result.success(channel)
 }
 
-private val channelPattern = Regex("<#([0-9]+)>")
+private val CHANNEL_PATTERN = Regex("^<#(\\d+)>").toPattern()
 
 fun InteractionCommand.getChannelIdFromStringParameter(parameterName: String): String? {
     val value = strings[parameterName] ?: return null
-    val match = channelPattern.find(value) ?: return value
-    return match.groups[1]!!.value
+    val matcher = CHANNEL_PATTERN.matcher(value)
+    if (!matcher.find()) {
+        return value
+    }
+    val result = matcher.toMatchResult()
+    return result.group(1)
 }
 
 suspend fun MessageChannelBehavior.tryCreateMessage(message: String): Boolean {

@@ -21,7 +21,7 @@ class ServerService(
     private val pvpKillFeedService: PvpKillFeedService
 ) {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     suspend fun updateServers(kord: Kord) {
 

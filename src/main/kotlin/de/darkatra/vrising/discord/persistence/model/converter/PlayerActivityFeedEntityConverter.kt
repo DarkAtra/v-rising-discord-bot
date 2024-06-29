@@ -14,11 +14,11 @@ class PlayerActivityFeedEntityConverter : EntityConverter<PlayerActivityFeed> {
 
     override fun fromDocument(document: Document, nitriteMapper: NitriteMapper): PlayerActivityFeed {
         return PlayerActivityFeed(
-            status = Status.valueOf(document.get("status", String::class.java)),
-            discordChannelId = document.get("discordChannelId", String::class.java),
-            lastUpdated = document.get("lastUpdated", String::class.java).let(Instant::parse),
-            currentFailedAttempts = document.get("currentFailedAttempts") as Int,
-            recentErrors = (document.get("recentErrors") as List<*>).map { error ->
+            status = Status.valueOf(document.get(PlayerActivityFeed::status.name, String::class.java)),
+            discordChannelId = document.get(PlayerActivityFeed::discordChannelId.name, String::class.java),
+            lastUpdated = document.get(PlayerActivityFeed::lastUpdated.name, String::class.java).let(Instant::parse),
+            currentFailedAttempts = document.get(PlayerActivityFeed::currentFailedAttempts.name) as Int,
+            recentErrors = (document.get(PlayerActivityFeed::recentErrors.name) as List<*>).map { error ->
                 nitriteMapper.tryConvert(error, Error::class.java) as Error
             }
         )
@@ -26,11 +26,11 @@ class PlayerActivityFeedEntityConverter : EntityConverter<PlayerActivityFeed> {
 
     override fun toDocument(playerActivityFeed: PlayerActivityFeed, nitriteMapper: NitriteMapper): Document {
         return Document.createDocument().apply {
-            put("status", playerActivityFeed.status.name)
-            put("discordChannelId", playerActivityFeed.discordChannelId)
-            put("lastUpdated", playerActivityFeed.lastUpdated.toString())
-            put("currentFailedAttempts", playerActivityFeed.currentFailedAttempts)
-            put("recentErrors", playerActivityFeed.recentErrors.map { error ->
+            put(PlayerActivityFeed::status.name, playerActivityFeed.status.name)
+            put(PlayerActivityFeed::discordChannelId.name, playerActivityFeed.discordChannelId)
+            put(PlayerActivityFeed::lastUpdated.name, playerActivityFeed.lastUpdated.toString())
+            put(PlayerActivityFeed::currentFailedAttempts.name, playerActivityFeed.currentFailedAttempts)
+            put(PlayerActivityFeed::recentErrors.name, playerActivityFeed.recentErrors.map { error ->
                 nitriteMapper.tryConvert(error, Document::class.java)
             })
         }

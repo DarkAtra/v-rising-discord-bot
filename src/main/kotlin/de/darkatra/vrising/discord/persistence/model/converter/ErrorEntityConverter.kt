@@ -12,15 +12,15 @@ class ErrorEntityConverter : EntityConverter<Error> {
 
     override fun fromDocument(document: Document, nitriteMapper: NitriteMapper): Error {
         return Error(
-            message = document.get("message", String::class.java),
-            timestamp = Instant.parse(document.get("timestamp", String::class.java))
+            message = document.get(Error::message.name, String::class.java),
+            timestamp = Instant.parse(document.get(Error::timestamp.name, String::class.java))
         )
     }
 
     override fun toDocument(error: Error, nitriteMapper: NitriteMapper): Document {
         return Document.createDocument().apply {
-            put("message", error.message)
-            put("timestamp", error.timestamp.toString())
+            put(Error::message.name, error.message)
+            put(Error::timestamp.name, error.timestamp.toString())
         }
     }
 }

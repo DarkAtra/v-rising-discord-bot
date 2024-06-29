@@ -18,7 +18,7 @@ class PvpKillFeedService(
     private val botCompanionClient: BotCompanionClient
 ) {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     suspend fun updatePvpKillFeed(kord: Kord, pvpKillFeed: PvpKillFeed) {
 

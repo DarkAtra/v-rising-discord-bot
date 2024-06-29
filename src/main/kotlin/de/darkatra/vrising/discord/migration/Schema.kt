@@ -2,15 +2,16 @@ package de.darkatra.vrising.discord.migration
 
 import org.dizitart.no2.repository.annotations.Id
 
+private val VERSION_PATTERN = Regex("^V(\\d+)\\.(\\d+)\\.(\\d+)").toPattern()
+
 data class Schema(
     @Id
     val appVersion: String,
 ) {
-    private val versionPattern = Regex("^V(\\d+)\\.(\\d+)\\.(\\d+)").toPattern()
 
     fun asSemanticVersion(): SemanticVersion {
 
-        val matcher = versionPattern.matcher(appVersion)
+        val matcher = VERSION_PATTERN.matcher(appVersion)
         if (!matcher.find() || matcher.groupCount() != 3) {
             error("Could not parse version from appVersion '$appVersion'.")
         }

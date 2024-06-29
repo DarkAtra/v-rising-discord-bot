@@ -13,7 +13,7 @@ import java.time.Instant
 class ServerRepository(
     database: Nitrite,
 ) {
-    private val repository = database.getRepository(Server::class.java)
+    private val repository by lazy { database.getRepository(Server::class.java) }
 
     fun addServer(server: Server) {
 
