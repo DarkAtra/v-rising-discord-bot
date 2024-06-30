@@ -89,6 +89,8 @@ class ConfigurePvpKillFeedCommand(
                 lastUpdated = server.lastUpdated
             )
 
+            serverRepository.updateServer(server)
+
             logger.info("Successfully configured the pvp kill feed for server '$serverId'.")
 
             interaction.deferEphemeralResponse().respond {

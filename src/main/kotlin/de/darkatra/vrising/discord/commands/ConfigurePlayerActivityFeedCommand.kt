@@ -89,6 +89,8 @@ class ConfigurePlayerActivityFeedCommand(
                 lastUpdated = server.lastUpdated
             )
 
+            serverRepository.updateServer(server)
+
             logger.info("Successfully configured the player activity feed for server '$serverId'.")
 
             interaction.deferEphemeralResponse().respond {

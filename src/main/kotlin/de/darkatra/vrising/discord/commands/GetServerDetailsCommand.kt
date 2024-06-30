@@ -104,7 +104,7 @@ class GetServerDetailsCommand(
 
                 field {
                     name = "Number of Leaderboards"
-                    value = "${Stream.of(server.pvpKillFeed).filter(Objects::nonNull).count()}"
+                    value = "${Stream.of(server.pvpLeaderboard).filter(Objects::nonNull).count()}"
                     inline = true
                 }
             }
