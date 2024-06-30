@@ -162,7 +162,6 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
-    @Disabled
     fun `should migrate schema from 2_10_5 to 2_11_0`() {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V2_10_5).use { database ->
