@@ -100,6 +100,8 @@ class ConfigureStatusMonitorCommand(
                 displayPlayerGearLevel = displayPlayerGearLevel ?: true
             )
 
+            serverRepository.updateServer(server)
+
             logger.info("Successfully configured the status monitor for server '$serverId'.")
 
             interaction.deferEphemeralResponse().respond {
