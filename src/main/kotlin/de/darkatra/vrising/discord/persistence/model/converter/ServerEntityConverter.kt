@@ -14,6 +14,7 @@ class ServerEntityConverter : EntityConverter<Server> {
     override fun getEntityType(): Class<Server> = Server::class.java
 
     override fun fromDocument(document: Document, nitriteMapper: NitriteMapper): Server {
+        @Suppress("DEPRECATION")
         return Server(
             id = document.get(Server::id.name, String::class.java),
             version = document.get(Server::version.name) as Long,
@@ -45,6 +46,7 @@ class ServerEntityConverter : EntityConverter<Server> {
     }
 
     override fun toDocument(server: Server, nitriteMapper: NitriteMapper): Document {
+        @Suppress("DEPRECATION")
         return Document.createDocument().apply {
             put(Server::id.name, server.id)
             put(Server::version.name, server.version)
