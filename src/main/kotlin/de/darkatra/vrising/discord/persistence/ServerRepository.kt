@@ -27,14 +27,14 @@ class ServerRepository(
     fun updateServer(server: Server) {
 
         @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
-        val newVersion = server.version
+        val serverVersion = server.version
 
         @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
         val databaseVersion = (repository.find(Server::id eq server.id).firstOrNull()
             ?: throw OutdatedServerException("Server with id '${server.id}' not found."))
             .version!!
 
-        if (newVersion == null || databaseVersion > newVersion) {
+        if (serverVersion == null || databaseVersion > serverVersion) {
             throw OutdatedServerException("Server with id '${server.id}' was already updated by another thread.")
         }
 

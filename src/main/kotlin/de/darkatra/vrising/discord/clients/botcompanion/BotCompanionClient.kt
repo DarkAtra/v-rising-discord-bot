@@ -55,7 +55,7 @@ class BotCompanionClient(
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<Character>>()))
-            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getCharacters request."))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getCharacters.name} request."))
         }
     }
 
@@ -70,7 +70,7 @@ class BotCompanionClient(
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PlayerActivity>>()))
-            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getPlayerActivities request."))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getPlayerActivities.name} request."))
         }
     }
 
@@ -85,7 +85,7 @@ class BotCompanionClient(
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PvpKill>>()))
-            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during getPlayerActivities request."))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getPvpKills.name} request."))
         }
     }
 

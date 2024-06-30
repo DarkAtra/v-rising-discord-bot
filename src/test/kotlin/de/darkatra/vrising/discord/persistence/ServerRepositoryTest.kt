@@ -28,15 +28,15 @@ class ServerRepositoryTest {
             ServerTestUtils.getServer()
         )
 
-        val serverStatusMonitors = serverRepository.getServers()
+        val servers = serverRepository.getServers()
 
-        assertThat(serverStatusMonitors).hasSize(1)
+        assertThat(servers).hasSize(1)
 
-        val serverStatusMonitor = serverStatusMonitors.first()
-        assertThat(serverStatusMonitor.id).isEqualTo(ServerTestUtils.ID)
-        assertThat(serverStatusMonitor.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
-        assertThat(serverStatusMonitor.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
-        assertThat(serverStatusMonitor.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+        val server = servers.first()
+        assertThat(server.id).isEqualTo(ServerTestUtils.ID)
+        assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
+        assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
+        assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
     }
 
     @Test
@@ -86,13 +86,13 @@ class ServerRepositoryTest {
     @Test
     fun `should not update server status monitor with higher version`() {
 
-        val serverStatusMonitor = ServerTestUtils.getServer()
-        serverRepository.addServer(serverStatusMonitor)
+        val server = ServerTestUtils.getServer()
+        serverRepository.addServer(server)
 
-        val update1 = serverRepository.getServer(serverStatusMonitor.id, serverStatusMonitor.discordServerId)!!.apply {
+        val update1 = serverRepository.getServer(server.id, server.discordServerId)!!.apply {
             hostname = "test-1"
         }
-        val update2 = serverRepository.getServer(serverStatusMonitor.id, serverStatusMonitor.discordServerId)!!.apply {
+        val update2 = serverRepository.getServer(server.id, server.discordServerId)!!.apply {
             hostname = "test-2"
         }
 
@@ -102,11 +102,11 @@ class ServerRepositoryTest {
             serverRepository.updateServer(update2)
         }
 
-        assertThat(e.message).isEqualTo("Server with id '${serverStatusMonitor.id}' was already updated by another thread.")
+        assertThat(e.message).isEqualTo("Server with id '${server.id}' was already updated by another thread.")
     }
 
     @Test
-    fun `should not insert server status monitor when using updateServerStatusMonitor`() {
+    fun `should not insert server status monitor when using updateServer`() {
 
         val e = assertThrows<OutdatedServerException> {
             serverRepository.updateServer(
