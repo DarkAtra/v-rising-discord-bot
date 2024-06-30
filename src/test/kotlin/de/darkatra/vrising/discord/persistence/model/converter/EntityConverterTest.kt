@@ -12,6 +12,7 @@ import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.ID
 import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.QUERY_PORT
 import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.persistence.model.StatusMonitor
+import de.darkatra.vrising.discord.persistence.model.Version
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.collection.Document
 import org.dizitart.no2.common.mapper.SimpleNitriteMapper
@@ -34,7 +35,10 @@ class EntityConverterTest {
 
         val originalServer = Server(
             id = ID,
-            version = Instant.now().toEpochMilli(),
+            version = Version(
+                revision = 1,
+                updated = Instant.now()
+            ),
             discordServerId = DISCORD_SERVER_ID,
             hostname = HOST_NAME,
             queryPort = QUERY_PORT,

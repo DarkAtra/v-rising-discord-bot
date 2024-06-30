@@ -5,9 +5,11 @@ import de.darkatra.vrising.discord.persistence.model.PlayerActivityFeed
 import de.darkatra.vrising.discord.persistence.model.PvpKillFeed
 import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.StatusMonitor
+import de.darkatra.vrising.discord.persistence.model.Version
 import org.dizitart.no2.collection.Document
 import org.dizitart.no2.common.mapper.EntityConverter
 import org.dizitart.no2.common.mapper.NitriteMapper
+import java.time.Instant
 
 class ServerEntityConverter : EntityConverter<Server> {
 
@@ -17,7 +19,10 @@ class ServerEntityConverter : EntityConverter<Server> {
         @Suppress("DEPRECATION")
         return Server(
             id = document.get(Server::id.name, String::class.java),
-            version = document.get(Server::version.name) as Long,
+            version = Version(
+                revision = document.get(Server::version.name + "_" + Version::revision.name) as Long,
+                updated = Instant.parse(document.get(Server::version.name + "_" + Version::updated.name, String::class.java)),
+            ),
             discordServerId = document.get(Server::discordServerId.name, String::class.java),
             hostname = document.get(Server::hostname.name, String::class.java),
             queryPort = document.get(Server::queryPort.name) as Int,
@@ -49,7 +54,8 @@ class ServerEntityConverter : EntityConverter<Server> {
         @Suppress("DEPRECATION")
         return Document.createDocument().apply {
             put(Server::id.name, server.id)
-            put(Server::version.name, server.version)
+            put(Server::version.name + "_" + Version::revision.name, server.version!!.revision)
+            put(Server::version.name + "_" + Version::updated.name, server.version!!.updated.toString())
             put(Server::discordServerId.name, server.discordServerId)
             put(Server::hostname.name, server.hostname)
             put(Server::queryPort.name, server.queryPort)

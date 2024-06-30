@@ -15,8 +15,7 @@ data class Server(
     @Id
     val id: String,
     @Deprecated("This field is updated automatically by the ServerRepository, manually update with caution")
-    var version: Long? = null,
-
+    internal var version: Version? = null,
     var discordServerId: String,
 
     var hostname: String,
@@ -45,7 +44,7 @@ data class Server(
 
     @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
     val lastUpdated: Instant
-        get() = Instant.ofEpochMilli(version!!)
+        get() = version!!.updated
 
     override val status: Status
         get() {
