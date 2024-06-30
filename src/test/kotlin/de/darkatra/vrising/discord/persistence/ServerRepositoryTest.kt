@@ -96,8 +96,10 @@ class ServerRepositoryTest {
             hostname = "test-2"
         }
 
+        println("Update 1")
         serverRepository.updateServer(update1)
 
+        println("Update 2")
         val e = assertThrows<OutdatedServerException> {
             serverRepository.updateServer(update2)
         }
