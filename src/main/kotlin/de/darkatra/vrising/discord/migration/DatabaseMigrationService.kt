@@ -56,10 +56,10 @@ class DatabaseMigrationService(
                 isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 1) },
                 documentCollectionName = "de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor",
                 databaseAction = { database ->
-                    database.getCollection("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
-                        database.getCollection("de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor").use { newCollection ->
-                            oldCollection.find().forEach { document ->
-                                newCollection.insert(document)
+                    database.getNitriteMap("de.darkatra.vrising.discord.ServerStatusMonitor").use { oldCollection ->
+                        database.getNitriteMap("de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor").use { newCollection ->
+                            oldCollection.values().forEach { document ->
+                                newCollection.putIfAbsent(document.id, document)
                             }
                         }
                         oldCollection.drop()
@@ -108,10 +108,10 @@ class DatabaseMigrationService(
                 isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 10 && currentSchemaVersion.patch <= 1) },
                 documentCollectionName = "de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor",
                 databaseAction = { database ->
-                    database.getCollection("de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor").use { oldCollection ->
-                        database.getCollection("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { newCollection ->
-                            oldCollection.find().forEach { document ->
-                                newCollection.insert(document)
+                    database.getNitriteMap("de.darkatra.vrising.discord.serverstatus.model.ServerStatusMonitor").use { oldCollection ->
+                        database.getNitriteMap("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { newCollection ->
+                            oldCollection.values().forEach { document ->
+                                newCollection.putIfAbsent(document.id, document)
                             }
                         }
                         oldCollection.drop()
@@ -123,9 +123,9 @@ class DatabaseMigrationService(
                 isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 10) },
                 documentCollectionName = "de.darkatra.vrising.discord.persistence.model.Server",
                 databaseAction = { database ->
-                    database.getCollection("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { oldCollection ->
-                        database.getCollection("de.darkatra.vrising.discord.persistence.model.Server").use { newCollection ->
-                            oldCollection.find().forEach { document ->
+                    database.getNitriteMap("de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor").use { oldCollection ->
+                        database.getNitriteMap("de.darkatra.vrising.discord.persistence.model.Server").use { newCollection ->
+                            oldCollection.values().forEach { document ->
 
                                 val server = Document.createDocument().apply {
                                     put("id", document["id"])
@@ -171,7 +171,7 @@ class DatabaseMigrationService(
                                         })
                                     }
                                 }
-                                newCollection.insert(server)
+                                newCollection.putIfAbsent(server.id, server)
                             }
                         }
                         oldCollection.drop()
@@ -205,10 +205,11 @@ class DatabaseMigrationService(
             migrationsToPerform.forEach { migration ->
                 migration.databaseAction(database)
 
-                database.getCollection(migration.documentCollectionName).use { collection ->
-                    collection.find().forEach { document ->
+                database.store.openMap<String, Document>(migration.documentCollectionName, String::class.java, Document::class.java)
+                database.getNitriteMap(migration.documentCollectionName).use { collection ->
+                    collection.values().forEach { document ->
                         migration.documentAction(document)
-                        collection.update(document)
+                        collection.put(document.id, document)
                     }
                 }
             }
