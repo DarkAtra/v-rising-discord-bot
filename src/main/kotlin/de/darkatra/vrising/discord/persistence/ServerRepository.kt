@@ -34,6 +34,8 @@ class ServerRepository(
             ?: throw OutdatedServerException("Server with id '${server.id}' not found."))
             .version!!
 
+        println("Server: $serverVersion")
+        println("Database: $databaseVersion")
         if (serverVersion == null || databaseVersion > serverVersion) {
             throw OutdatedServerException("Server with id '${server.id}' was already updated by another thread.")
         }
