@@ -1,6 +1,7 @@
 package de.darkatra.vrising.discord.persistence
 
 import de.darkatra.vrising.discord.persistence.model.Server
+import de.darkatra.vrising.discord.persistence.model.Version
 import org.dizitart.kno2.filters.and
 import org.dizitart.kno2.filters.eq
 import org.dizitart.no2.Nitrite
@@ -34,9 +35,7 @@ class ServerRepository(
             ?: throw OutdatedServerException("Server with id '${server.id}' not found."))
             .version!!
 
-        println("Server: $serverVersion")
-        println("Database: $databaseVersion")
-        if (serverVersion == null || databaseVersion > serverVersion) {
+        if (serverVersion == null || databaseVersion.revision > serverVersion.revision || databaseVersion.updated > serverVersion.updated) {
             throw OutdatedServerException("Server with id '${server.id}' was already updated by another thread.")
         }
 
@@ -99,7 +98,10 @@ class ServerRepository(
 
         return server.apply {
             @Suppress("DEPRECATION") // this is the internal usage the warning is referring to
-            version = Instant.now().toEpochMilli()
+            version = Version(
+                revision = (version?.revision ?: 0) + 1,
+                updated = Instant.now()
+            )
         }
     }
 }

@@ -129,7 +129,8 @@ class DatabaseMigrationService(
 
                                 val server = Document.createDocument().apply {
                                     put("id", document["id"])
-                                    put("version", document["version"])
+                                    put("version_revision", 1L)
+                                    put("version_updated", Instant.ofEpochMilli(document["version"] as Long).toString())
                                     put("discordServerId", document["discordServerId"])
                                     put("hostname", document["hostname"])
                                     put("queryPort", document["queryPort"])

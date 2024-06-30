@@ -14,7 +14,10 @@ object ServerTestUtils {
     fun getServer(): Server {
         return Server(
             id = ID,
-            version = Instant.now().toEpochMilli(),
+            version = Version(
+                revision = 1,
+                updated = Instant.now()
+            ),
             discordServerId = DISCORD_SERVER_ID,
             hostname = HOST_NAME,
             queryPort = QUERY_PORT,

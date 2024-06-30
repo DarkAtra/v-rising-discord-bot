@@ -1,6 +1,5 @@
 package de.darkatra.vrising.discord.persistence
 
-import ch.qos.logback.classic.Logger
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
 import de.darkatra.vrising.discord.persistence.model.ServerTestUtils
 import org.assertj.core.api.Assertions.assertThat
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.DisabledInNativeImage
-import org.slf4j.LoggerFactory
 
 @DisabledInNativeImage
 class ServerRepositoryTest {
@@ -88,9 +86,6 @@ class ServerRepositoryTest {
     @Test
     fun `should not update server status monitor with higher version`() {
 
-        val logger = LoggerFactory.getLogger("nitrite") as Logger
-        logger.level = ch.qos.logback.classic.Level.DEBUG
-
         val server = ServerTestUtils.getServer()
         serverRepository.addServer(server)
 
@@ -101,10 +96,8 @@ class ServerRepositoryTest {
             hostname = "test-2"
         }
 
-        println("Update 1")
         serverRepository.updateServer(update1)
 
-        println("Update 2")
         val e = assertThrows<OutdatedServerException> {
             serverRepository.updateServer(update2)
         }

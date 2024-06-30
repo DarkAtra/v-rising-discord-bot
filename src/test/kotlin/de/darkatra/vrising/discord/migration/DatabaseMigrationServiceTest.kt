@@ -3,11 +3,13 @@ package de.darkatra.vrising.discord.migration
 import de.darkatra.vrising.discord.DatabaseConfigurationTestUtils
 import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.Status
+import de.darkatra.vrising.discord.persistence.model.Version
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.collection.Document
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
+import java.time.Instant
 
 @DisabledInNativeImage
 class DatabaseMigrationServiceTest {
@@ -195,7 +197,7 @@ class DatabaseMigrationServiceTest {
             }
             assertThat(server.id).isEqualTo(oldDocument["id"])
             @Suppress("DEPRECATION")
-            assertThat(server.version).isEqualTo(oldDocument["version"])
+            assertThat(server.version).isEqualTo(Version(1, Instant.ofEpochMilli(oldDocument["version"] as Long)))
             assertThat(server.discordServerId).isEqualTo(oldDocument["discordServerId"])
             assertThat(server.hostname).isEqualTo(oldDocument["hostname"])
             assertThat(server.queryPort).isEqualTo(oldDocument["queryPort"])
