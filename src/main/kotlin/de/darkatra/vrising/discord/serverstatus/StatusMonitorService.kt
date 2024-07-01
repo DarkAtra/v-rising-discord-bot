@@ -1,8 +1,11 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
+import de.darkatra.vrising.discord.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.clients.serverquery.ServerQueryClient
+import de.darkatra.vrising.discord.commands.ConfigureStatusMonitorCommand
+import de.darkatra.vrising.discord.commands.GetStatusMonitorDetailsCommand
 import de.darkatra.vrising.discord.getDiscordChannel
 import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.persistence.model.StatusMonitor
@@ -21,16 +24,28 @@ import org.springframework.stereotype.Service
 class StatusMonitorService(
     private val botProperties: BotProperties,
     private val serverQueryClient: ServerQueryClient,
-    private val botCompanionClient: BotCompanionClient
+    private val botCompanionClient: BotCompanionClient,
+    private val getStatusMonitorDetailsCommand: GetStatusMonitorDetailsCommand,
+    private val configureStatusMonitorCommand: ConfigureStatusMonitorCommand
 ) {
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     suspend fun updateStatusMonitor(kord: Kord, statusMonitor: StatusMonitor) {
 
-        val channel = kord.getDiscordChannel(statusMonitor.discordChannelId).getOrElse {
-            logger.debug("Disabling server monitor for server '${statusMonitor.getServer().id}' because the channel '${statusMonitor.discordChannelId}' does not seem to exist.")
-            statusMonitor.status = Status.INACTIVE
+        val channel = kord.getDiscordChannel(statusMonitor.discordChannelId).getOrElse { e ->
+            when (e) {
+                is InvalidDiscordChannelException -> {
+                    logger.debug("Disabling server monitor for server '${statusMonitor.getServer().id}' because the channel '${statusMonitor.discordChannelId}' does not seem to exist.")
+                    statusMonitor.status = Status.INACTIVE
+                }
+
+                else -> {
+                    statusMonitor.currentFailedAttempts += 1
+                    statusMonitor.addError(e, botProperties.maxRecentErrors)
+                    disableStatusMonitorIfNecessary(statusMonitor)
+                }
+            }
             return
         }
 
@@ -43,30 +58,21 @@ class StatusMonitorService(
 
             logger.error("Exception updating the status monitor for server '${statusMonitor.getServer().id}'.", e)
             statusMonitor.currentFailedAttempts += 1
-
-            if (botProperties.maxRecentErrors > 0) {
-                statusMonitor.addError(e, botProperties.maxRecentErrors)
-            }
-
+            statusMonitor.addError(e, botProperties.maxRecentErrors)
 
             if (statusMonitor.currentEmbedMessageId == null && statusMonitor.currentFailedAttempts == 1) {
-                // FIXME: mention the correct command to retrieve the error messages for the status monitor
                 channel.tryCreateMessage(
                     """Failed to update the status monitor for server '${statusMonitor.getServer().id}'.
-                        |Please check the detailed error message using the get-server-details command.""".trimMargin()
+                        |Please check the detailed error message using the ${getStatusMonitorDetailsCommand.getCommandName()} command.""".trimMargin()
                 )
             }
 
-            if (botProperties.maxFailedAttempts != 0 && statusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
-                logger.warn("Disabling server monitor for server '${statusMonitor.getServer().id}' because it exceeded the max failed attempts.")
-                statusMonitor.status = Status.INACTIVE
-
-                // FIXME: mention the correct command to re-enable the status monitor
+            disableStatusMonitorIfNecessary(statusMonitor) {
                 channel.tryCreateMessage(
                     """Disabled status monitor for server '${statusMonitor.getServer().id}' because the server did not
                         |respond successfully after ${botProperties.maxFailedAttempts} attempts.
                         |Please make sure the server is running and is accessible from the internet to use this bot.
-                        |You can re-enable the server status monitor using the update-server command.""".trimMargin()
+                        |You can re-enable this functionality using the ${configureStatusMonitorCommand.getCommandName()} command.""".trimMargin()
                 )
             }
             return
@@ -83,22 +89,14 @@ class StatusMonitorService(
 
                 logger.warn("Could not resolve characters for status monitor for server '${statusMonitor.getServer().id}'.", e)
                 statusMonitor.currentFailedApiAttempts += 1
+                statusMonitor.addError(e, botProperties.maxRecentErrors)
 
-                if (botProperties.maxRecentErrors > 0) {
-                    statusMonitor.addError(e, botProperties.maxRecentErrors)
-                }
-
-
-                if (botProperties.maxFailedApiAttempts != 0 && statusMonitor.currentFailedApiAttempts >= botProperties.maxFailedApiAttempts) {
-                    logger.warn("Disabling displayPlayerGearLevel for status monitor of server '${statusMonitor.getServer().id}' because it exceeded the max failed api attempts.")
-                    statusMonitor.displayPlayerGearLevel = false
-
-                    // FIXME: mention the correct command to re-enable the status monitor
+                disableBotCompanionFeaturesIfNecessary(statusMonitor) {
                     channel.tryCreateMessage(
                         """The status monitor for server '${statusMonitor.getServer().id}' will no longer display the players gear level because
                             |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
                             |Please make sure the server-api-hostname and server-api-port are correct.
-                            |You can re-enable the functionality using the update-server command.""".trimMargin()
+                            |You can re-enable this functionality using the ${configureStatusMonitorCommand.getCommandName()} command.""".trimMargin()
                     )
                 }
                 return
@@ -137,5 +135,23 @@ class StatusMonitorService(
         statusMonitor.currentFailedAttempts = 0
 
         logger.debug("Successfully updated the status and persisted the embedId for server monitor of server '${statusMonitor.getServer().id}'.")
+    }
+
+    private suspend fun disableStatusMonitorIfNecessary(statusMonitor: StatusMonitor, block: suspend () -> Unit = {}) {
+
+        if (botProperties.maxFailedAttempts != 0 && statusMonitor.currentFailedAttempts >= botProperties.maxFailedAttempts) {
+            logger.warn("Disabling server monitor for server '${statusMonitor.getServer().id}' because it exceeded the max failed attempts.")
+            statusMonitor.status = Status.INACTIVE
+            block()
+        }
+    }
+
+    private suspend fun disableBotCompanionFeaturesIfNecessary(statusMonitor: StatusMonitor, block: suspend () -> Unit = {}) {
+
+        if (botProperties.maxFailedApiAttempts != 0 && statusMonitor.currentFailedApiAttempts >= botProperties.maxFailedApiAttempts) {
+            logger.warn("Disabling displayPlayerGearLevel for status monitor of server '${statusMonitor.getServer().id}' because it exceeded the max failed api attempts.")
+            statusMonitor.displayPlayerGearLevel = false
+            block()
+        }
     }
 }

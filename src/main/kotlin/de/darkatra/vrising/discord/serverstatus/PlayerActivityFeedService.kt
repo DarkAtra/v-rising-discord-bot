@@ -1,8 +1,10 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
+import de.darkatra.vrising.discord.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
+import de.darkatra.vrising.discord.commands.ConfigurePlayerActivityFeedCommand
 import de.darkatra.vrising.discord.getDiscordChannel
 import de.darkatra.vrising.discord.persistence.model.PlayerActivityFeed
 import de.darkatra.vrising.discord.persistence.model.Status
@@ -15,7 +17,8 @@ import java.time.Instant
 @Service
 class PlayerActivityFeedService(
     private val botProperties: BotProperties,
-    private val botCompanionClient: BotCompanionClient
+    private val botCompanionClient: BotCompanionClient,
+    private val configurePlayerActivityFeedCommand: ConfigurePlayerActivityFeedCommand
 ) {
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
@@ -27,9 +30,19 @@ class PlayerActivityFeedService(
             return
         }
 
-        val playerActivityChannel = kord.getDiscordChannel(playerActivityFeed.discordChannelId).getOrElse {
-            logger.debug("Disabling player activity feed for server '${playerActivityFeed.getServer().id}' because the channel '${playerActivityFeed.discordChannelId}' does not seem to exist.")
-            playerActivityFeed.status = Status.INACTIVE
+        val playerActivityChannel = kord.getDiscordChannel(playerActivityFeed.discordChannelId).getOrElse { e ->
+            when (e) {
+                is InvalidDiscordChannelException -> {
+                    logger.debug("Disabling player activity feed for server '${playerActivityFeed.getServer().id}' because the channel '${playerActivityFeed.discordChannelId}' does not seem to exist.")
+                    playerActivityFeed.status = Status.INACTIVE
+                }
+
+                else -> {
+                    playerActivityFeed.currentFailedAttempts += 1
+                    playerActivityFeed.addError(e, botProperties.maxRecentErrors)
+                    disablePlayerActivityFeedIfNecessary(playerActivityFeed)
+                }
+            }
             return
         }
 
@@ -42,23 +55,17 @@ class PlayerActivityFeedService(
 
             logger.error("Exception updating the player activity feed for server '${playerActivityFeed.getServer().id}'", e)
             playerActivityFeed.currentFailedAttempts += 1
+            playerActivityFeed.addError(e, botProperties.maxRecentErrors)
 
-            if (botProperties.maxRecentErrors > 0) {
-                playerActivityFeed.addError(e, botProperties.maxRecentErrors)
-            }
-
-            if (botProperties.maxFailedApiAttempts != 0 && playerActivityFeed.currentFailedAttempts >= botProperties.maxFailedApiAttempts) {
-                logger.warn("Disabling the player activity feed for server '${playerActivityFeed.getServer().id}' because it exceeded the max failed api attempts.")
-                playerActivityFeed.status = Status.INACTIVE
-
-                // FIXME: mention the correct command to re-enable the player activity feed
+            disablePlayerActivityFeedIfNecessary(playerActivityFeed) {
                 playerActivityChannel.tryCreateMessage(
                     """Disabled the player activity feed for server '${playerActivityFeed.getServer().id}' because
                         |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
                         |Please make sure the server-api-hostname and server-api-port are correct.
-                        |You can re-enable the functionality using the update-server command.""".trimMargin()
+                        |You can re-enable this functionality using the ${configurePlayerActivityFeedCommand.getCommandName()} command.""".trimMargin()
                 )
             }
+
             return
         }
 
@@ -80,5 +87,14 @@ class PlayerActivityFeedService(
         playerActivityFeed.lastUpdated = Instant.now()
 
         logger.debug("Successfully updated the player activity feed for server '${playerActivityFeed.getServer().id}'.")
+    }
+
+    private suspend fun disablePlayerActivityFeedIfNecessary(playerActivityFeed: PlayerActivityFeed, block: suspend () -> Unit = {}) {
+
+        if (botProperties.maxFailedApiAttempts != 0 && playerActivityFeed.currentFailedAttempts >= botProperties.maxFailedApiAttempts) {
+            logger.warn("Disabling the player activity feed for server '${playerActivityFeed.getServer().id}' because it exceeded the max failed api attempts.")
+            playerActivityFeed.status = Status.INACTIVE
+            block()
+        }
     }
 }
