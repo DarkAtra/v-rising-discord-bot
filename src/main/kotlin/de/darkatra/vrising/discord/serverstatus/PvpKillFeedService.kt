@@ -1,8 +1,10 @@
 package de.darkatra.vrising.discord.serverstatus
 
 import de.darkatra.vrising.discord.BotProperties
+import de.darkatra.vrising.discord.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
+import de.darkatra.vrising.discord.commands.ConfigurePvpKillFeedCommand
 import de.darkatra.vrising.discord.getDiscordChannel
 import de.darkatra.vrising.discord.persistence.model.PvpKillFeed
 import de.darkatra.vrising.discord.persistence.model.Status
@@ -15,7 +17,8 @@ import java.time.Instant
 @Service
 class PvpKillFeedService(
     private val botProperties: BotProperties,
-    private val botCompanionClient: BotCompanionClient
+    private val botCompanionClient: BotCompanionClient,
+    private val configurePvpKillFeedCommand: ConfigurePvpKillFeedCommand
 ) {
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
@@ -27,9 +30,19 @@ class PvpKillFeedService(
             return
         }
 
-        val pvpKillFeedChannel = kord.getDiscordChannel(pvpKillFeed.discordChannelId).getOrElse {
-            logger.debug("Disabling pvp kill feed for server '${pvpKillFeed.getServer().id}' because the channel '${pvpKillFeed.discordChannelId}' does not seem to exist.")
-            pvpKillFeed.status = Status.INACTIVE
+        val pvpKillFeedChannel = kord.getDiscordChannel(pvpKillFeed.discordChannelId).getOrElse { e ->
+            when (e) {
+                is InvalidDiscordChannelException -> {
+                    logger.debug("Disabling pvp kill feed for server '${pvpKillFeed.getServer().id}' because the channel '${pvpKillFeed.discordChannelId}' does not seem to exist.")
+                    pvpKillFeed.status = Status.INACTIVE
+                }
+
+                else -> {
+                    pvpKillFeed.currentFailedAttempts += 1
+                    pvpKillFeed.addError(e, botProperties.maxRecentErrors)
+                    disablePvpKillFeedIfNecessary(pvpKillFeed)
+                }
+            }
             return
         }
 
@@ -42,21 +55,14 @@ class PvpKillFeedService(
 
             logger.error("Exception updating the pvp kill feed for server ${pvpKillFeed.getServer().id}", e)
             pvpKillFeed.currentFailedAttempts += 1
+            pvpKillFeed.addError(e, botProperties.maxRecentErrors)
 
-            if (botProperties.maxRecentErrors > 0) {
-                pvpKillFeed.addError(e, botProperties.maxRecentErrors)
-            }
-
-            if (botProperties.maxFailedApiAttempts != 0 && pvpKillFeed.currentFailedAttempts >= botProperties.maxFailedApiAttempts) {
-                logger.warn("Disabling the pvp kill feed for server '${pvpKillFeed.getServer().id}' because it exceeded the max failed api attempts.")
-                pvpKillFeed.status = Status.INACTIVE
-
-                // FIXME: mention the correct command to re-enable the player activity feed
+            disablePvpKillFeedIfNecessary(pvpKillFeed) {
                 pvpKillFeedChannel.tryCreateMessage(
                     """Disabled the pvp kill feed for server '${pvpKillFeed.getServer().id}' because
                         |the bot companion did not respond successfully after ${botProperties.maxFailedApiAttempts} attempts.
                         |Please make sure the server-api-hostname and server-api-port are correct.
-                        |You can re-enable the functionality using the update-server command.""".trimMargin()
+                        |You can re-enable this functionality using the ${configurePvpKillFeedCommand.getCommandName()} command.""".trimMargin()
                 )
             }
             return
@@ -76,5 +82,14 @@ class PvpKillFeedService(
         pvpKillFeed.lastUpdated = Instant.now()
 
         logger.debug("Successfully updated the pvp kill feed for server '${pvpKillFeed.getServer().id}'.")
+    }
+
+    private suspend fun disablePvpKillFeedIfNecessary(pvpKillFeed: PvpKillFeed, block: suspend () -> Unit = {}) {
+
+        if (botProperties.maxFailedApiAttempts != 0 && pvpKillFeed.currentFailedAttempts >= botProperties.maxFailedApiAttempts) {
+            logger.warn("Disabling the pvp kill feed for server '${pvpKillFeed.getServer().id}' because it exceeded the max failed api attempts.")
+            pvpKillFeed.status = Status.INACTIVE
+            block()
+        }
     }
 }
