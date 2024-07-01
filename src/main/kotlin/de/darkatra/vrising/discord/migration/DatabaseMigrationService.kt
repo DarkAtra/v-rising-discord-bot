@@ -167,7 +167,7 @@ class DatabaseMigrationService(
                                             put("displayPlayerGearLevel", document["displayPlayerGearLevel"])
                                             put("currentEmbedMessageId", document["currentEmbedMessageId"])
                                             put("currentFailedAttempts", document["currentFailedAttempts"])
-                                            put("currentFailedApiAttempts", document["currentFailedApiAttempts"])
+                                            put("currentFailedApiAttempts", document["currentFailedApiAttempts"] ?: 0)
                                             put("recentErrors", emptyList<Any>())
                                         })
                                     }
