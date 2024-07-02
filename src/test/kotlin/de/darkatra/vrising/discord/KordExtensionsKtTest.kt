@@ -3,9 +3,11 @@ package de.darkatra.vrising.discord
 import dev.kord.core.entity.interaction.InteractionCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
+@DisabledInNativeImage
 class KordExtensionsKtTest {
 
     @Test

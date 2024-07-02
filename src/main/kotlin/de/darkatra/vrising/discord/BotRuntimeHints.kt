@@ -18,6 +18,8 @@ import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
 import dev.kord.core.cache.data.WebhookData
 import io.ktor.utils.io.pool.DefaultPool
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import org.dizitart.no2.collection.Document
 import org.dizitart.no2.collection.NitriteId
 import org.dizitart.no2.common.meta.Attributes
@@ -77,15 +79,19 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             UserData::class.java,
             VoiceStateData::class.java,
             WebhookData::class.java,
-            Optional.Null.Companion::class.java,
-            Optional.Missing.Companion::class.java
         )
 
         hints.reflection()
             // required by kord (remove once https://github.com/kordlib/kord/issues/786 is merged)
             .registerType(GuildApplicationCommandPermissionsData::class.java)
             .registerType(StickerPackData::class.java)
+            .registerType(Optional.Missing.Companion::class.java)
+            .registerType(Optional.Null.Companion::class.java)
             // required by ktor (dependency of kord)
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(StickerPackData::class.java)
+            // required for kotlinx serialization (dependency of kord)
+            .registerType(JsonArray.Companion::class.java)
+            .registerType(JsonObject.Companion::class.java)
     }
 }
