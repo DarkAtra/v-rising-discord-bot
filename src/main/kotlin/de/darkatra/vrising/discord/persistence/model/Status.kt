@@ -1,6 +1,6 @@
 package de.darkatra.vrising.discord.persistence.model
 
-enum class ServerStatusMonitorStatus {
+enum class Status {
     INACTIVE,
     ACTIVE
 }
