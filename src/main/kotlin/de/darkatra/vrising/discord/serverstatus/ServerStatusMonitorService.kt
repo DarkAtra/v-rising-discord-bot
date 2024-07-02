@@ -42,9 +42,13 @@ class ServerStatusMonitorService(
 
             MDC.put("server-status-monitor-id", serverStatusMonitor.id)
 
-            updateServerStatusMonitor(kord, serverStatusMonitor)
-            updatePlayerActivityFeed(kord, serverStatusMonitor)
-            updatePvpKillFeed(kord, serverStatusMonitor)
+            try {
+                updateServerStatusMonitor(kord, serverStatusMonitor)
+                updatePlayerActivityFeed(kord, serverStatusMonitor)
+                updatePvpKillFeed(kord, serverStatusMonitor)
+            } catch (e: Exception) {
+                logger.error("Unhandled error updating status monitor '${serverStatusMonitor.id}'. Please report this issue: https://github.com/DarkAtra/v-rising-discord-bot/issues/new/choose")
+            }
             try {
                 serverStatusMonitorRepository.updateServerStatusMonitor(serverStatusMonitor)
             } catch (e: OutdatedServerStatusMonitorException) {
@@ -181,13 +185,19 @@ class ServerStatusMonitorService(
                 return
             } catch (e: EntityNotFoundException) {
                 serverStatusMonitor.currentEmbedMessageId = null
+            } catch (e: Exception) {
+                logger.warn("Could not update status embed for monitor '${serverStatusMonitor.id}'", e)
             }
         }
 
-        serverStatusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
-        serverStatusMonitor.currentFailedAttempts = 0
+        try {
+            serverStatusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
+            serverStatusMonitor.currentFailedAttempts = 0
 
-        logger.debug("Successfully updated the status and persisted the embedId of server monitor '${serverStatusMonitor.id}'.")
+            logger.debug("Successfully updated the status and persisted the embedId of server monitor '${serverStatusMonitor.id}'.")
+        } catch (e: Exception) {
+            logger.warn("Could not create status embed for monitor '${serverStatusMonitor.id}'", e)
+        }
     }
 
     private suspend fun updatePlayerActivityFeed(kord: Kord, serverStatusMonitor: ServerStatusMonitor) {
