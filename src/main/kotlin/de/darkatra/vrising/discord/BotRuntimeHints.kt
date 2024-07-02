@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord
 
+import dev.kord.common.entity.optional.Optional
 import dev.kord.core.cache.data.ApplicationCommandData
 import dev.kord.core.cache.data.AutoModerationRuleData
 import dev.kord.core.cache.data.ChannelData
@@ -75,7 +76,9 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             ThreadMemberData::class.java,
             UserData::class.java,
             VoiceStateData::class.java,
-            WebhookData::class.java
+            WebhookData::class.java,
+            Optional.Null.Companion::class.java,
+            Optional.Missing.Companion::class.java
         )
 
         hints.reflection()
