@@ -29,6 +29,7 @@ services:
     command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
+    user: "1000:1000"
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
     environment:
