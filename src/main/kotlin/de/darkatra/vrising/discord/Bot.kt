@@ -6,6 +6,7 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
+import de.darkatra.vrising.discord.persistence.DatabaseBackupService
 import de.darkatra.vrising.discord.serverstatus.ServerService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -55,7 +56,8 @@ class Bot(
     private val botProperties: BotProperties,
     private val commands: List<Command>,
     private val databaseMigrationService: DatabaseMigrationService,
-    private val serverService: ServerService
+    private val serverService: ServerService,
+    private val databaseBackupService: DatabaseBackupService
 ) : ApplicationRunner, DisposableBean, SchedulingConfigurer {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -142,6 +144,19 @@ class Bot(
                         }
                     },
                     CronTrigger("0 0 0 * * *", ZoneOffset.UTC)
+                )
+            )
+        }
+
+        if (botProperties.databaseBackupJobEnabled) {
+            taskRegistrar.addCronTask(
+                CronTask(
+                    {
+                        if (isReady.get()) {
+                            databaseBackupService.performDatabaseBackup()
+                        }
+                    },
+                    CronTrigger("0 45 23 * * *", ZoneOffset.UTC)
                 )
             )
         }

@@ -12,6 +12,9 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 > I highly recommend not exposing the api port to the internet in an unprotected manner. The setup guide below explains how the API port can be secured using
 > Basic Authentication.
 
+{: .warning }
+> It is not possible to use the bot-companion with GPortal hosted server as they don't allow exposing the API port to the internet.
+
 ## Setup Guide
 
 1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases) on your V Rising server.
