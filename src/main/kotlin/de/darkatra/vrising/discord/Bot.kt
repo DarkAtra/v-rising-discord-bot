@@ -6,10 +6,7 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
-import de.darkatra.vrising.discord.migration.Schema
-import de.darkatra.vrising.discord.persistence.model.Error
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.serverstatus.ServerService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
@@ -43,23 +40,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
 @RegisterReflectionForBinding(
+    // properties
     BotProperties::class,
-    Schema::class,
-    ServerStatusMonitor::class,
-    Error::class,
+    // http
     Character::class,
-    VBlood::class,
     PlayerActivity::class,
     PlayerActivity.Type::class,
     PvpKill::class,
-    PvpKill.Player::class
+    PvpKill.Player::class,
+    VBlood::class,
 )
 class Bot(
     private val database: Nitrite,
     private val botProperties: BotProperties,
     private val commands: List<Command>,
     private val databaseMigrationService: DatabaseMigrationService,
-    private val serverStatusMonitorService: ServerStatusMonitorService
+    private val serverService: ServerService
 ) : ApplicationRunner, DisposableBean, SchedulingConfigurer {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -80,8 +76,7 @@ class Bot(
             val command = commands.find { command -> command.isSupported(interaction, botProperties.adminUserIds) }
             if (command == null) {
                 interaction.deferEphemeralResponse().respond {
-                    content = """This command is not supported here, please refer to the documentation.
-                        |Be sure to use the commands in the channel where you want the status message to appear.""".trimMargin()
+                    content = "This command is not supported here, please refer to the documentation."
                 }
                 return@on
             }
@@ -127,7 +122,7 @@ class Bot(
                 {
                     if (isReady.get() && kord.isActive) {
                         runBlocking {
-                            serverStatusMonitorService.updateServerStatusMonitors(kord)
+                            serverService.updateServers(kord)
                         }
                     }
                 },
@@ -142,7 +137,7 @@ class Bot(
                     {
                         if (isReady.get() && kord.isActive) {
                             runBlocking {
-                                serverStatusMonitorService.cleanupInactiveServerStatusMonitors(kord)
+                                serverService.cleanupInactiveServers(kord)
                             }
                         }
                     },

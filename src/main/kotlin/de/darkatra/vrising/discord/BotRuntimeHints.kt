@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord
 
+import dev.kord.common.entity.optional.Optional
 import dev.kord.core.cache.data.ApplicationCommandData
 import dev.kord.core.cache.data.AutoModerationRuleData
 import dev.kord.core.cache.data.ChannelData
@@ -17,12 +18,12 @@ import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
 import dev.kord.core.cache.data.WebhookData
 import io.ktor.utils.io.pool.DefaultPool
-import org.dizitart.no2.Document
-import org.dizitart.no2.Index
-import org.dizitart.no2.NitriteId
-import org.dizitart.no2.meta.Attributes
-import org.h2.store.fs.FilePathDisk
-import org.h2.store.fs.FilePathNio
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import org.dizitart.no2.collection.Document
+import org.dizitart.no2.collection.NitriteId
+import org.dizitart.no2.common.meta.Attributes
+import org.dizitart.no2.index.IndexMeta
 import org.springframework.aot.hint.BindingReflectionHintsRegistrar
 import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
@@ -41,7 +42,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
-        // required by nitrite to create a database with password
+        // required by nitrite for serialization
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.Security\$UserCredential"))
         // required by nitrite for serialization
         hints.serialization().registerType(TypeReference.of("java.util.ArrayList"))
@@ -52,7 +53,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         hints.serialization().registerType(ConcurrentSkipListMap::class.java)
         hints.serialization().registerType(Document::class.java)
         hints.serialization().registerType(HashMap::class.java)
-        hints.serialization().registerType(Index::class.java)
+        hints.serialization().registerType(IndexMeta::class.java)
         hints.serialization().registerType(TypeReference.of("org.dizitart.no2.internals.IndexMetaService\$IndexMeta"))
         hints.serialization().registerType(TypeReference.of("java.lang.Integer"))
         hints.serialization().registerType(LinkedHashMap::class.java)
@@ -77,19 +78,20 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             ThreadMemberData::class.java,
             UserData::class.java,
             VoiceStateData::class.java,
-            WebhookData::class.java
+            WebhookData::class.java,
         )
 
         hints.reflection()
-            // required by nitrite to create and open file based databases
-            .registerType(FilePathDisk::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
-            .registerType(FilePathNio::class.java, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             // required by kord (remove once https://github.com/kordlib/kord/issues/786 is merged)
             .registerType(GuildApplicationCommandPermissionsData::class.java)
             .registerType(StickerPackData::class.java)
-            // required by kotlin coroutines (dependency of kord)
-            .registerType(TypeReference.of("kotlin.internal.jdk8.JDK8PlatformImplementations"), MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
+            .registerType(Optional.Missing.Companion::class.java)
+            .registerType(Optional.Null.Companion::class.java)
             // required by ktor (dependency of kord)
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(StickerPackData::class.java)
+            // required for kotlinx serialization (dependency of kord)
+            .registerType(JsonArray.Companion::class.java)
+            .registerType(JsonObject.Companion::class.java)
     }
 }
