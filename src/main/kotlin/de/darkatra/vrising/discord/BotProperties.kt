@@ -58,7 +58,7 @@ class BotProperties {
     var databaseBackupJobEnabled: Boolean = false
 
     @field:NotNull
-    var databaseBackupDirectory: Path = Path.of("database-backups/")
+    var databaseBackupDirectory: Path = Path.of("./database-backups/")
 
     @field:Min(1)
     @field:NotNull

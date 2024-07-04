@@ -54,13 +54,6 @@ class ConfigureStatusMonitorCommand(
         }
     }
 
-    override fun isSupported(interaction: ChatInputCommandInteraction, adminUserIds: Set<String>): Boolean {
-        if (interaction is GlobalChatInputCommandInteraction) {
-            return false
-        }
-        return super.isSupported(interaction, adminUserIds)
-    }
-
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val serverId = interaction.getServerIdParameter()
