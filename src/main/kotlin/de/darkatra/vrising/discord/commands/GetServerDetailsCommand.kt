@@ -62,18 +62,18 @@ class GetServerDetailsCommand(
 
                 field {
                     name = "Api Hostname"
-                    value = when (server.apiHostname != null) {
-                        true -> "${server.apiHostname}"
-                        false -> "-"
+                    value = when {
+                        server.apiHostname != null -> "${server.apiHostname}"
+                        else -> "-"
                     }
                     inline = true
                 }
 
                 field {
                     name = "Api Port"
-                    value = when (server.apiPort != null) {
-                        true -> "${server.apiPort}"
-                        false -> "-"
+                    value = when {
+                        server.apiPort != null -> "${server.apiPort}"
+                        else -> "-"
                     }
                     inline = true
                 }

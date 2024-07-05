@@ -74,9 +74,13 @@ class PvpKillFeedService(
             .filter { pvpKill -> pvpKill.occurred.isAfter(pvpKillFeed.lastUpdated) }
             .sortedWith(Comparator.comparing(PvpKill::occurred))
             .forEach { pvpKill ->
-                pvpKillFeedChannel.tryCreateMessage(
-                    "<t:${pvpKill.occurred.epochSecond}>: ${pvpKill.killer.name} (${pvpKill.killer.gearLevel}) killed ${pvpKill.victim.name} (${pvpKill.victim.gearLevel})."
-                )
+                try {
+                    pvpKillFeedChannel.createMessage(
+                        "<t:${pvpKill.occurred.epochSecond}>: ${pvpKill.killer.name} (${pvpKill.killer.gearLevel}) killed ${pvpKill.victim.name} (${pvpKill.victim.gearLevel})."
+                    )
+                } catch (e: Exception) {
+                    logger.warn("Could not post pvp kill feed message for server '${pvpKillFeed.getServer().id}'.", e)
+                }
             }
 
         pvpKillFeed.lastUpdated = Instant.now()

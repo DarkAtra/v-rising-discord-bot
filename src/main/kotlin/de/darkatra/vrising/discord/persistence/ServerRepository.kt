@@ -71,13 +71,13 @@ class ServerRepository(
 
     fun getServers(discordServerId: String? = null, offset: Long? = null, limit: Long? = null): List<Server> {
 
-        val filter = when (discordServerId != null) {
-            true -> Server::discordServerId eq discordServerId
-            false -> Filter.ALL
+        val filter = when {
+            discordServerId != null -> Server::discordServerId eq discordServerId
+            else -> Filter.ALL
         }
 
-        val findOptions = when (offset != null && limit != null) {
-            true -> FindOptions.skipBy(offset).limit(limit)
+        val findOptions = when {
+            offset != null && limit != null -> FindOptions.skipBy(offset).limit(limit)
             else -> null
         }
 
@@ -86,9 +86,9 @@ class ServerRepository(
 
     fun count(discordServerId: String? = null): Long {
 
-        val filter = when (discordServerId != null) {
-            true -> Server::discordServerId eq discordServerId
-            false -> Filter.ALL
+        val filter = when {
+            discordServerId != null -> Server::discordServerId eq discordServerId
+            else -> Filter.ALL
         }
 
         return repository.find(filter).size()

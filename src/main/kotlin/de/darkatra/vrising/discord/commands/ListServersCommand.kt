@@ -72,9 +72,9 @@ class ListServersCommand(
         }
 
         interaction.deferEphemeralResponse().respond {
-            content = when (servers.isEmpty()) {
-                true -> "No servers found."
-                false -> servers.joinToString(separator = "\n") { server ->
+            content = when {
+                servers.isEmpty() -> "No servers found."
+                else -> servers.joinToString(separator = "\n") { server ->
                     "${server.id} - ${server.hostname}:${server.queryPort} - ${server.status.name}"
                 } + "\n*Current Page: $page, Total Pages: $totalPages*"
             }

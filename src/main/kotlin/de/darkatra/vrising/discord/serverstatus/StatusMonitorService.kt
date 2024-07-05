@@ -15,6 +15,7 @@ import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.edit
+import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.rest.builder.message.embed
 import org.slf4j.LoggerFactory
@@ -117,24 +118,37 @@ class StatusMonitorService(
         }
 
         val currentEmbedMessageId = statusMonitor.currentEmbedMessageId
-        if (currentEmbedMessageId != null) {
-            try {
+        when {
+            currentEmbedMessageId != null -> try {
+
                 channel.getMessage(Snowflake(currentEmbedMessageId))
                     .edit { embed(embedCustomizer) }
 
                 statusMonitor.currentFailedAttempts = 0
 
                 logger.debug("Successfully updated the status monitor for server '${statusMonitor.getServer().id}'.")
-                return
-            } catch (e: Exception) {
+            } catch (e: EntityNotFoundException) {
                 statusMonitor.currentEmbedMessageId = null
+            } catch (e: Exception) {
+                logger.warn("Could not update status embed for server '${statusMonitor.getServer().id}'", e)
+
+                statusMonitor.currentFailedApiAttempts += 1
+                statusMonitor.addError(e, botProperties.maxRecentErrors)
+            }
+
+            else -> try {
+
+                statusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
+                statusMonitor.currentFailedAttempts = 0
+
+                logger.debug("Successfully updated the status and persisted the embedId for server monitor of server '${statusMonitor.getServer().id}'.")
+            } catch (e: Exception) {
+                logger.warn("Could not create status embed for server '${statusMonitor.getServer().id}'", e)
+
+                statusMonitor.currentFailedApiAttempts += 1
+                statusMonitor.addError(e, botProperties.maxRecentErrors)
             }
         }
-
-        statusMonitor.currentEmbedMessageId = channel.createEmbed(embedCustomizer).id.toString()
-        statusMonitor.currentFailedAttempts = 0
-
-        logger.debug("Successfully updated the status and persisted the embedId for server monitor of server '${statusMonitor.getServer().id}'.")
     }
 
     private suspend fun disableStatusMonitorIfNecessary(statusMonitor: StatusMonitor, block: suspend () -> Unit = {}) {

@@ -12,7 +12,6 @@ data class PvpKillFeed(
     override var recentErrors: List<Error> = emptyList()
 ) : ErrorAware, ServerAware, StatusAware {
 
-    @Transient
     private var server: Server? = null
 
     override fun getServer(): Server {

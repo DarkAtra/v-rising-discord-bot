@@ -79,9 +79,13 @@ class PlayerActivityFeedService(
                     PlayerActivity.Type.CONNECTED -> "joined"
                     PlayerActivity.Type.DISCONNECTED -> "left"
                 }
-                playerActivityChannel.tryCreateMessage(
-                    "<t:${playerActivity.occurred.epochSecond}>: ${playerActivity.playerName} $action the server."
-                )
+                try {
+                    playerActivityChannel.createMessage(
+                        "<t:${playerActivity.occurred.epochSecond}>: ${playerActivity.playerName} $action the server."
+                    )
+                } catch (e: Exception) {
+                    logger.warn("Could not post player activity feed message for server '${playerActivityFeed.getServer().id}'.", e)
+                }
             }
 
         playerActivityFeed.lastUpdated = Instant.now()
