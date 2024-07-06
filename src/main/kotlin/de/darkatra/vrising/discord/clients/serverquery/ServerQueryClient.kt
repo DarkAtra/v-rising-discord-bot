@@ -12,13 +12,11 @@ import java.util.concurrent.CompletableFuture
 @Service
 class ServerQueryClient : DisposableBean {
 
-    private val client by lazy {
-        SourceQueryClient(
-            SourceQueryOptions.builder()
-                .option(GeneralOptions.CONNECTION_POOLING, true)
-                .build()
-        )
-    }
+    private val client = SourceQueryClient(
+        SourceQueryOptions.builder()
+            .option(GeneralOptions.CONNECTION_POOLING, true)
+            .build()
+    )
 
     fun getServerStatus(serverHostName: String, serverQueryPort: Int): Result<ServerStatus> {
 

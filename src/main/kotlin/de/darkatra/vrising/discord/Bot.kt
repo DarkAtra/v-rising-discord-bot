@@ -1,9 +1,5 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.clients.botcompanion.model.Character
-import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
-import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
-import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.persistence.DatabaseBackupService
@@ -16,9 +12,7 @@ import dev.kord.core.on
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
-import org.dizitart.no2.Nitrite
 import org.slf4j.LoggerFactory
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -40,19 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(
-    // properties
-    BotProperties::class,
-    // http
-    Character::class,
-    PlayerActivity::class,
-    PlayerActivity.Type::class,
-    PvpKill::class,
-    PvpKill.Player::class,
-    VBlood::class,
-)
 class Bot(
-    private val database: Nitrite,
     private val botProperties: BotProperties,
     private val commands: List<Command>,
     private val databaseMigrationService: DatabaseMigrationService,
@@ -114,7 +96,6 @@ class Bot(
         runBlocking {
             kord.shutdown()
         }
-        database.close()
     }
 
     override fun configureTasks(taskRegistrar: ScheduledTaskRegistrar) {

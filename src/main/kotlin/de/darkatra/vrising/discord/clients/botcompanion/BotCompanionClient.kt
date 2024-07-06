@@ -19,6 +19,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.appendPathSegments
 import io.ktor.http.headers
 import io.ktor.http.userAgent
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -29,7 +30,7 @@ import java.time.Duration
 @Service
 class BotCompanionClient(
     private val applicationContext: ApplicationContext
-) {
+) : DisposableBean {
 
     private val objectMapper by lazy {
         jacksonObjectMapper().registerModule(JavaTimeModule())
@@ -107,5 +108,9 @@ class BotCompanionClient(
     private fun getRequestUrl(serverApiHostName: String, serverApiPort: Int): URL {
         val address = InetSocketAddress(serverApiHostName, serverApiPort)
         return URL("http://${address.hostString}:${address.port}/v-rising-discord-bot")
+    }
+
+    override fun destroy() {
+        httpClient.close()
     }
 }
