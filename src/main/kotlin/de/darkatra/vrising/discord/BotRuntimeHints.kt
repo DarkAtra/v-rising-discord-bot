@@ -62,16 +62,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         bindingReflectionHintsRegistrar.registerReflectionHints(
             hints.reflection(),
             BotProperties::class.java,
-            // database
-            Error::class.java,
-            Leaderboard::class.java,
-            PlayerActivityFeed::class.java,
-            PvpKillFeed::class.java,
-            Server::class.java,
-            Status::class.java,
-            StatusMonitor::class.java,
-            Version::class.java,
-            // http
             Character::class.java,
             PlayerActivity::class.java,
             PlayerActivity.Type::class.java,
@@ -79,7 +69,17 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             PvpKill.Player::class.java,
             VBlood::class.java,
         )
-        hints.serialization().registerType(java.lang.Boolean::class.java)
+        hints.reflection()
+            .registerType(Error::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(Leaderboard::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(PlayerActivityFeed::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(PvpKillFeed::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(Server::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(Status::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(StatusMonitor::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(Version::class.java, MemberCategory.DECLARED_FIELDS)
+        hints.serialization()
+            .registerType(java.lang.Boolean::class.java)
 
         // required by nitrite for serialization
         hints.serialization()
