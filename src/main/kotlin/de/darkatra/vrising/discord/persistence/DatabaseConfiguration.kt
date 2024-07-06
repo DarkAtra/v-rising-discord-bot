@@ -13,7 +13,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.nio.file.Path
-import kotlin.io.path.absolutePathString
 
 @Configuration
 @EnableConfigurationProperties(BotProperties::class)
@@ -26,7 +25,7 @@ class DatabaseConfiguration(
         fun buildNitriteDatabase(databaseFile: Path, username: String? = null, password: String? = null): Nitrite {
 
             val storeModule = MVStoreModule.withConfig()
-                .filePath(databaseFile.absolutePathString())
+                .filePath(databaseFile.toAbsolutePath().toFile())
                 .compress(true)
                 .build()
 
