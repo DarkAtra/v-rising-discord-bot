@@ -7,6 +7,7 @@ import de.darkatra.vrising.discord.clients.serverquery.model.ServerStatus
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Service
 import java.net.InetSocketAddress
+import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 
 @Service
@@ -36,8 +37,10 @@ class ServerQueryClient : DisposableBean {
                     )
                 }.join()
             )
+        } catch (e: CancellationException) {
+            Result.failure(CancellationException("Server query aborted.", e))
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(ServerQueryClientException("Exception performing server query", e))
         }
     }
 

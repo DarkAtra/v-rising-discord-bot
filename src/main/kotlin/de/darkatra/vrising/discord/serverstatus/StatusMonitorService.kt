@@ -3,6 +3,7 @@ package de.darkatra.vrising.discord.serverstatus
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
+import de.darkatra.vrising.discord.clients.serverquery.CancellationException
 import de.darkatra.vrising.discord.clients.serverquery.ServerQueryClient
 import de.darkatra.vrising.discord.commands.ConfigureStatusMonitorCommand
 import de.darkatra.vrising.discord.commands.GetStatusMonitorDetailsCommand
@@ -56,6 +57,11 @@ class StatusMonitorService(
         ).map { serverStatus ->
             ServerInfo.of(serverStatus)
         }.getOrElse { e ->
+
+            if (e is CancellationException) {
+                logger.debug("Server query was canceled.", e)
+                return
+            }
 
             logger.error("Exception updating the status monitor for server '${statusMonitor.getServer().id}'.", e)
             statusMonitor.currentFailedAttempts += 1
