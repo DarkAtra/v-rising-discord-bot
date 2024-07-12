@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.clients.serverquery
 
+import com.ibasco.agql.core.util.FailsafeOptions
 import com.ibasco.agql.core.util.GeneralOptions
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryClient
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryOptions
@@ -16,6 +17,10 @@ class ServerQueryClient : DisposableBean {
     private val client = SourceQueryClient(
         SourceQueryOptions.builder()
             .option(GeneralOptions.CONNECTION_POOLING, true)
+            .option(GeneralOptions.READ_TIMEOUT, 5000)
+            .option(FailsafeOptions.FAILSAFE_RETRY_MAX_ATTEMPTS, 3)
+            .option(FailsafeOptions.FAILSAFE_RETRY_DELAY, 200)
+            .option(FailsafeOptions.FAILSAFE_CIRCBREAKER_ENABLED, false)
             .build()
     )
 
@@ -23,9 +28,24 @@ class ServerQueryClient : DisposableBean {
 
         val address = InetSocketAddress(serverHostName, serverQueryPort)
 
-        val getInfo = client.getInfo(address)
-        val getPlayers = client.getPlayers(address)
-        val getRules = client.getRules(address)
+        val getInfo = client.getInfo(address).handle { r, e ->
+            if (e != null) {
+                throw ServerQueryClientException("Exception performing getInfo query", e)
+            }
+            return@handle r
+        }
+        val getPlayers = client.getPlayers(address).handle { r, e ->
+            if (e != null) {
+                throw ServerQueryClientException("Exception performing getPlayers query", e)
+            }
+            return@handle r
+        }
+        val getRules = client.getRules(address).handle { r, e ->
+            if (e != null) {
+                throw ServerQueryClientException("Exception performing getRules query", e)
+            }
+            return@handle r
+        }
 
         return try {
             Result.success(
