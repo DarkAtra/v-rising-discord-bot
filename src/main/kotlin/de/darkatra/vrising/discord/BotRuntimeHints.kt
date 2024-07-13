@@ -81,6 +81,10 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         hints.serialization()
             .registerType(java.lang.Boolean::class.java)
 
+        // required by jackson
+        hints.reflection()
+            .registerType(java.lang.Enum.EnumDesc::class.java)
+
         // required by nitrite for serialization
         hints.serialization()
             .registerType(AbstractOwnableSynchronizer::class.java) // via Attributes
