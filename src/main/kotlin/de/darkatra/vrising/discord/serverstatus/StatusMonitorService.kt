@@ -35,6 +35,8 @@ class StatusMonitorService(
 
     suspend fun updateStatusMonitor(kord: Kord, statusMonitor: StatusMonitor) {
 
+        logger.debug("Attempting to update the server monitor for server '${statusMonitor.getServer().id}'...")
+
         val channel = kord.getDiscordChannel(statusMonitor.discordChannelId).getOrElse { e ->
             when (e) {
                 is InvalidDiscordChannelException -> {

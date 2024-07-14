@@ -30,6 +30,8 @@ class PvpKillFeedService(
             return
         }
 
+        logger.debug("Attempting to update the pvp kill feed for server '${pvpKillFeed.getServer().id}'...")
+
         val pvpKillFeedChannel = kord.getDiscordChannel(pvpKillFeed.discordChannelId).getOrElse { e ->
             when (e) {
                 is InvalidDiscordChannelException -> {

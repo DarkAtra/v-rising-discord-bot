@@ -30,6 +30,8 @@ class PlayerActivityFeedService(
             return
         }
 
+        logger.debug("Attempting to update the player activity feed for server '${playerActivityFeed.getServer().id}'...")
+
         val playerActivityChannel = kord.getDiscordChannel(playerActivityFeed.discordChannelId).getOrElse { e ->
             when (e) {
                 is InvalidDiscordChannelException -> {
