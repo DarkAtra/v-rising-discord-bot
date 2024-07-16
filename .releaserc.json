@@ -37,7 +37,9 @@
                     }
                 ],
                 "successComment": false,
-                "releasedLabels": false
+                "releasedLabels": false,
+                "failComment": false,
+                "failTitle": false
             }
         ]
     ]
