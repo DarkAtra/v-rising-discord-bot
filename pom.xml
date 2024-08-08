@@ -269,6 +269,11 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
+                        <configuration>
+                            <buildArgs combine.children="append">
+                                <arg>-march=compatibility</arg>
+                            </buildArgs>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
