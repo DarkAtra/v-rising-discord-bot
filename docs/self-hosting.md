@@ -8,8 +8,8 @@ nav_order: 3
 {: .warning }
 > I only recommend self-hosting the bot if you are experienced in running and maintaining software.
 
-You have two options for running the bot, using docker and running on bare metal. I generally recommend running it as a docker container as it reduces the
-maintenance effort and simplifies the configuration on your end.
+You have two options for running the bot, the first uses docker and the second is running it on bare metal.
+I generally recommend running it as a docker container as it reduces the maintenance effort and simplifies the configuration on your end.
 
 ## Hosting the bot using docker-compose
 
@@ -25,7 +25,7 @@ You can also build it from scratch by cloning the repository and then running `m
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:2.8.0-native
+    image: ghcr.io/darkatra/v-rising-discord-bot:2.11.0-native # find the latest version here: https://github.com/DarkAtra/v-rising-discord-bot/releases
     command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
@@ -42,8 +42,8 @@ services:
 
 {: .note }
 > The container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
-> case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the example above with any valid window path,
-> e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.
+> case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the
+> example above with any valid window path, e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.
 
 ## Hosting the bot without docker
 
@@ -57,9 +57,10 @@ services:
    ```
 4. Run the application using `java -jar v-rising-discord-bot-<version>.jar`
 
-If you run the application in a Linux environment, make sure that you use a separate user.
-This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
-applications working directory by default.
+If you run the application in a Linux environment, make sure to use a separate user.
+This user only needs read and write permissions for the `bot.db` database file and read
+permissions for the `application.yml`, both of which are located in the applications
+working directory by default.
 
 You can change the location of the database file by modifying the `application.yml` slightly:
 

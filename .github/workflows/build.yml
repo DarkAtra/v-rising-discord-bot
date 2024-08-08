@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - next
+      # - next
     paths:
       - 'src/**'
       - 'pom.xml'
@@ -55,12 +55,10 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - uses: graalvm/setup-graalvm@v1.0.12
+      - uses: graalvm/setup-graalvm@v1.2.1
         with:
-          java-version: '17'
-          # distribution: 'graalvm'
-          version: '22.3.2'
-          components: 'native-image'
+          java-version: '21'
+          distribution: 'graalvm-community'
 
       - name: Run tests
         run: mvn -B -ntp -PnativeTest verify
@@ -97,7 +95,7 @@ jobs:
         run: echo "image-name=$(mvn help:evaluate -Dexpression=image.name -q -DforceStdout)" >> $GITHUB_OUTPUT
 
       - name: Scan Docker Image for Vulnerabilities
-        uses: aquasecurity/trivy-action@0.12.0
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: ${{ steps.get-image-name.outputs.image-name }}
           format: sarif

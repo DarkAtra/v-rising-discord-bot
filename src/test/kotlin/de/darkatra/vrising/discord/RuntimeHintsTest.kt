@@ -1,9 +1,6 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.migration.Schema
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
 import org.junit.jupiter.api.Test
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ImportRuntimeHints
 
@@ -19,6 +16,5 @@ class RuntimeHintsTest {
     }
 
     @ImportRuntimeHints(BotRuntimeHints::class)
-    @RegisterReflectionForBinding(BotProperties::class, Schema::class, ServerStatusMonitor::class)
     class TestConfiguration
 }

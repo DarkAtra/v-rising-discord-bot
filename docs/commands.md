@@ -6,70 +6,129 @@ nav_order: 4
 # Discord Commands
 
 Please note that all commands are [guild](https://discord.com/developers/docs/resources/guild) specific by default.
-All optional command parameters can be reset by passing `~` as an argument.
 
-## `/list-servers`
+## Server
 
-Lists all server status monitors.
+### `/list-servers`
+
+Use this command to list all servers that you have previously added using the `/add-server` command.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
 | Parameter | Description                        | Required | Default value |
 |-----------|------------------------------------|----------|---------------|
 | `page`    | The page to request. Zero indexed. | `false`  | `0`           |
 
-## `/add-server`
+### `/add-server`
 
-Adds a server to the status monitor.
+Use this command to add a server. This is required in order to use any feature of the bot.
 
-| Parameter                         | Description                                                                                                                                                                                                                 | Required | Default value |
-|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| `server-hostname`                 | The hostname of the server to add a status monitor for.                                                                                                                                                                     | `true`   | `null`        |
-| `server-query-port`               | The query port of the server to add a status monitor for.                                                                                                                                                                   | `true`   | `null`        |
-| `server-api-hostname`             | The hostname to use when querying the server's api. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                              | `false`  | `null`        |
-| `server-api-port`                 | The api port of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                                                      | `false`  | `null`        |
-| `server-api-username`             | The username used to authenticate to the api of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                      | `false`  | `null`        |
-| `server-api-password`             | The password used to authenticate to the api of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                      | `false`  | `null`        |
-| `embed-enabled`                   | Whether or not a discord status embed should be posted.                                                                                                                                                                     | `false`  | `true`        |
-| `display-server-description`      | Whether or not to display the v rising server description on discord.                                                                                                                                                       | `false`  | `true`        |
-| `display-player-gear-level`       | Whether or not to display each player's gear level. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                              | `false`  | `true`        |
-| `player-activity-feed-channel-id` | The id of the channel to post the player activity feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                       | `false`  | `null`        |
-| `pvp-kill-feed-channel-id`        | The id of the channel to post the pvp kill feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set. Requires at least version `0.4.0` of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| Parameter             | Description                                                                                                                                                            | Required | Default value |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-hostname`     | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
+| `server-query-port`   | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
+| `server-api-hostname` | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
+| `server-api-port`     | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
+| `server-api-username` | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `server-api-password` | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
 
-## `/update-server`
+### `/update-server`
 
-Updates the given server status monitor. Only parameters specified are updated, all other parameters remain unchanged.
+Use this command to update the given server.
+Only parameters specified are updated, all other parameters remain unchanged.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter                         | Description                                                                                                                                                                                                                 | Required | Default value |
-|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| `server-status-monitor-id`        | The id of the server status monitor to update.                                                                                                                                                                              | `true`   | `null`        |
-| `server-hostname`                 | The hostname of the server to add a status monitor for.                                                                                                                                                                     | `false`  | `null`        |
-| `server-query-port`               | The query port of the server to add a status monitor for.                                                                                                                                                                   | `false`  | `null`        |
-| `server-api-hostname`             | The hostname to use when querying the server's api. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                              | `false`  | `null`        |
-| `server-api-port`                 | The api port of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                                                      | `false`  | `null`        |
-| `server-api-username`             | The username used to authenticate to the api of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                      | `false`  | `null`        |
-| `server-api-password`             | The password used to authenticate to the api of the server. Only required if you're planing to use the [v-rising-discord-bot-companion integration](bot-companion.md).                                                      | `false`  | `null`        |
-| `status`                          | Determines if a server status monitor should be updated or not. Either `ACTIVE` or `INACTIVE`.                                                                                                                              | `false`  | `null`        |
-| `embed-enabled`                   | Whether or not a discord status embed should be posted. Set this to false if you only want to use the activity or kill feed feature of the bot.                                                                             | `false`  | `true`        |
-| `display-server-description`      | Whether or not to display the v rising server description on discord.                                                                                                                                                       | `false`  | `true`        |
-| `display-player-gear-level`       | Whether or not to display each player's gear level. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                              | `false`  | `true`        |
-| `player-activity-feed-channel-id` | The id of the channel to post the player activity feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set.                                                                                       | `false`  | `null`        |
-| `pvp-kill-feed-channel-id`        | The id of the channel to post the pvp kill feed in. Only has an effect if `server-api-hostname` and `server-api-port` are set. Requires at least version `0.4.0` of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| Parameter             | Description                                                                                                                                                            | Required | Default value |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`           | The id of the server to update.                                                                                                                                        | `true`   | `null`        |
+| `server-hostname`     | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
+| `server-query-port`   | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
+| `server-api-hostname` | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
+| `server-api-port`     | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
+| `server-api-username` | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `server-api-password` | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
 
-## `/remove-server`
+### `/remove-server`
 
-Removes a server from the status monitor.
+Use this command to remove the given server. This command can not be undone.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter                  | Description                                    | Required | Default value |
-|----------------------------|------------------------------------------------|----------|---------------|
-| `server-status-monitor-id` | The id of the server status monitor to remove. | `true`   | `null`        |
+| Parameter   | Description                     | Required | Default value |
+|-------------|---------------------------------|----------|---------------|
+| `server-id` | The id of the server to remove. | `true`   | `null`        |
 
-## `/get-server-details`
+### `/get-server-details`
 
-Gets all the configuration details for the specified server.
+Use this command to get all configuration details for the given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter                  | Description                                             | Required | Default value |
-|----------------------------|---------------------------------------------------------|----------|---------------|
-| `server-status-monitor-id` | The id of the server status monitor to get details for. | `true`   | `null`        |
+| Parameter   | Description                              | Required | Default value |
+|-------------|------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get details for. | `true`   | `null`        |
+
+## Status Embed
+
+## `/configure-status-monitor`
+
+Use this command to configure the status embed, aka. status monitor, for a given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter                    | Description                                                                                                                                 | Required | Default value |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`                  | The id of the server to configure the status embed for.                                                                                     | `true`   | `null`        |
+| `channel-id`                 | The id of the channel to post the status embed in.                                                                                          | `true`   | `null`        |
+| `status`                     | Determines if the status embed should be updated or not. Either `ACTIVE` or `INACTIVE`.                                                     | `false`  | `ACTIVE`      |
+| `display-server-description` | Whether to display the v rising server description in the status embed.                                                                     | `false`  | `true`        |
+| `display-player-gear-level`  | Whether to display each player's gear level. Only has an effect if the server has a `server-api-hostname` and `server-api-port` configured. | `false`  | `true`        |
+
+## `/get-status-monitor-details`
+
+Use this command to get all status monitor configuration details for the given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter   | Description                                                               | Required | Default value |
+|-------------|---------------------------------------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get all status monitor configuration details for. | `true`   | `null`        |
+
+## Player Activity Feed
+
+### `/configure-player-activity-feed`
+
+Use this command to configure the player activity feed for a given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter    | Description                                                                                     | Required | Default value |
+|--------------|-------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`  | The id of the server to configure the player activity feed for.                                 | `true`   | `null`        |
+| `channel-id` | The id of the channel to post the player activity feed in.                                      | `true`   | `null`        |
+| `status`     | Determines if the player activity feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+
+## `/get-player-activity-feed-details`
+
+Use this command to get all player activity feed configuration details for the given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter   | Description                                                                     | Required | Default value |
+|-------------|---------------------------------------------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get all player activity feed configuration details for. | `true`   | `null`        |
+
+## Pvp Kill Feed
+
+## `/configure-pvp-kill-feed`
+
+Use this command to configure the pvp kill feed for a given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter    | Description                                                                              | Required | Default value |
+|--------------|------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`  | The id of the server to configure the pvp kill feed for.                                 | `true`   | `null`        |
+| `channel-id` | The id of the channel to post the pvp kill feed in.                                      | `true`   | `null`        |
+| `status`     | Determines if the pvp kill feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+
+## `/get-pvp-kill-feed-details`
+
+Use this command to get all pvp kill feed configuration details for the given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter   | Description                                                              | Required | Default value |
+|-------------|--------------------------------------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get all pvp kill feed configuration details for. | `true`   | `null`        |

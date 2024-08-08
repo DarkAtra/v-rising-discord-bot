@@ -54,9 +54,9 @@ object ServerStatusEmbed {
             // days-running -> for how many days the server has been running in in-game days (pre 0.5.42553)
             val currentDay = serverInfo.rules["days-runningv2"]
             field {
-                name = when (currentDay != null) {
-                    true -> "Days running"
-                    false -> "Ingame days"
+                name = when {
+                    currentDay != null -> "Days running"
+                    else -> "Ingame days"
                 }
                 // fallback to the old field for older servers and "-" if both fields are absent
                 value = "${currentDay ?: serverInfo.rules["days-running"] ?: "-"}"
