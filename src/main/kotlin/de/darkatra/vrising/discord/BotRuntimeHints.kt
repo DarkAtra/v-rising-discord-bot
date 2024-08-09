@@ -80,6 +80,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType(Version::class.java, MemberCategory.DECLARED_FIELDS)
         hints.serialization()
             .registerType(java.lang.Boolean::class.java)
+            .registerType(TypeReference.of("kotlin.collections.EmptyList"))
 
         // required by jackson
         hints.reflection()

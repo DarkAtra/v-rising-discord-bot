@@ -7,10 +7,8 @@ import de.darkatra.vrising.discord.persistence.model.Version
 import org.assertj.core.api.Assertions.assertThat
 import org.dizitart.no2.collection.Document
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.DisabledInNativeImage
 import java.time.Instant
 
-@DisabledInNativeImage
 class DatabaseMigrationServiceTest {
 
     @Test

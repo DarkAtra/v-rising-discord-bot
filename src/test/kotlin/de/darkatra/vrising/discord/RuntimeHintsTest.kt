@@ -15,6 +15,6 @@ class RuntimeHintsTest {
         // workaround to generate runtime hints for unit tests
     }
 
-    @ImportRuntimeHints(BotRuntimeHints::class)
+    @ImportRuntimeHints(BotRuntimeHints::class, TestRuntimeHints::class)
     class TestConfiguration
 }
