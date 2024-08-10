@@ -44,34 +44,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
-        // FIXME: required by nitrite until https://github.com/nitrite/nitrite-java/pull/1014 is released
-        arrayOf(
-            "org.dizitart.no2.mvstore.compat.v1.mvstore.fs.FilePathDisk",
-            "org.dizitart.no2.mvstore.compat.v1.mvstore.fs.FilePathNio",
-            "org.dizitart.no2.mvstore.compat.v1.mvstore.fs.FilePathEncrypt",
-            "org.h2.store.fs.FilePathMem",
-            "org.h2.store.fs.FilePathMemLZF",
-            "org.h2.store.fs.FilePathNioMem",
-            "org.h2.store.fs.FilePathNioMemLZF",
-            "org.h2.store.fs.FilePathSplit",
-            "org.h2.store.fs.FilePathNioMapped",
-            "org.h2.store.fs.FilePathAsync",
-            "org.h2.store.fs.FilePathZip",
-            "org.h2.store.fs.FilePathRetryOnInterrupt"
-        ).forEach { clazz ->
-            hints.reflection()
-                .registerType(TypeReference.of(clazz), MemberCategory.INVOKE_DECLARED_CONSTRUCTORS)
-        }
-        hints.serialization()
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$UserCredential"))
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$Document"))
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$Index"))
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$IndexMeta"))
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$Attributes"))
-            .registerType(TypeReference.of("org.dizitart.no2.mvstore.compat.v1.Compat\$NitriteId"))
-            .registerType(java.util.concurrent.ConcurrentSkipListMap::class.java)
-            .registerType(java.util.concurrent.ConcurrentSkipListSet::class.java)
-
         // required by the bot
         bindingReflectionHintsRegistrar.registerReflectionHints(
             hints.reflection(),
