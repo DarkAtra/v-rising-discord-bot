@@ -13,12 +13,7 @@ concurrency:
   group: ci-main
 
 permissions:
-  # used by semantic release
-  contents: write
-  issues: write
-  pull-requests: write
-  # used to publish the docker image
-  packages: write
+  contents: read
 
 jobs:
   verify:
@@ -26,8 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -50,8 +43,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - uses: graalvm/setup-graalvm@v1.2.1
         with:
@@ -64,6 +55,11 @@ jobs:
   release:
     name: Build and Release
     runs-on: ubuntu-latest
+    permissions:
+      # required by semantic release
+      contents: write
+      # required to publish the docker image
+      packages: write
     needs:
       - verify
       - verify-native
