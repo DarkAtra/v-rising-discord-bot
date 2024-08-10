@@ -32,25 +32,11 @@ import dev.kord.core.cache.data.WebhookData
 import io.ktor.utils.io.pool.DefaultPool
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
-import org.dizitart.no2.collection.NitriteId
-import org.dizitart.no2.common.DBValue
-import org.dizitart.no2.common.Fields
-import org.dizitart.no2.common.meta.Attributes
-import org.dizitart.no2.common.tuples.Pair
-import org.dizitart.no2.index.IndexDescriptor
-import org.dizitart.no2.index.IndexMeta
-import org.dizitart.no2.store.UserCredential
 import org.springframework.aot.hint.BindingReflectionHintsRegistrar
 import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.aot.hint.TypeReference
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.locks.AbstractOwnableSynchronizer
-import java.util.concurrent.locks.AbstractQueuedSynchronizer
-import java.util.concurrent.locks.ReentrantLock
 
 class BotRuntimeHints : RuntimeHintsRegistrar {
 
@@ -85,35 +71,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         // required by jackson
         hints.reflection()
             .registerType(java.lang.Enum.EnumDesc::class.java)
-
-        // required by nitrite for serialization
-        hints.serialization()
-            .registerType(AbstractOwnableSynchronizer::class.java) // via Attributes
-            .registerType(AbstractQueuedSynchronizer::class.java) // via Attributes
-            .registerType(ArrayList::class.java)
-            .registerType(AtomicBoolean::class.java) // via IndexMeta
-            .registerType(Attributes::class.java)
-            .registerType(ConcurrentHashMap::class.java) // via Attributes
-            .registerType(TypeReference.of("java.util.concurrent.ConcurrentHashMap\$Segment")) // via Attributes
-            .registerType(CopyOnWriteArrayList::class.java) // via SingleFieldIndex
-            .registerType(DBValue::class.java) // via SingleFieldIndex
-            .registerType(Fields::class.java) // via IndexDescriptor
-            .registerType(java.util.HashMap::class.java) // via Document
-            .registerType(java.util.HashSet::class.java)
-            .registerType(IndexDescriptor::class.java) // via IndexMeta
-            .registerType(IndexMeta::class.java)
-            .registerType(java.lang.Integer::class.java) // via StoreMetaData
-            .registerType(java.util.LinkedHashMap::class.java) // via Document
-            .registerType(java.lang.Long::class.java) // via StoreMetaData
-            .registerType(TypeReference.of("org.dizitart.no2.collection.NitriteDocument"))
-            .registerType(NitriteId::class.java)
-            .registerType(java.lang.Number::class.java) // via StoreMetaData
-            .registerType(Pair::class.java)
-            .registerType(ReentrantLock::class.java) // via Attributes
-            .registerType(TypeReference.of("java.util.concurrent.locks.ReentrantLock\$NonfairSync")) // via Attributes
-            .registerType(TypeReference.of("java.util.concurrent.locks.ReentrantLock\$Sync")) // via Attributes
-            .registerType(java.lang.String::class.java) // via StoreMetaData
-            .registerType(UserCredential::class.java)
 
         // required for kord (remove once https://github.com/kordlib/kord/issues/786 is merged)
         bindingReflectionHintsRegistrar.registerReflectionHints(
