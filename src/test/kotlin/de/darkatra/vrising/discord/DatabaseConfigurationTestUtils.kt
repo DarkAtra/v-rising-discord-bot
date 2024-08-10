@@ -3,7 +3,6 @@ package de.darkatra.vrising.discord
 import de.darkatra.vrising.discord.persistence.DatabaseConfiguration
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.filters.Filter
-import org.dizitart.no2.mvstore.compat.v1.mvstore.fs.FilePath
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.nio.file.Files
@@ -14,8 +13,8 @@ import kotlin.io.path.outputStream
 
 object DatabaseConfigurationTestUtils {
 
-    val DATABASE_FILE_V1_2_x by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v1.2.db") }
-    val DATABASE_FILE_V2_10_5 by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v2.10.5.db") }
+    val DATABASE_FILE_V1_2_x by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v1.2.db")!! }
+    val DATABASE_FILE_V2_10_5 by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v2.10.5.db")!! }
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 
     fun getTestDatabase(fromTemplate: URL? = null, username: String? = null, password: String? = null): Nitrite {
@@ -32,8 +31,6 @@ object DatabaseConfigurationTestUtils {
                 }
             }
         }
-
-        logger.info("Debug: ${FilePath.get(databaseFile.absolutePathString())}")
 
         return DatabaseConfiguration.buildNitriteDatabase(databaseFile, username, password)
     }

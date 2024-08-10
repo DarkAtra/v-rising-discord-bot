@@ -7,9 +7,7 @@ import org.dizitart.no2.Nitrite
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.condition.DisabledInNativeImage
 
-@DisabledInNativeImage
 class ServerRepositoryTest {
 
     private val nitrite: Nitrite = DatabaseConfigurationTestUtils.getTestDatabase()
