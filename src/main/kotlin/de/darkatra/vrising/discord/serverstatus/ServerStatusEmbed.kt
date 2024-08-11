@@ -46,7 +46,7 @@ object ServerStatusEmbed {
 
             field {
                 name = "Online count"
-                value = "${serverInfo.numberOfPlayers}/${serverInfo.maxPlayers}"
+                value = "${serverInfo.players.size}/${serverInfo.maxPlayers}"
                 inline = true
             }
 
