@@ -12,9 +12,12 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 > I highly recommend not exposing the api port to the internet in an unprotected manner. The setup guide below explains how the API port can be secured using
 > Basic Authentication.
 
+{: .warning }
+> It is **not** possible to use the bot-companion with GPortal hosted server as they don't allow exposing the API port to the internet.
+
 ## Setup Guide
 
-1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases) on your V Rising server.
+1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases) on your v rising server.
 2. Download the [v-rising-discord-bot-companion.dll](https://github.com/DarkAtra/v-rising-discord-bot-companion/releases)
     * **or** clone [this repo](https://github.com/DarkAtra/v-rising-discord-bot-companion) and build it via `dotnet build`. This
       requires [dotnet 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
@@ -27,9 +30,8 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
      "BindPort": 25570
    }
    ```
-   **It is not recommended to expose the api port to the internet in an unprotected manner.** Consider protecting the api port using a reverse proxy that
-   supports basic authentication or by using a firewall rule.
-5. Start the V Rising server and test if the mod works as expect by running the following command in your
+   **It is not recommended to expose the api port to the internet in an unprotected manner.** More on that in the next few steps.
+5. Start the v rising server and test if the mod works as expect by running the following command in your
    terminal: `curl -v http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200 OK` as soon as the server has fully started.
 6. Secure the API port using [Basic Authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). Navigate to the `BepInEx/config` folder
    and open `v-rising-discord-bot-companion.cfg`. The file should look something like this:
@@ -67,16 +69,17 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 
 1. Make sure you're using [the latest version](https://github.com/DarkAtra/v-rising-discord-bot/releases) of the discord bot.
     * **Tip**: You can also find the current docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot)
-2. Use the `/update-server` command to update the status monitor and set both `server-api-hostname`, `server-api-port`, `server-api-username`
-   and `server-api-password`. If the V Rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost`
+2. Use the `/update-server` command to update the server and specify a `server-api-hostname`, `server-api-port`, `server-api-username`
+   and `server-api-password`. If the v rising server and the discord bot are hosted on the same machine, set `server-api-hostname` to `localhost`
    and `server-api-port` to `25570` if you used the `ServerHostSettings.json` from above.
 3. You should see the gear level for each player in the status embed the next time it is updated.
 
 ### Enabling the activity or kill feed
 
-1. Use the `/update-server` command to update the status monitor and set `player-activity-feed-channel-id` to the id of the discord channel you want the
-   activity feed to appear in. You can do the same for the kill feed by setting `pvp-kill-feed-channel-id`.
-2. The bot will now post a message whenever a player joins or leaves the server or whenever someone was killed in a PvP battle. It looks something like this:
+1. Use the `/configure-player-activity-feed` or `/configure-pvp-kill-feed` command and set `channel-id`
+   to the id of the discord channel you want the player activity feed or pvp kill feed to appear in.
+2. The bot will now post a message whenever a player joins or leaves the server or whenever someone was killed in a PvP battle.
+   It looks something like this:
 
    <img alt="Companion Preview" src="assets/companion-preview.png" width="400"/>
 

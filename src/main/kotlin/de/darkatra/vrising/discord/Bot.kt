@@ -1,15 +1,9 @@
 package de.darkatra.vrising.discord
 
-import de.darkatra.vrising.discord.clients.botcompanion.model.Character
-import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
-import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
-import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
-import de.darkatra.vrising.discord.migration.Schema
-import de.darkatra.vrising.discord.persistence.model.Error
-import de.darkatra.vrising.discord.persistence.model.ServerStatusMonitor
-import de.darkatra.vrising.discord.serverstatus.ServerStatusMonitorService
+import de.darkatra.vrising.discord.persistence.DatabaseBackupService
+import de.darkatra.vrising.discord.serverstatus.ServerService
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
@@ -18,9 +12,7 @@ import dev.kord.core.on
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
-import org.dizitart.no2.Nitrite
 import org.slf4j.LoggerFactory
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -42,24 +34,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 @SpringBootApplication
 @ImportRuntimeHints(BotRuntimeHints::class)
 @EnableConfigurationProperties(BotProperties::class)
-@RegisterReflectionForBinding(
-    BotProperties::class,
-    Schema::class,
-    ServerStatusMonitor::class,
-    Error::class,
-    Character::class,
-    VBlood::class,
-    PlayerActivity::class,
-    PlayerActivity.Type::class,
-    PvpKill::class,
-    PvpKill.Player::class
-)
 class Bot(
-    private val database: Nitrite,
     private val botProperties: BotProperties,
     private val commands: List<Command>,
     private val databaseMigrationService: DatabaseMigrationService,
-    private val serverStatusMonitorService: ServerStatusMonitorService
+    private val serverService: ServerService,
+    private val databaseBackupService: DatabaseBackupService
 ) : ApplicationRunner, DisposableBean, SchedulingConfigurer {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -80,8 +60,7 @@ class Bot(
             val command = commands.find { command -> command.isSupported(interaction, botProperties.adminUserIds) }
             if (command == null) {
                 interaction.deferEphemeralResponse().respond {
-                    content = """This command is not supported here, please refer to the documentation.
-                        |Be sure to use the commands in the channel where you want the status message to appear.""".trimMargin()
+                    content = "This command is not supported here, please refer to the documentation."
                 }
                 return@on
             }
@@ -117,7 +96,6 @@ class Bot(
         runBlocking {
             kord.shutdown()
         }
-        database.close()
     }
 
     override fun configureTasks(taskRegistrar: ScheduledTaskRegistrar) {
@@ -127,7 +105,7 @@ class Bot(
                 {
                     if (isReady.get() && kord.isActive) {
                         runBlocking {
-                            serverStatusMonitorService.updateServerStatusMonitors(kord)
+                            serverService.updateServers(kord)
                         }
                     }
                 },
@@ -142,11 +120,24 @@ class Bot(
                     {
                         if (isReady.get() && kord.isActive) {
                             runBlocking {
-                                serverStatusMonitorService.cleanupInactiveServerStatusMonitors(kord)
+                                serverService.cleanupInactiveServers(kord)
                             }
                         }
                     },
                     CronTrigger("0 0 0 * * *", ZoneOffset.UTC)
+                )
+            )
+        }
+
+        if (botProperties.databaseBackupJobEnabled) {
+            taskRegistrar.addCronTask(
+                CronTask(
+                    {
+                        if (isReady.get()) {
+                            databaseBackupService.performDatabaseBackup()
+                        }
+                    },
+                    CronTrigger("0 45 23 * * *", ZoneOffset.UTC)
                 )
             )
         }

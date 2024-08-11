@@ -1,29 +1,37 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
+import org.springframework.context.support.StaticApplicationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.client.support.BasicAuthenticationInterceptor
 
 @WireMockTest
 @DisabledInNativeImage
 class BotCompanionClientTest {
 
-    private val botCompanionClient = BotCompanionClient()
+    private val botCompanionClient = BotCompanionClient(
+        StaticApplicationContext().apply {
+            id = "test"
+        }
+    )
 
     @Test
     fun `should get characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
@@ -47,7 +55,9 @@ class BotCompanionClientTest {
                 )
         )
 
-        val charactersResult = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val charactersResult = runBlocking {
+            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+        }
         assertThat(charactersResult.isSuccess).isTrue()
 
         val characters = charactersResult.getOrThrow()
@@ -68,6 +78,8 @@ class BotCompanionClientTest {
 
         wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
                 .withBasicAuth(username, password)
                 .willReturn(
                     WireMock.aResponse()
@@ -92,11 +104,9 @@ class BotCompanionClientTest {
                 )
         )
 
-        val charactersResult = botCompanionClient.getCharacters(
-            "localhost",
-            wireMockRuntimeInfo.httpPort,
-            listOf(BasicAuthenticationInterceptor(username, password))
-        )
+        val charactersResult = runBlocking {
+            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, username, password)
+        }
         assertThat(charactersResult.isSuccess).isTrue()
 
         val characters = charactersResult.getOrThrow()
@@ -114,6 +124,8 @@ class BotCompanionClientTest {
 
         wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -129,17 +141,19 @@ class BotCompanionClientTest {
                 )
         )
 
-        val charactersResult = botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val charactersResult = runBlocking {
+            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+        }
         assertThat(charactersResult.isFailure).isTrue()
     }
 
     @Test
     fun `should get player activities`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/player-activities")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
@@ -163,7 +177,9 @@ class BotCompanionClientTest {
                 )
         )
 
-        val playerActivitiesResult = botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val playerActivitiesResult = runBlocking {
+            botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort)
+        }
         assertThat(playerActivitiesResult.isSuccess).isTrue()
 
         val playerActivities = playerActivitiesResult.getOrThrow()
@@ -178,10 +194,10 @@ class BotCompanionClientTest {
     @Test
     fun `should get pvp kills`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
-        val wireMock = wireMockRuntimeInfo.wireMock
-
-        wireMock.register(
+        wireMockRuntimeInfo.wireMock.register(
             WireMock.get("/v-rising-discord-bot/pvp-kills")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
@@ -206,7 +222,9 @@ class BotCompanionClientTest {
                 )
         )
 
-        val pvpKillsResult = botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort, emptyList())
+        val pvpKillsResult = runBlocking {
+            botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort)
+        }
         assertThat(pvpKillsResult.isSuccess).isTrue()
 
         val pvpKills = pvpKillsResult.getOrThrow()
