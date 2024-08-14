@@ -52,7 +52,11 @@ class BotCompanionClient(
         serverApiPassword: String? = null
     ): Result<List<Character>> {
 
-        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/characters", serverApiUsername, serverApiPassword)
+        val response = try {
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/characters", serverApiUsername, serverApiPassword)
+        } catch (e: Exception) {
+            return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getCharacters.name} request.", e))
+        }
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<Character>>()))
@@ -67,7 +71,11 @@ class BotCompanionClient(
         serverApiPassword: String? = null
     ): Result<List<PlayerActivity>> {
 
-        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/player-activities", serverApiUsername, serverApiPassword)
+        val response = try {
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/player-activities", serverApiUsername, serverApiPassword)
+        } catch (e: Exception) {
+            return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getPlayerActivities.name} request.", e))
+        }
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PlayerActivity>>()))
@@ -82,7 +90,11 @@ class BotCompanionClient(
         serverApiPassword: String? = null
     ): Result<List<PvpKill>> {
 
-        val response = performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/pvp-kills", serverApiUsername, serverApiPassword)
+        val response = try {
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/pvp-kills", serverApiUsername, serverApiPassword)
+        } catch (e: Exception) {
+            return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getPvpKills.name} request.", e))
+        }
 
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PvpKill>>()))
