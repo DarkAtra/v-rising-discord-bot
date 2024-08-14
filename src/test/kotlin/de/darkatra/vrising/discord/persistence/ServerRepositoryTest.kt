@@ -96,6 +96,8 @@ class ServerRepositoryTest {
 
         serverRepository.updateServer(update1)
 
+        assertThat(serverRepository.getServer(server.id, server.discordServerId)!!.hostname).isEqualTo("test-1")
+
         val e = assertThrows<OutdatedServerException> {
             serverRepository.updateServer(update2)
         }

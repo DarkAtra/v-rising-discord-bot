@@ -26,6 +26,29 @@ class BotCompanionClientTest {
     )
 
     @Test
+    fun `should handle timeouts correctly`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+
+        wireMockRuntimeInfo.wireMock.register(
+            WireMock.get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withFixedDelay(10_000)
+                        .withStatus(HttpStatus.OK.value())
+                )
+        )
+
+        val charactersResult = runBlocking {
+            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+        }
+        assertThat(charactersResult.isFailure).isTrue()
+
+        val exception = charactersResult.exceptionOrNull()
+        assertThat(exception).hasMessageContaining("Unexpected exception performing")
+    }
+
+    @Test
     fun `should get characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(

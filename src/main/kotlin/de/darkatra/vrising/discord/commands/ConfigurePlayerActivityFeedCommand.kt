@@ -37,7 +37,7 @@ class ConfigurePlayerActivityFeedCommand(
             description = description
         ) {
 
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerIdParameter()

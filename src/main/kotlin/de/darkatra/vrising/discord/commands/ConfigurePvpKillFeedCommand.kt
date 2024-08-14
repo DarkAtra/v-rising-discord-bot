@@ -37,7 +37,7 @@ class ConfigurePvpKillFeedCommand(
             description = description
         ) {
 
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerIdParameter()

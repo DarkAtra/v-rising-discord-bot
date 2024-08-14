@@ -41,7 +41,7 @@ class ConfigureStatusMonitorCommand(
             description = description
         ) {
 
-            dmPermission = false
+            dmPermission = true
             disableCommandInGuilds()
 
             addServerIdParameter()
