@@ -35,6 +35,10 @@ class ServerRepositoryTest {
         assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
         assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
         assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+        assertThat(server.apiHostname).isEqualTo(ServerTestUtils.API_HOST_NAME)
+        assertThat(server.apiPort).isEqualTo(ServerTestUtils.API_PORT)
+        assertThat(server.apiUsername).isEqualTo(ServerTestUtils.API_USERNAME)
+        assertThat(server.apiPassword).isEqualTo(ServerTestUtils.API_PASSWORD)
     }
 
     @Test
@@ -51,6 +55,10 @@ class ServerRepositoryTest {
         assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
         assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
         assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+        assertThat(server.apiHostname).isEqualTo(ServerTestUtils.API_HOST_NAME)
+        assertThat(server.apiPort).isEqualTo(ServerTestUtils.API_PORT)
+        assertThat(server.apiUsername).isEqualTo(ServerTestUtils.API_USERNAME)
+        assertThat(server.apiPassword).isEqualTo(ServerTestUtils.API_PASSWORD)
     }
 
     @Test
@@ -67,6 +75,10 @@ class ServerRepositoryTest {
         assertThat(server.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
         assertThat(server.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
         assertThat(server.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+        assertThat(server.apiHostname).isEqualTo(ServerTestUtils.API_HOST_NAME)
+        assertThat(server.apiPort).isEqualTo(ServerTestUtils.API_PORT)
+        assertThat(server.apiUsername).isEqualTo(ServerTestUtils.API_USERNAME)
+        assertThat(server.apiPassword).isEqualTo(ServerTestUtils.API_PASSWORD)
     }
 
     @Test
@@ -115,5 +127,33 @@ class ServerRepositoryTest {
         }
 
         assertThat(e.message).isEqualTo("Server with id '${ServerTestUtils.ID}' not found.")
+    }
+
+    @Test
+    fun `should update nullable fields of Server`() {
+
+        val server = ServerTestUtils.getServer()
+        serverRepository.addServer(server)
+
+        val update = serverRepository.getServer(server.id, server.discordServerId)!!.apply {
+            apiHostname = null
+            apiPort = null
+            apiUsername = null
+            apiPassword = null
+        }
+
+        serverRepository.updateServer(update)
+
+        val actualServer = serverRepository.getServer(ServerTestUtils.ID)
+
+        assertThat(actualServer).isNotNull()
+        assertThat(actualServer!!.id).isEqualTo(ServerTestUtils.ID)
+        assertThat(actualServer.discordServerId).isEqualTo(ServerTestUtils.DISCORD_SERVER_ID)
+        assertThat(actualServer.hostname).isEqualTo(ServerTestUtils.HOST_NAME)
+        assertThat(actualServer.queryPort).isEqualTo(ServerTestUtils.QUERY_PORT)
+        assertThat(actualServer.apiHostname).isNull()
+        assertThat(actualServer.apiPort).isNull()
+        assertThat(actualServer.apiUsername).isNull()
+        assertThat(actualServer.apiPassword).isNull()
     }
 }

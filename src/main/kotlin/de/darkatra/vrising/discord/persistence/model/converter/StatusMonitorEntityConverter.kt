@@ -32,9 +32,7 @@ class StatusMonitorEntityConverter : EntityConverter<StatusMonitor> {
             put(StatusMonitor::discordChannelId.name, statusMonitor.discordChannelId)
             put(StatusMonitor::displayServerDescription.name, statusMonitor.displayServerDescription)
             put(StatusMonitor::displayPlayerGearLevel.name, statusMonitor.displayPlayerGearLevel)
-            statusMonitor.currentEmbedMessageId?.let { currentEmbedMessageId ->
-                put(StatusMonitor::currentEmbedMessageId.name, currentEmbedMessageId)
-            }
+            put(StatusMonitor::currentEmbedMessageId.name, statusMonitor.currentEmbedMessageId)
             put(StatusMonitor::currentFailedAttempts.name, statusMonitor.currentFailedAttempts)
             put(StatusMonitor::currentFailedApiAttempts.name, statusMonitor.currentFailedApiAttempts)
             put(StatusMonitor::recentErrors.name, statusMonitor.recentErrors.map { error ->

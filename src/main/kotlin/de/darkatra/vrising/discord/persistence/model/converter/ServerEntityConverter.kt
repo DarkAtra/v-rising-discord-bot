@@ -59,30 +59,14 @@ class ServerEntityConverter : EntityConverter<Server> {
             put(Server::discordServerId.name, server.discordServerId)
             put(Server::hostname.name, server.hostname)
             put(Server::queryPort.name, server.queryPort)
-            server.apiHostname?.let { apiHostname ->
-                put(Server::apiHostname.name, apiHostname)
-            }
-            server.apiPort?.let { apiPort ->
-                put(Server::apiPort.name, apiPort)
-            }
-            server.apiUsername?.let { apiUsername ->
-                put(Server::apiUsername.name, apiUsername)
-            }
-            server.apiPassword?.let { apiPassword ->
-                put(Server::apiPassword.name, apiPassword)
-            }
-            server.playerActivityFeed?.let { playerActivityFeed ->
-                put(Server::playerActivityFeed.name, nitriteMapper.tryConvert(playerActivityFeed, Document::class.java))
-            }
-            server.pvpKillFeed?.let { pvpKillFeed ->
-                put(Server::pvpKillFeed.name, nitriteMapper.tryConvert(pvpKillFeed, Document::class.java))
-            }
-            server.statusMonitor?.let { statusMonitor ->
-                put(Server::statusMonitor.name, nitriteMapper.tryConvert(statusMonitor, Document::class.java))
-            }
-            server.pvpLeaderboard?.let { pvpLeaderboard ->
-                put(Server::pvpLeaderboard.name, nitriteMapper.tryConvert(pvpLeaderboard, Document::class.java))
-            }
+            put(Server::apiHostname.name, server.apiHostname)
+            put(Server::apiPort.name, server.apiPort)
+            put(Server::apiUsername.name, server.apiUsername)
+            put(Server::apiPassword.name, server.apiPassword)
+            put(Server::playerActivityFeed.name, server.playerActivityFeed?.let { nitriteMapper.tryConvert(it, Document::class.java) })
+            put(Server::pvpKillFeed.name, server.pvpKillFeed?.let { nitriteMapper.tryConvert(it, Document::class.java) })
+            put(Server::statusMonitor.name, server.statusMonitor?.let { nitriteMapper.tryConvert(it, Document::class.java) })
+            put(Server::pvpLeaderboard.name, server.pvpLeaderboard?.let { nitriteMapper.tryConvert(it, Document::class.java) })
         }
     }
 }
