@@ -67,7 +67,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 
 ## Status Embed
 
-## `/configure-status-monitor`
+### `/configure-status-monitor`
 
 Use this command to configure the status embed, aka. status monitor, for a given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -80,7 +80,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | `display-server-description` | Whether to display the v rising server description in the status embed.                                                                     | `false`  | `true`        |
 | `display-player-gear-level`  | Whether to display each player's gear level. Only has an effect if the server has a `server-api-hostname` and `server-api-port` configured. | `false`  | `true`        |
 
-## `/get-status-monitor-details`
+### `/get-status-monitor-details`
 
 Use this command to get all status monitor configuration details for the given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -102,7 +102,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | `channel-id` | The id of the channel to post the player activity feed in.                                      | `true`   | `null`        |
 | `status`     | Determines if the player activity feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
 
-## `/get-player-activity-feed-details`
+### `/get-player-activity-feed-details`
 
 Use this command to get all player activity feed configuration details for the given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -113,7 +113,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 
 ## Pvp Kill Feed
 
-## `/configure-pvp-kill-feed`
+### `/configure-pvp-kill-feed`
 
 Use this command to configure the pvp kill feed for a given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
@@ -124,7 +124,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | `channel-id` | The id of the channel to post the pvp kill feed in.                                      | `true`   | `null`        |
 | `status`     | Determines if the pvp kill feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
 
-## `/get-pvp-kill-feed-details`
+### `/get-pvp-kill-feed-details`
 
 Use this command to get all pvp kill feed configuration details for the given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
