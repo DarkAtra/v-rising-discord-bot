@@ -37,7 +37,7 @@
 
         <kord.version>0.14.0</kord.version>
         <!-- keep the ktor version in sync with what kord uses to avoid unexpected errors -->
-        <ktor.version>2.3.11</ktor.version>
+        <ktor.version>3.0.1</ktor.version>
         <agql-source-query.version>1.2.2</agql-source-query.version>
         <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
         <potassium-nitrite.version>4.3.1-SNAPSHOT</potassium-nitrite.version>
