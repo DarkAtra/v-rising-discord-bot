@@ -81,7 +81,9 @@ class BotCompanionClientTest {
         val charactersResult = runBlocking {
             botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
         }
-        assertThat(charactersResult.isSuccess).isTrue()
+        assertThat(charactersResult.isSuccess).withFailMessage {
+            charactersResult.exceptionOrNull()?.message
+        }.isTrue()
 
         val characters = charactersResult.getOrThrow()
         assertThat(characters).isNotEmpty()
@@ -130,7 +132,9 @@ class BotCompanionClientTest {
         val charactersResult = runBlocking {
             botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, username, password)
         }
-        assertThat(charactersResult.isSuccess).isTrue()
+        assertThat(charactersResult.isSuccess).withFailMessage {
+            charactersResult.exceptionOrNull()?.message
+        }.isTrue()
 
         val characters = charactersResult.getOrThrow()
         assertThat(characters).isNotEmpty()
@@ -203,7 +207,9 @@ class BotCompanionClientTest {
         val playerActivitiesResult = runBlocking {
             botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort)
         }
-        assertThat(playerActivitiesResult.isSuccess).isTrue()
+        assertThat(playerActivitiesResult.isSuccess).withFailMessage {
+            playerActivitiesResult.exceptionOrNull()?.message
+        }.isTrue()
 
         val playerActivities = playerActivitiesResult.getOrThrow()
         assertThat(playerActivities).isNotEmpty()
@@ -248,7 +254,9 @@ class BotCompanionClientTest {
         val pvpKillsResult = runBlocking {
             botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort)
         }
-        assertThat(pvpKillsResult.isSuccess).isTrue()
+        assertThat(pvpKillsResult.isSuccess).withFailMessage {
+            pvpKillsResult.exceptionOrNull()?.message
+        }.isTrue()
 
         val pvpKills = pvpKillsResult.getOrThrow()
         assertThat(pvpKills).isNotEmpty()

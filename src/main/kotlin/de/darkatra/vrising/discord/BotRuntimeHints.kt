@@ -99,7 +99,6 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         // required by ktor (dependency of kord)
         hints.reflection()
             .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(StickerPackData::class.java)
 
         // required for kotlinx serialization (dependency of kord)
         hints.reflection()
