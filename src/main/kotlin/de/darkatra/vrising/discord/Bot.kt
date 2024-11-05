@@ -9,7 +9,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
-import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -81,10 +81,24 @@ class Bot(
         }
 
         kord.on<ReadyEvent> {
-            kord.getGlobalApplicationCommands()
-                .filterNot { command -> commands.any { it.getCommandName() == command.name } }
-                .collect { applicationCommand -> applicationCommand.delete() }
-            commands.forEach { command -> command.register(kord) }
+            val currentGlobalApplicationCommands = kord.getGlobalApplicationCommands().toList()
+
+            // delete obsolete commands
+            currentGlobalApplicationCommands
+                .filterNot { discordCommand -> commands.any { command -> command.getCommandName() == discordCommand.name } }
+                .forEach { applicationCommand ->
+                    applicationCommand.delete()
+                    logger.info("Successfully deleted obsolete '${applicationCommand.name}' command.")
+                }
+
+            // register commands that aren't registered yet
+            commands
+                .filterNot { command -> currentGlobalApplicationCommands.any { discordCommand -> command.getCommandName() == discordCommand.name } }
+                .forEach { command ->
+                    command.register(kord)
+                    logger.info("Successfully registered '${command.getCommandName()}' command.")
+                }
+
             isReady.set(true)
         }
 
