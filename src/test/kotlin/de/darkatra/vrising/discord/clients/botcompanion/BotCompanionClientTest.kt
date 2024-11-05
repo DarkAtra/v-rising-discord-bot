@@ -82,7 +82,7 @@ class BotCompanionClientTest {
             botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
-            charactersResult.exceptionOrNull()?.message
+            charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
         }.isTrue()
 
         val characters = charactersResult.getOrThrow()
@@ -133,7 +133,7 @@ class BotCompanionClientTest {
             botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, username, password)
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
-            charactersResult.exceptionOrNull()?.message
+            charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
         }.isTrue()
 
         val characters = charactersResult.getOrThrow()
@@ -208,7 +208,7 @@ class BotCompanionClientTest {
             botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort)
         }
         assertThat(playerActivitiesResult.isSuccess).withFailMessage {
-            playerActivitiesResult.exceptionOrNull()?.message
+            playerActivitiesResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
         }.isTrue()
 
         val playerActivities = playerActivitiesResult.getOrThrow()
@@ -255,7 +255,7 @@ class BotCompanionClientTest {
             botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort)
         }
         assertThat(pvpKillsResult.isSuccess).withFailMessage {
-            pvpKillsResult.exceptionOrNull()?.message
+            pvpKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
         }.isTrue()
 
         val pvpKills = pvpKillsResult.getOrThrow()
