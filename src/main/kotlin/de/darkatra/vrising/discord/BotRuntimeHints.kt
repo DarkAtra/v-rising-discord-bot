@@ -17,6 +17,7 @@ import dev.kord.core.cache.data.ApplicationCommandData
 import dev.kord.core.cache.data.AutoModerationRuleData
 import dev.kord.core.cache.data.ChannelData
 import dev.kord.core.cache.data.EmojiData
+import dev.kord.core.cache.data.EntitlementData
 import dev.kord.core.cache.data.GuildApplicationCommandPermissionsData
 import dev.kord.core.cache.data.GuildData
 import dev.kord.core.cache.data.MemberData
@@ -25,6 +26,7 @@ import dev.kord.core.cache.data.PresenceData
 import dev.kord.core.cache.data.RoleData
 import dev.kord.core.cache.data.StickerData
 import dev.kord.core.cache.data.StickerPackData
+import dev.kord.core.cache.data.SubscriptionData
 import dev.kord.core.cache.data.ThreadMemberData
 import dev.kord.core.cache.data.UserData
 import dev.kord.core.cache.data.VoiceStateData
@@ -78,6 +80,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             ApplicationCommandData::class.java,
             AutoModerationRuleData::class.java,
             ChannelData::class.java,
+            EntitlementData::class.java,
             EmojiData::class.java,
             GuildData::class.java,
             MemberData::class.java,
@@ -85,6 +88,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             PresenceData::class.java,
             RoleData::class.java,
             StickerData::class.java,
+            SubscriptionData::class.java,
             ThreadMemberData::class.java,
             UserData::class.java,
             VoiceStateData::class.java,
