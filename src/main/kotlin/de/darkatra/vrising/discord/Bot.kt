@@ -85,7 +85,7 @@ class Bot(
 
             // delete obsolete commands
             currentGlobalApplicationCommands
-                .filterNot { discordCommand -> commands.any { command -> command.getCommandName() == discordCommand.name } }
+                .filterNot { applicationCommand -> commands.any { command -> command.getCommandName() == applicationCommand.name } }
                 .forEach { applicationCommand ->
                     applicationCommand.delete()
                     logger.info("Successfully deleted obsolete '${applicationCommand.name}' command.")
@@ -93,7 +93,7 @@ class Bot(
 
             // register commands that aren't registered yet
             commands
-                .filterNot { command -> currentGlobalApplicationCommands.any { discordCommand -> command.getCommandName() == discordCommand.name } }
+                .filterNot { command -> currentGlobalApplicationCommands.any { applicationCommand -> command.getCommandName() == applicationCommand.name } }
                 .forEach { command ->
                     command.register(kord)
                     logger.info("Successfully registered '${command.getCommandName()}' command.")
