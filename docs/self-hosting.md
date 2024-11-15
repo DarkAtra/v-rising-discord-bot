@@ -25,7 +25,7 @@ You can also build it from scratch by cloning the repository and then running `m
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:2.11.0-native # find the latest version here: https://github.com/DarkAtra/v-rising-discord-bot/releases
+    image: ghcr.io/darkatra/v-rising-discord-bot:2.12.0-native # find the latest version here: https://github.com/DarkAtra/v-rising-discord-bot/releases
     command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
