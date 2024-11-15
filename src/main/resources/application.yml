@@ -9,6 +9,9 @@ logging:
   level:
     root: info
     com.ibasco.agql: warn
+    # nitrite is logging some of the exceptions before throwing - disable all nitrite logs since we already log all exceptions
+    nitrite: off
+    nitrite-mvstore: off
   pattern:
     console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5p) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m %mdc%n%wEx"
 
