@@ -18,12 +18,14 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.copyTo
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
+import kotlin.io.path.inputStream
 
 @Configuration
 @EnableConfigurationProperties(BotProperties::class)
@@ -33,15 +35,14 @@ class DatabaseConfiguration(
 
     companion object {
 
+        private val encryptedMarker = "H2encrypt"
         private val logger by lazy { LoggerFactory.getLogger(DatabaseConfiguration::class.java) }
 
         fun buildNitriteDatabase(databaseFile: Path, username: String? = null, password: String? = null): Nitrite {
 
             // version 2.12.0 introduced database encryption at rest. the following code attempts to perform the migration if necessary
-            return try {
-                // try to open the database with encryption
-                getNitriteBuilder(getStoreModule(databaseFile, password)).openOrCreate(username, password)
-            } catch (e: NitriteIOException) {
+            val firstFewBytes = databaseFile.inputStream().readNBytes(encryptedMarker.length).toString(StandardCharsets.UTF_8)
+            if (firstFewBytes != encryptedMarker) {
 
                 // if the automated migration was aborted while writing the files to disc, restore the backup
                 val unencryptedDatabaseBackupFile = Path.of(System.getProperty("java.io.tmpdir")).resolve("v-rising-bot.db.unencrypted")
@@ -56,9 +57,8 @@ class DatabaseConfiguration(
                 // retry opening the database without encryption if we encounter an error
                 val unencryptedDatabase = try {
                     getNitriteBuilder(getStoreModule(databaseFile, null)).openOrCreate(username, password)
-                } catch (e2: NitriteIOException) {
-                    // if we also can't open the database without encryption, throw the initial error as it probably isn't related to encryption
-                    throw e
+                } catch (e: NitriteIOException) {
+                    throw IllegalStateException("Could not encrypt the database.", e)
                 }
 
                 unencryptedDatabaseBackupFile.deleteIfExists()
@@ -83,10 +83,10 @@ class DatabaseConfiguration(
                 unencryptedDatabaseBackupFile.deleteIfExists()
                 tempDatabaseFile.deleteIfExists()
 
-                getNitriteBuilder(getStoreModule(databaseFile, password)).openOrCreate(username, password).also {
-                    logger.info("Successfully encrypted the database.")
-                }
+                logger.info("Successfully encrypted the database.")
             }
+
+            return getNitriteBuilder(getStoreModule(databaseFile, password)).openOrCreate(username, password)
         }
 
         private fun getNitriteBuilder(storeModule: StoreModule): NitriteBuilder {
