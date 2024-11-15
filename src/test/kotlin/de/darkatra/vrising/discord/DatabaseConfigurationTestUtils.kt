@@ -16,6 +16,7 @@ object DatabaseConfigurationTestUtils {
     val DATABASE_FILE_V1_2_x by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v1.2.db")!! }
     val DATABASE_FILE_V2_10_5 by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v2.10.5.db")!! }
     val DATABASE_FILE_V2_10_5_WITH_PASSWORD by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v2.10.5-with-password.db")!! }
+    val DATABASE_FILE_V2_12_0_WITH_PASSWORD by lazy { DatabaseConfigurationTestUtils::class.java.getResource("/persistence/v2.12.0-with-password.db")!! }
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
 

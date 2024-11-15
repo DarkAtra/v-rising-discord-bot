@@ -300,4 +300,17 @@ class DatabaseMigrationServiceTest {
             assertThat(server.statusMonitor!!.recentErrors).isEmpty()
         }
     }
+
+    @Test
+    fun `should not attempt to encrypt an already encrypted database`(capturedOutput: CapturedOutput) {
+
+        DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V2_12_0_WITH_PASSWORD, "test", "test").use { database ->
+
+            assertThat(capturedOutput.out).doesNotContain("Successfully encrypted the database.")
+
+            database.getRepository(Server::class.java).use { serverRepository ->
+                assertThat(serverRepository.size()).isEqualTo(1)
+            }
+        }
+    }
 }
