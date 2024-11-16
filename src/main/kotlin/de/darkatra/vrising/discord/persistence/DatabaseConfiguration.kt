@@ -2,7 +2,6 @@ package de.darkatra.vrising.discord.persistence
 
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.migration.SchemaEntityConverter
-import de.darkatra.vrising.discord.migration.getNitriteMap
 import de.darkatra.vrising.discord.migration.listAllCollectionNames
 import de.darkatra.vrising.discord.persistence.model.converter.ErrorEntityConverter
 import de.darkatra.vrising.discord.persistence.model.converter.PlayerActivityFeedEntityConverter
@@ -11,6 +10,8 @@ import de.darkatra.vrising.discord.persistence.model.converter.ServerEntityConve
 import de.darkatra.vrising.discord.persistence.model.converter.StatusMonitorEntityConverter
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.NitriteBuilder
+import org.dizitart.no2.collection.Document
+import org.dizitart.no2.collection.NitriteId
 import org.dizitart.no2.exceptions.NitriteIOException
 import org.dizitart.no2.mvstore.MVStoreModule
 import org.dizitart.no2.store.StoreModule
@@ -69,10 +70,10 @@ class DatabaseConfiguration(
                 val encryptedDatabase = getNitriteBuilder(getStoreModule(tempDatabaseFile, password)).openOrCreate(username, password)
                 for (collectionName in unencryptedDatabase.listAllCollectionNames()) {
 
-                    val oldCollection = unencryptedDatabase.getNitriteMap(collectionName)
-                    val newCollection = encryptedDatabase.getNitriteMap(collectionName)
+                    val oldCollection = unencryptedDatabase.store.openMap<NitriteId, Any>(collectionName, NitriteId::class.java, Document::class.java)
+                    val newCollection = encryptedDatabase.store.openMap<NitriteId, Any>(collectionName, NitriteId::class.java, Document::class.java)
 
-                    oldCollection.values().forEach { document -> newCollection.put(document.id, document) }
+                    oldCollection.entries().forEach { entry -> newCollection.put(entry.first, entry.second) }
                 }
                 unencryptedDatabase.close()
                 encryptedDatabase.close()

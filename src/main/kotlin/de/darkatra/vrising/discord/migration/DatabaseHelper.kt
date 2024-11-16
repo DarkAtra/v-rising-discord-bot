@@ -12,6 +12,5 @@ fun Nitrite.getNitriteMap(name: String): NitriteMap<NitriteId, Document> {
 }
 
 fun Nitrite.listAllCollectionNames(): List<String> {
-    return store.openMap<String, Attributes>(Constants.META_MAP_NAME, String::class.java, Attributes::class.java).keys()
-        .filter { key -> !key.startsWith("\$nitrite") }
+    return store.openMap<String, Attributes>(Constants.META_MAP_NAME, String::class.java, Attributes::class.java).keys().toList()
 }
