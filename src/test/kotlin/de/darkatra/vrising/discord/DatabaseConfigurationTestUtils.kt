@@ -9,6 +9,7 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption.CREATE
 import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.deleteIfExists
 import kotlin.io.path.outputStream
 
 object DatabaseConfigurationTestUtils {
@@ -24,7 +25,7 @@ object DatabaseConfigurationTestUtils {
 
         val databaseFile = Files.createTempFile("v-rising-bot", ".db").also {
             logger.info("Test Db location: " + it.absolutePathString())
-        }
+        }.also { it.deleteIfExists() }
 
         if (fromTemplate != null) {
             logger.info("Loading template from '$fromTemplate'.")
