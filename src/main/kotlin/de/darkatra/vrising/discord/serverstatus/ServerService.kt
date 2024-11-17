@@ -44,7 +44,7 @@ class ServerService(
         }
     }
 
-    suspend fun cleanupInactiveServers(kord: Kord) {
+    fun cleanupInactiveServers() {
 
         val inactiveServers = serverRepository.getServers().filterInactive()
         if (inactiveServers.isEmpty()) {
@@ -53,13 +53,14 @@ class ServerService(
         }
 
         val sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS)
-        inactiveServers.forEach { server ->
+        val serverIds = inactiveServers.map { server ->
             if (server.lastUpdated.isBefore(sevenDaysAgo)) {
                 serverRepository.removeServer(server.id)
             }
+            server.id
         }
 
-        logger.info("Successfully removed ${inactiveServers.count()} servers with no active feature.")
+        logger.info("Successfully removed ${serverIds.count()} servers with no active feature: $serverIds")
     }
 
     private suspend fun updateStatusMonitor(kord: Kord, server: Server) {

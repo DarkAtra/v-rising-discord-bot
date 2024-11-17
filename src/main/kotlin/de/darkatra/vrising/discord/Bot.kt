@@ -133,9 +133,7 @@ class Bot(
                 CronTask(
                     {
                         if (isReady.get() && kord.isActive) {
-                            runBlocking {
-                                serverService.cleanupInactiveServers(kord)
-                            }
+                            serverService.cleanupInactiveServers()
                         }
                     },
                     CronTrigger("0 0 0 * * *", ZoneOffset.UTC)
