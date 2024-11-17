@@ -53,11 +53,15 @@ class ServerService(
         }
 
         val sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS)
-        val serverIds = inactiveServers.map { server ->
-            if (server.lastUpdated.isBefore(sevenDaysAgo)) {
-                serverRepository.removeServer(server.id)
+        val serverIds = inactiveServers.mapNotNull { server ->
+            when (server.lastUpdated.isBefore(sevenDaysAgo)) {
+                true -> {
+                    serverRepository.removeServer(server.id)
+                    server.id
+                }
+
+                false -> null
             }
-            server.id
         }
 
         logger.info("Successfully removed ${serverIds.count()} servers with no active feature: $serverIds")

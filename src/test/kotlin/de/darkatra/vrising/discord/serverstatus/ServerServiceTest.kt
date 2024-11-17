@@ -10,16 +10,21 @@ import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.DISCORD_SER
 import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.HOST_NAME
 import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.QUERY_PORT
 import de.darkatra.vrising.discord.persistence.model.Version
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.mockito.kotlin.given
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 @DisabledInNativeImage
+@ExtendWith(OutputCaptureExtension::class)
 class ServerServiceTest {
 
     private val serverRepository = Mockito.mock(ServerRepository::class.java)
@@ -30,7 +35,7 @@ class ServerServiceTest {
     private val serverService = ServerService(serverRepository, statusMonitorService, playerActivityFeedService, pvpKillFeedService)
 
     @Test
-    fun shouldOffboardInactiveServers() {
+    fun shouldOffboardInactiveServers(capturedOutput: CapturedOutput) {
 
         val servers = listOf(
             // should not be offboarded
@@ -70,5 +75,7 @@ class ServerServiceTest {
 
         verify(serverRepository).removeServer("offboard-me-pls")
         verify(serverRepository, never()).removeServer("do-not-offboard")
+
+        assertThat(capturedOutput.out).contains("Successfully removed 1 servers with no active feature: [offboard-me-pls]")
     }
 }
