@@ -16,6 +16,13 @@
             "matchPackageNames": [
                 "*"
             ]
+        },
+        {
+            "groupName": "all github actions dependencies",
+            "groupSlug": "all-github-actions-dependencies",
+            "matchManagers": [
+                "github-actions"
+            ]
         }
     ]
 }
