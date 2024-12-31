@@ -9,6 +9,8 @@ import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.sse.SSE
+import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.accept
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.get
@@ -19,6 +21,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.appendPathSegments
 import io.ktor.http.headers
 import io.ktor.http.userAgent
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
@@ -41,6 +44,10 @@ class BotCompanionClient(
                 connectTimeoutMillis = Duration.ofSeconds(1).toMillis()
                 requestTimeoutMillis = Duration.ofSeconds(5).toMillis()
                 socketTimeoutMillis = Duration.ofSeconds(5).toMillis()
+            }
+            install(SSE) {
+                showCommentEvents()
+                showRetryEvents()
             }
         }
     }
@@ -125,4 +132,31 @@ class BotCompanionClient(
     override fun destroy() {
         httpClient.close()
     }
+}
+
+fun main() {
+
+    val httpClient = HttpClient(OkHttp) {
+        install(HttpTimeout) {
+            connectTimeoutMillis = Duration.ofSeconds(1).toMillis()
+            requestTimeoutMillis = Duration.ofSeconds(5).toMillis()
+            socketTimeoutMillis = Duration.ofSeconds(5).toMillis()
+        }
+        install(SSE) {
+            showCommentEvents()
+            showRetryEvents()
+        }
+    }
+
+    runBlocking {
+        httpClient.sse(host = "localhost", port = 25570, path = "/v-rising-discord-bot/events", request = { basicAuth("test", "test") }) {
+            while (true) {
+                incoming.collect { event ->
+                    println(event)
+                }
+            }
+        }
+    }
+
+    httpClient.close()
 }
