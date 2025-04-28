@@ -1,6 +1,6 @@
 ---
 title: Bot companion integration
-nav_order: 5
+nav_order: 6
 ---
 
 # [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration

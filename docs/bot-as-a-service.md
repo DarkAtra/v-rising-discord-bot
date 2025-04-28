@@ -1,6 +1,6 @@
 ---
 title: Using the bot as a service
-nav_order: 2
+nav_order: 3
 ---
 
 # Using the bot as a service
