@@ -5,6 +5,11 @@ nav_order: 6
 
 # [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
 
+{: .warning }
+> The bot currently only supports displaying the status embed for servers running V Rising 1.1 - Invaders of Oakveil.
+> An updated version of the bot-companion will be released in the upcoming days to introduce support for the activity and kill feed.
+> Please see [Invaders of Oakveil](oakveil-update.md).
+
 The bot companion is a server-side mod that allows the bot to fetch additional data about players, such as the gear level.
 It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
 
