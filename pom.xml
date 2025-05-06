@@ -210,7 +210,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-jammy-tiny:0.0.297</builder>
+                        <builder>paketobuildpacks/builder-jammy-java-tiny:0.0.25</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION> <!-- required so that GraalVM 21 is used -->
