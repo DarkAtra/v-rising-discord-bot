@@ -1,6 +1,6 @@
 ---
 title: Self-hosting the bot
-nav_order: 4
+nav_order: 3
 ---
 
 # Self-hosting the bot
