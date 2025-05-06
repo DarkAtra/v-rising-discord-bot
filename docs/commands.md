@@ -1,6 +1,6 @@
 ---
 title: Discord Commands
-nav_order: 5
+nav_order: 4
 ---
 
 # Discord Commands

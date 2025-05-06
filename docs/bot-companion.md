@@ -1,14 +1,9 @@
 ---
 title: Bot companion integration
-nav_order: 6
+nav_order: 5
 ---
 
 # [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) Integration
-
-{: .warning }
-> The bot currently only supports displaying the status embed for servers running V Rising 1.1 - Invaders of Oakveil.
-> An updated version of the bot-companion will be released in the upcoming days to introduce support for the activity and kill feed.
-> Please see [Invaders of Oakveil](oakveil-update.md).
 
 The bot companion is a server-side mod that allows the bot to fetch additional data about players, such as the gear level.
 It does this by exposing [additional http endpoints](#endpoints) on the servers api port.
@@ -26,8 +21,7 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 2. Download the [v-rising-discord-bot-companion.dll](https://github.com/DarkAtra/v-rising-discord-bot-companion/releases)
     * **or** clone [this repo](https://github.com/DarkAtra/v-rising-discord-bot-companion) and build it via `dotnet build`. This
       requires [dotnet 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
-3. Move the `v-rising-discord-bot-companion.dll` to the BepInExp plugin folder. You will also need
-   the [Bloodstone.dll](https://github.com/decaprime/Bloodstone/releases).
+3. Move the `v-rising-discord-bot-companion.dll` to the BepInExp plugin folder.
 4. Enable the servers api port by adding the following to your `ServerHostSettings.json`:
    ```
    "API": {
@@ -166,7 +160,7 @@ Content-Type: application/json
       "gearLevel": 71
     },
     "victim": {
-      "name": "Testi",
+      "name": "Socium",
       "gearLevel": 11
     },
     "occurred": "2023-01-01T00:00:00Z"
