@@ -12,9 +12,9 @@ This is what the status embed looks like:
 
 <img alt="Preview" src="assets/preview.png" width="400"/>
 
-The bot consists of two parts, the `v-rising-discord-bot` (`bot` from here on) and
-the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) (`bot-companion` from here on), a server-side mod, which is
-required if you want to use any of the following features:
+The bot consists of two parts, the [v-rising-discord-bot](https://github.com/DarkAtra/v-rising-discord-bot)
+(`bot` from here on) and the [v-rising-discord-bot-companion](https://github.com/DarkAtra/v-rising-discord-bot-companion) (`bot-companion` from here on), a
+server-side mod, which is required if you want to use any of the following features:
 
 * displaying the current gear level of all players in the status embed
 * posting a message in a discord channel when a player joins or leaves the V Rising server
