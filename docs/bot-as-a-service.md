@@ -13,13 +13,6 @@ Please [reach out](https://discord.gg/KcMcYKa6Nt) if something doesn't work for 
 > This service is provided to the best of my ability. I can not guarantee that the bot is available 24/7.
 > I also reserve the right to prohibit you from using the bot at any time if there is any suspicion of misuse.
 
-{: .warning }
-> Discord only allows an app to be installed on at most 100 discord servers. In order to join more than 100 server, the app developer has to verify their
-> identity and add a privacy policy and terms of use for their app. Discord does this to ensure that developers operating software at scale on their platform
-> are real and trustworthy. However, I'm not eager to send discord a qualifying identity document just to provide my little bot as a service. All that just
-> means that you won't be able to add `Jarvis` to your discord server if it's already installed on 100 server. Once that happens, you will have
-> to [self-host](self-hosting.md). The bot is currently installed on about 95 servers.
-
 ## Setup Guide
 
 1. [Invite Jarvis (the bot) to your discord server](https://discord.com/oauth2/authorize?client_id=982682186207592470).
