@@ -33,6 +33,14 @@ class HostnameValidatorTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = ["123456"])
+    fun `should reject invalid`(hostname: String) {
+        assertThrows<ValidationException> {
+            ServerHostnameParameter.validate(hostname, false)
+        }
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = ["darkatra.de", "8.8.8.8"])
     fun `should permit `(hostname: String) {
         assertDoesNotThrow {

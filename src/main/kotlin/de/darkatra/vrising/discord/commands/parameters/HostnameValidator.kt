@@ -8,8 +8,12 @@ import java.net.UnknownHostException
 
 object HostnameValidator {
 
+    private val letterRegex = Regex("[a-zA-Z]+")
+
     fun validate(hostname: String, allowLocalAddressRanges: Boolean, propertyName: String) {
-        if (!InetAddressValidator.getInstance().isValid(hostname) && !DomainValidator.getInstance(true).isValid(hostname)) {
+        if (!InetAddressValidator.getInstance().isValid(hostname)
+            && !(hostname.contains(letterRegex) && DomainValidator.getInstance(true).isValid(hostname))
+        ) {
             throw ValidationException("'$propertyName' is not a valid ip address or domain name. Rejected: $hostname")
         }
         if (!allowLocalAddressRanges) {
