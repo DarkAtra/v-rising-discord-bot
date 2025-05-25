@@ -8,9 +8,11 @@ import de.darkatra.vrising.discord.persistence.model.Error
 import de.darkatra.vrising.discord.persistence.model.Leaderboard
 import de.darkatra.vrising.discord.persistence.model.PlayerActivityFeed
 import de.darkatra.vrising.discord.persistence.model.PvpKillFeed
+import de.darkatra.vrising.discord.persistence.model.RaidFeed
 import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.persistence.model.StatusMonitor
+import de.darkatra.vrising.discord.persistence.model.VBloodKillFeed
 import de.darkatra.vrising.discord.persistence.model.Version
 import dev.kord.common.entity.optional.Optional
 import dev.kord.core.cache.data.ApplicationCommandData
@@ -62,9 +64,11 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType(Leaderboard::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(PlayerActivityFeed::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(PvpKillFeed::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(RaidFeed::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(Server::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(Status::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(StatusMonitor::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(VBloodKillFeed::class.java, MemberCategory.DECLARED_FIELDS)
             .registerType(Version::class.java, MemberCategory.DECLARED_FIELDS)
         hints.serialization()
             .registerType(java.lang.Boolean::class.java)

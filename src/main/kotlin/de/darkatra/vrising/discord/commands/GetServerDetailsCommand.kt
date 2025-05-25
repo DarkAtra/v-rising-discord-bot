@@ -103,6 +103,18 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Raid Feed Status"
+                    value = server.raidFeed?.status?.name ?: "-"
+                    inline = true
+                }
+
+                field {
+                    name = "VBlood Kill Feed Status"
+                    value = server.vBloodKillFeed?.status?.name ?: "-"
+                    inline = true
+                }
+
+                field {
                     name = "Number of Leaderboards"
                     value = "${Stream.of(server.pvpLeaderboard).filter(Objects::nonNull).count()}"
                     inline = true

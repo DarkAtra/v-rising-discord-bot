@@ -6,8 +6,10 @@ import de.darkatra.vrising.discord.migration.listAllCollectionNames
 import de.darkatra.vrising.discord.persistence.model.converter.ErrorEntityConverter
 import de.darkatra.vrising.discord.persistence.model.converter.PlayerActivityFeedEntityConverter
 import de.darkatra.vrising.discord.persistence.model.converter.PvpKillFeedEntityConverter
+import de.darkatra.vrising.discord.persistence.model.converter.RaidFeedEntityConverter
 import de.darkatra.vrising.discord.persistence.model.converter.ServerEntityConverter
 import de.darkatra.vrising.discord.persistence.model.converter.StatusMonitorEntityConverter
+import de.darkatra.vrising.discord.persistence.model.converter.VBloodKillFeedEntityConverter
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.NitriteBuilder
 import org.dizitart.no2.collection.Document
@@ -102,8 +104,10 @@ class DatabaseConfiguration(
                 .registerEntityConverter(ErrorEntityConverter())
                 .registerEntityConverter(PlayerActivityFeedEntityConverter())
                 .registerEntityConverter(PvpKillFeedEntityConverter())
+                .registerEntityConverter(RaidFeedEntityConverter())
                 .registerEntityConverter(ServerEntityConverter())
                 .registerEntityConverter(StatusMonitorEntityConverter())
+                .registerEntityConverter(VBloodKillFeedEntityConverter())
         }
 
         private fun getStoreModule(databaseFile: Path, password: String?): MVStoreModule {
