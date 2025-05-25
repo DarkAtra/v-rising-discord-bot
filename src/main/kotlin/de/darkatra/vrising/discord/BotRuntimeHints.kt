@@ -3,7 +3,9 @@ package de.darkatra.vrising.discord
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
+import de.darkatra.vrising.discord.clients.botcompanion.model.Raid
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
+import de.darkatra.vrising.discord.clients.botcompanion.model.VBloodKill
 import de.darkatra.vrising.discord.persistence.model.Error
 import de.darkatra.vrising.discord.persistence.model.Leaderboard
 import de.darkatra.vrising.discord.persistence.model.PlayerActivityFeed
@@ -57,7 +59,11 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             PlayerActivity.Type::class.java,
             PvpKill::class.java,
             PvpKill.Player::class.java,
+            Raid::class.java,
+            Raid.Player::class.java,
             VBlood::class.java,
+            VBloodKill::class.java,
+            VBloodKill.Player::class.java,
         )
         hints.reflection()
             .registerType(Error::class.java, MemberCategory.DECLARED_FIELDS)
