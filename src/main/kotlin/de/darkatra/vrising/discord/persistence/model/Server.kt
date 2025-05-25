@@ -28,6 +28,8 @@ data class Server(
 
     var playerActivityFeed: PlayerActivityFeed? = null,
     var pvpKillFeed: PvpKillFeed? = null,
+    var raidFeed: RaidFeed? = null,
+    var vBloodKillFeed: VBloodKillFeed? = null,
     var statusMonitor: StatusMonitor? = null,
 
     // TODO: decide on the way to store leaderboards
@@ -51,6 +53,8 @@ data class Server(
             return when (playerActivityFeed?.status == Status.ACTIVE
                 || statusMonitor?.status == Status.ACTIVE
                 || pvpKillFeed?.status == Status.ACTIVE
+                || raidFeed?.status == Status.ACTIVE
+                || vBloodKillFeed?.status == Status.ACTIVE
                 || pvpLeaderboard?.status == Status.ACTIVE) {
                 true -> Status.ACTIVE
                 false -> Status.INACTIVE

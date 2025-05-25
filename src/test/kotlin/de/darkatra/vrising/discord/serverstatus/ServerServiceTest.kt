@@ -31,8 +31,9 @@ class ServerServiceTest {
     private val statusMonitorService = Mockito.mock(StatusMonitorService::class.java)
     private val playerActivityFeedService = Mockito.mock(PlayerActivityFeedService::class.java)
     private val pvpKillFeedService = Mockito.mock(PvpKillFeedService::class.java)
+    private val vBloodKillFeedService = Mockito.mock(VBloodKillFeedService::class.java)
 
-    private val serverService = ServerService(serverRepository, statusMonitorService, playerActivityFeedService, pvpKillFeedService)
+    private val serverService = ServerService(serverRepository, statusMonitorService, playerActivityFeedService, pvpKillFeedService, vBloodKillFeedService)
 
     @Test
     fun shouldOffboardInactiveServers(capturedOutput: CapturedOutput) {
