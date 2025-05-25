@@ -7,11 +7,18 @@ import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.persistence.model.filterActive
 import de.darkatra.vrising.discord.persistence.model.filterInactive
 import dev.kord.core.Kord
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+
+private const val UPDATE_SERVER_COROUTINES: Int = 10
 
 @Service
 class ServerService(
@@ -26,21 +33,32 @@ class ServerService(
     suspend fun updateServers(kord: Kord) {
 
         val activeServers = serverRepository.getServers().filterActive()
-        activeServers.forEach { server ->
+        val chunks = activeServers.chunked(activeServers.size / UPDATE_SERVER_COROUTINES + 1)
 
-            MDC.put("server-id", server.id)
+        logger.debug("Updating ${activeServers.size} servers using ${chunks.size} coroutines...")
 
-            updateStatusMonitor(kord, server)
-            updatePlayerActivityFeed(kord, server)
-            updatePvpKillFeed(kord, server)
+        chunks.forEach { chunk ->
+            coroutineScope {
+                launch(Dispatchers.IO) {
+                    chunk.forEach { server ->
+                        MDC.put("server-id", server.id)
 
-            try {
-                serverRepository.updateServer(server)
-            } catch (e: OutdatedServerException) {
-                logger.debug("Server was updated or deleted by another thread. Will ignore this exception and proceed with the next server.", e)
+                        withContext(MDCContext()) {
+                            updateStatusMonitor(kord, server)
+                            updatePlayerActivityFeed(kord, server)
+                            updatePvpKillFeed(kord, server)
+
+                            try {
+                                serverRepository.updateServer(server)
+                            } catch (e: OutdatedServerException) {
+                                logger.debug("Server was updated or deleted by another thread. Will ignore this exception and proceed with the next server.", e)
+                            }
+                        }
+
+                        MDC.clear()
+                    }
+                }
             }
-
-            MDC.clear()
         }
     }
 
@@ -64,7 +82,7 @@ class ServerService(
             }
         }
 
-        logger.info("Successfully removed ${serverIds.count()} servers with no active feature: $serverIds")
+        logger.info("Successfully removed ${serverIds.size} servers with no active feature: $serverIds")
     }
 
     private suspend fun updateStatusMonitor(kord: Kord, server: Server) {
