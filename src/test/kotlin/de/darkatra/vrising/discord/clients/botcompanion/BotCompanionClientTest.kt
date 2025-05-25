@@ -268,4 +268,113 @@ class BotCompanionClientTest {
         assertThat(character.victim.gearLevel).isEqualTo(11)
         assertThat(character.occurred.toString()).isEqualTo("2023-01-01T00:00:00Z")
     }
+
+    @Test
+    fun `should get raids`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+
+        wireMockRuntimeInfo.wireMock.register(
+            WireMock.get("/v-rising-discord-bot/raids")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(
+                            // language=json
+                            """
+                            [
+                              {
+                                "attackers": [
+                                  {
+                                    "name": "Socium",
+                                    "gearLevel": 91
+                                  }
+                                ],
+                                "defenders": [
+                                  {
+                                    "name": "Atra",
+                                    "gearLevel": 87
+                                  }
+                                ],
+                                "occurred": "2023-01-01T00:00:00Z"
+                              }
+                            ]""".trimIndent()
+                        )
+                )
+        )
+
+        val raidsResult = runBlocking {
+            botCompanionClient.getRaids("localhost", wireMockRuntimeInfo.httpPort)
+        }
+        assertThat(raidsResult.isSuccess).withFailMessage {
+            raidsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
+        }.isTrue()
+
+        val raids = raidsResult.getOrThrow()
+        assertThat(raids).isNotEmpty()
+
+        val character = raids.first()
+        assertThat(character.attackers).hasSize(1)
+        assertThat(character.attackers.first().name).isEqualTo("Socium")
+        assertThat(character.attackers.first().gearLevel).isEqualTo(91)
+        assertThat(character.defenders).hasSize(1)
+        assertThat(character.defenders.first().name).isEqualTo("Atra")
+        assertThat(character.defenders.first().gearLevel).isEqualTo(87)
+        assertThat(character.occurred.toString()).isEqualTo("2023-01-01T00:00:00Z")
+    }
+
+    @Test
+    fun `should get vblood kills`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+
+        wireMockRuntimeInfo.wireMock.register(
+            WireMock.get("/v-rising-discord-bot/vblood-kills")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(
+                            // language=json
+                            """
+                            [
+                              {
+                                "killers": [
+                                  {
+                                    "name": "Atra",
+                                    "gearLevel": 87
+                                  },
+                                  {
+                                    "name": "Socium",
+                                    "gearLevel": 91
+                                  }
+                                ],
+                                "vBlood": "FOREST_BEAR_DIRE",
+                                "occurred": "2023-01-01T00:00:00Z"
+                              }
+                            ]""".trimIndent()
+                        )
+                )
+        )
+
+        val vBloodKillsResult = runBlocking {
+            botCompanionClient.getVBloodKills("localhost", wireMockRuntimeInfo.httpPort)
+        }
+        assertThat(vBloodKillsResult.isSuccess).withFailMessage {
+            vBloodKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
+        }.isTrue()
+
+        val vBloodKills = vBloodKillsResult.getOrThrow()
+        assertThat(vBloodKills).isNotEmpty()
+
+        val character = vBloodKills.first()
+        assertThat(character.vBlood).isEqualTo(VBlood.FOREST_BEAR_DIRE)
+        assertThat(character.killers).hasSize(2)
+        assertThat(character.killers.first().name).isEqualTo("Atra")
+        assertThat(character.killers.first().gearLevel).isEqualTo(87)
+        assertThat(character.killers.last().name).isEqualTo("Socium")
+        assertThat(character.killers.last().gearLevel).isEqualTo(91)
+        assertThat(character.occurred.toString()).isEqualTo("2023-01-01T00:00:00Z")
+    }
 }

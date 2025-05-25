@@ -195,7 +195,7 @@ Content-Type: application/json
         "gearLevel": 87
       }
     ],
-    "occurred": "2025-05-25T11:49:00.765031Z"
+    "occurred": "2023-01-01T00:00:00Z"
   }
 ]
 ```
