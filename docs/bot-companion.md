@@ -168,6 +168,38 @@ Content-Type: application/json
 ]
 ```
 
+### `/v-rising-discord-bot/raids`
+
+Returns the most recent raids.
+
+Note that this is not persistent across server restarts.
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+[
+  {
+    "attackers": [
+      {
+        "name": "Socium",
+        "gearLevel": 91
+      }
+    ],
+    "defenders": [
+      {
+        "name": "Atra",
+        "gearLevel": 87
+      }
+    ],
+    "occurred": "2025-05-25T11:49:00.765031Z"
+  }
+]
+```
+
 ### `/v-rising-discord-bot/vblood-kills`
 
 Returns the most recent pvp kills.

@@ -26,7 +26,8 @@ class ServerService(
     private val statusMonitorService: StatusMonitorService,
     private val playerActivityFeedService: PlayerActivityFeedService,
     private val pvpKillFeedService: PvpKillFeedService,
-    private val vBloodKillFeedService: VBloodKillFeedService
+    private val raidFeedService: RaidFeedService,
+    private val vBloodKillFeedService: VBloodKillFeedService,
 ) {
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
@@ -118,6 +119,17 @@ class ServerService(
         }
 
         pvpKillFeedService.updatePvpKillFeed(kord, pvpKillFeed)
+    }
+
+    private suspend fun updateRaidFeed(kord: Kord, server: Server) {
+
+        val raidFeed = server.raidFeed
+        if (raidFeed == null || raidFeed.status == Status.INACTIVE) {
+            logger.debug("No active raid feed to update for server '${server.id}'.")
+            return
+        }
+
+        raidFeedService.updateRaidFeed(kord, raidFeed)
     }
 
     private suspend fun updateVBloodKillFeed(kord: Kord, server: Server) {

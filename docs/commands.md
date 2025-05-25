@@ -133,6 +133,28 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 |-------------|--------------------------------------------------------------------------|----------|---------------|
 | `server-id` | The id of the server to get all pvp kill feed configuration details for. | `true`   | `null`        |
 
+## Raid Feed
+
+### `/configure-raid-feed`
+
+Use this command to configure the raid feed for a given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter    | Description                                                                          | Required | Default value |
+|--------------|--------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`  | The id of the server to configure the raid feed for.                                 | `true`   | `null`        |
+| `channel-id` | The id of the channel to post the raid feed in.                                      | `true`   | `null`        |
+| `status`     | Determines if the raid feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+
+### `/get-raid-feed-details`
+
+Use this command to get all raid feed configuration details for the given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter   | Description                                                          | Required | Default value |
+|-------------|----------------------------------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get all raid feed configuration details for. | `true`   | `null`        |
+
 ## VBlood Kill Feed
 
 ### `/configure-vblood-kill-feed`
