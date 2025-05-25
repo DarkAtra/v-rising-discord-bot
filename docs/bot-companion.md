@@ -167,3 +167,34 @@ Content-Type: application/json
   }
 ]
 ```
+
+### `/v-rising-discord-bot/vblood-kills`
+
+Returns the most recent pvp kills.
+
+Note that this is not persistent across server restarts.
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+[
+  {
+    "killers": [
+      {
+        "name": "Atra",
+        "gearLevel": 87
+      },
+      {
+        "name": "Socium",
+        "gearLevel": 91
+      }
+    ],
+    "vBlood": "FOREST_BEAR_DIRE",
+    "occurred": "2023-01-01T00:00:00Z"
+  }
+]
+```

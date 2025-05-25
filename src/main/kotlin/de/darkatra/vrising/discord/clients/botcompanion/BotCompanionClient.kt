@@ -6,6 +6,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
+import de.darkatra.vrising.discord.clients.botcompanion.model.Raid
+import de.darkatra.vrising.discord.clients.botcompanion.model.VBloodKill
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -99,6 +101,44 @@ class BotCompanionClient(
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<PvpKill>>()))
             else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getPvpKills.name} request."))
+        }
+    }
+
+    suspend fun getRaids(
+        serverApiHostName: String,
+        serverApiPort: Int,
+        serverApiUsername: String? = null,
+        serverApiPassword: String? = null
+    ): Result<List<Raid>> {
+
+        val response = try {
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/raids", serverApiUsername, serverApiPassword)
+        } catch (e: Exception) {
+            return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getRaids.name} request.", e))
+        }
+
+        return when (response.status) {
+            HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<Raid>>()))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getRaids.name} request."))
+        }
+    }
+
+    suspend fun getVBloodKills(
+        serverApiHostName: String,
+        serverApiPort: Int,
+        serverApiUsername: String? = null,
+        serverApiPassword: String? = null
+    ): Result<List<VBloodKill>> {
+
+        val response = try {
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/vblood-kills", serverApiUsername, serverApiPassword)
+        } catch (e: Exception) {
+            return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getVBloodKills.name} request.", e))
+        }
+
+        return when (response.status) {
+            HttpStatusCode.OK -> Result.success(objectMapper.readValue(response.bodyAsText(), jacksonTypeRef<List<VBloodKill>>()))
+            else -> Result.failure(BotCompanionClientException("Unexpected response status '${response.status.value}' during ${this::getVBloodKills.name} request."))
         }
     }
 

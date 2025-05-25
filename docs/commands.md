@@ -132,3 +132,25 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | Parameter   | Description                                                              | Required | Default value |
 |-------------|--------------------------------------------------------------------------|----------|---------------|
 | `server-id` | The id of the server to get all pvp kill feed configuration details for. | `true`   | `null`        |
+
+## VBlood Kill Feed
+
+### `/configure-vblood-kill-feed`
+
+Use this command to configure the vblood kill feed for a given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter    | Description                                                                                 | Required | Default value |
+|--------------|---------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`  | The id of the server to configure the vblood kill feed for.                                 | `true`   | `null`        |
+| `channel-id` | The id of the channel to post the vblood kill feed in.                                      | `true`   | `null`        |
+| `status`     | Determines if the vblood kill feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+
+### `/get-vblood-kill-feed-details`
+
+Use this command to get all vblood kill feed configuration details for the given server.
+Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
+
+| Parameter   | Description                                                                 | Required | Default value |
+|-------------|-----------------------------------------------------------------------------|----------|---------------|
+| `server-id` | The id of the server to get all vblood kill feed configuration details for. | `true`   | `null`        |
