@@ -8,6 +8,7 @@ import de.darkatra.vrising.discord.commands.ConfigureVBloodKillFeedCommand
 import de.darkatra.vrising.discord.getDiscordChannel
 import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.persistence.model.VBloodKillFeed
+import de.darkatra.vrising.discord.toReadableString
 import de.darkatra.vrising.discord.tryCreateMessage
 import dev.kord.core.Kord
 import org.slf4j.LoggerFactory
@@ -74,11 +75,13 @@ class VBloodKillFeedService(
 
         vBloodKills
             .filter { vBloodKill -> vBloodKill.occurred.isAfter(vBloodKillFeed.lastUpdated) }
+            .filter { vBloodKill -> vBloodKill.killers.isNotEmpty() }
             .sortedWith(Comparator.comparing(VBloodKill::occurred))
             .forEach { vBloodKill ->
                 try {
+                    val killersString = vBloodKill.killers.map { it.name }.toReadableString()
                     vBloodKillFeedChannel.createMessage(
-                        "<t:${vBloodKill.occurred.epochSecond}>: ${vBloodKill.killers.joinToString(", ")} killed ${vBloodKill.vBlood.name}."
+                        "<t:${vBloodKill.occurred.epochSecond}>: $killersString killed ${vBloodKill.vBlood.displayName}."
                     )
                 } catch (e: Exception) {
                     logger.warn("Could not post vblood kill feed message for server '${vBloodKillFeed.getServer().id}'.", e)
