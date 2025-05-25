@@ -18,7 +18,9 @@ server-side mod, which is required if you want to use any of the following featu
 
 * displaying the current gear level of all players in the status embed
 * posting a message in a discord channel when a player joins or leaves the V Rising server
-* displaying a PVP kill feed on discord
+* posting a message in a discord channel whenever someone died in a PVP fight
+* posting a message in a discord channel whenever a VBlood was killed
+* posting a message in a discord channel whenever someone breached a castle
 
 Here's an example of what that would look like:
 
