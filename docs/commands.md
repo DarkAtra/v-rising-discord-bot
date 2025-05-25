@@ -135,6 +135,8 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 
 ## Raid Feed
 
+Requires at least bot companion version `0.8.0`.
+
 ### `/configure-raid-feed`
 
 Use this command to configure the raid feed for a given server.
@@ -156,6 +158,8 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 | `server-id` | The id of the server to get all raid feed configuration details for. | `true`   | `null`        |
 
 ## VBlood Kill Feed
+
+Requires at least bot companion version `0.8.0`.
 
 ### `/configure-vblood-kill-feed`
 
