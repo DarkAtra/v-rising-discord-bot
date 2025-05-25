@@ -79,8 +79,9 @@ class VBloodKillFeedService(
             .sortedWith(Comparator.comparing(VBloodKill::occurred))
             .forEach { vBloodKill ->
                 try {
+                    val killersString = vBloodKill.killers.map { it.name }.toReadableString()
                     vBloodKillFeedChannel.createMessage(
-                        "<t:${vBloodKill.occurred.epochSecond}>: ${vBloodKill.killers.map { it.name }.toReadableString()} killed ${vBloodKill.vBlood.name}."
+                        "<t:${vBloodKill.occurred.epochSecond}>: $killersString killed ${vBloodKill.vBlood.displayName}."
                     )
                 } catch (e: Exception) {
                     logger.warn("Could not post vblood kill feed message for server '${vBloodKillFeed.getServer().id}'.", e)
