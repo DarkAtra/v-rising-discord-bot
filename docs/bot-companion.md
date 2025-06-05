@@ -202,7 +202,7 @@ Content-Type: application/json
 
 ### `/v-rising-discord-bot/vblood-kills`
 
-Returns the most recent pvp kills.
+Returns the most recent vblood kills.
 
 Note that this is not persistent across server restarts.
 
