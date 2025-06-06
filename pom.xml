@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.5.0</version>
         <relativePath/>
     </parent>
 
     <groupId>de.darkatra</groupId>
     <artifactId>v-rising-discord-bot</artifactId>
-    <version>2.14.0</version>
+    <version>2.14.1-next.2</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -32,7 +32,7 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.version>2.1.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
         <kord.version>0.15.0</kord.version>
@@ -41,12 +41,11 @@
         <potassium-nitrite.version>4.3.1-SNAPSHOT</potassium-nitrite.version>
         <commons-validator.version>1.9.0</commons-validator.version>
 
-        <!-- keep these in sync with what kord uses to avoid unexpected errors -->
-        <ktor.version>3.0.0</ktor.version>
+        <ktor.version>3.1.3</ktor.version>
         <kotlin-coroutines.version>1.9.0</kotlin-coroutines.version>
 
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
-        <wiremock.version>3.9.2</wiremock.version>
+        <wiremock.version>3.13.0</wiremock.version>
     </properties>
 
     <dependencyManagement>
