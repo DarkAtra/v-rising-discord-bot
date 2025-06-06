@@ -140,7 +140,7 @@ class StatusMonitorService(
             } catch (e: Exception) {
                 logger.warn("Could not update status embed for server '${statusMonitor.getServer().id}'", e)
 
-                statusMonitor.currentFailedApiAttempts += 1
+                statusMonitor.currentFailedAttempts += 1
                 statusMonitor.addError(e, botProperties.maxRecentErrors)
             }
 
@@ -153,7 +153,7 @@ class StatusMonitorService(
             } catch (e: Exception) {
                 logger.warn("Could not create status embed for server '${statusMonitor.getServer().id}'", e)
 
-                statusMonitor.currentFailedApiAttempts += 1
+                statusMonitor.currentFailedAttempts += 1
                 statusMonitor.addError(e, botProperties.maxRecentErrors)
             }
         }
