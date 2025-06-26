@@ -12,9 +12,6 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
 > I highly recommend not exposing the api port to the internet in an unprotected manner. The setup guide below explains how the API port can be secured using
 > Basic Authentication.
 
-{: .warning }
-> It is **not** possible to use the bot-companion with GPortal hosted server as they don't allow exposing the API port to the internet.
-
 ## Setup Guide
 
 1. [Install BepInEx](https://github.com/decaprime/VRising-Modding/releases) on your v rising server.
@@ -29,7 +26,8 @@ It does this by exposing [additional http endpoints](#endpoints) on the servers 
      "BindPort": 25570
    }
    ```
-   **It is not recommended to expose the api port to the internet in an unprotected manner.** More on that in the next few steps.
+   **It is not recommended to expose the api port to the internet in an unprotected manner.** More on that in the next few steps. Please note, that you can *
+   *not** specify a BindPort on GPortal servers. Simply enable the API port, restart the server and find the API port in their web interface.
 5. Start the v rising server and test if the mod works as expect by running the following command in your
    terminal: `curl -v http://localhost:25570/v-rising-discord-bot/characters`. Expect status code `200 OK` as soon as the server has fully started.
 6. Secure the API port using [Basic Authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). Navigate to the `BepInEx/config` folder

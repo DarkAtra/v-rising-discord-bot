@@ -26,6 +26,8 @@ aux_links:
     - "https://github.com/DarkAtra/v-rising-discord-bot"
   "Join our Discord":
     - "https://discord.gg/KcMcYKa6Nt"
+  "Support the Project":
+    - "https://github.com/sponsors/DarkAtra"
 
 callouts:
   warning:
