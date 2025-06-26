@@ -73,6 +73,45 @@ class BotPropertiesTest {
     }
 
     @ParameterizedTest
+    @ValueSource(ints = [1, 5, 100])
+    fun `should be valid if updateThreadCount is positive`(updateThreadCount: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.updateThreadCount = updateThreadCount
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [-99, -1, 0])
+    fun `should be invalid if updateThreadCount is negative or zero`(updateThreadCount: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.updateThreadCount = updateThreadCount
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [101, 999])
+    fun `should be invalid if updateThreadCount is greater than 100`(updateThreadCount: Int) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.updateThreadCount = updateThreadCount
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
     @ValueSource(ints = [0, 1, 5])
     fun `should be valid if maxFailedAttempts is positive or zero`(maxFailedAttempts: Int) {
 

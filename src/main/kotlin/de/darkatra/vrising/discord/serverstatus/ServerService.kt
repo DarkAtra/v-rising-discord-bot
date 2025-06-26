@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.serverstatus
 
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.persistence.OutdatedServerException
 import de.darkatra.vrising.discord.persistence.ServerRepository
 import de.darkatra.vrising.discord.persistence.model.Server
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-private const val UPDATE_SERVER_COROUTINES: Int = 10
-
 @Service
 class ServerService(
     private val serverRepository: ServerRepository,
@@ -28,6 +27,7 @@ class ServerService(
     private val pvpKillFeedService: PvpKillFeedService,
     private val raidFeedService: RaidFeedService,
     private val vBloodKillFeedService: VBloodKillFeedService,
+    private val botProperties: BotProperties,
 ) {
 
     private val logger by lazy { LoggerFactory.getLogger(javaClass) }
@@ -35,7 +35,7 @@ class ServerService(
     suspend fun updateServers(kord: Kord) {
 
         val activeServers = serverRepository.getServers().filterActive()
-        val chunks = activeServers.chunked(activeServers.size / UPDATE_SERVER_COROUTINES + 1)
+        val chunks = activeServers.chunked(activeServers.size / botProperties.updateThreadCount + 1)
 
         logger.debug("Updating ${activeServers.size} servers using ${chunks.size} coroutines...")
 

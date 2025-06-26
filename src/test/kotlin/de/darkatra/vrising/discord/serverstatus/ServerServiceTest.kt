@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.serverstatus
 
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.persistence.ServerRepository
 import de.darkatra.vrising.discord.persistence.model.Server
 import de.darkatra.vrising.discord.persistence.model.ServerTestUtils.API_HOST_NAME
@@ -33,6 +34,7 @@ class ServerServiceTest {
     private val pvpKillFeedService = Mockito.mock(PvpKillFeedService::class.java)
     private val raidFeedService = Mockito.mock(RaidFeedService::class.java)
     private val vBloodKillFeedService = Mockito.mock(VBloodKillFeedService::class.java)
+    private val botProperties = Mockito.mock(BotProperties::class.java)
 
     private val serverService = ServerService(
         serverRepository = serverRepository,
@@ -40,7 +42,8 @@ class ServerServiceTest {
         playerActivityFeedService = playerActivityFeedService,
         pvpKillFeedService = pvpKillFeedService,
         raidFeedService = raidFeedService,
-        vBloodKillFeedService = vBloodKillFeedService
+        vBloodKillFeedService = vBloodKillFeedService,
+        botProperties = botProperties,
     )
 
     @Test

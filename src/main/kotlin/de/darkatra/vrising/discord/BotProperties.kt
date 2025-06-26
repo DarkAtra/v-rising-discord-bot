@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord
 
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -28,6 +29,11 @@ class BotProperties {
     @field:NotNull
     @field:DurationMin(seconds = 5)
     var updateDelay: Duration = Duration.ofMinutes(1)
+
+    @field:Min(1)
+    @field:Max(100)
+    @field:NotNull
+    var updateThreadCount: Int = 10
 
     @field:Min(0)
     @field:NotNull
