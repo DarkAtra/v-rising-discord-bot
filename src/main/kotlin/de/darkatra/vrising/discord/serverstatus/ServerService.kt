@@ -49,6 +49,7 @@ class ServerService(
                             updateStatusMonitor(kord, server)
                             updatePlayerActivityFeed(kord, server)
                             updatePvpKillFeed(kord, server)
+                            updateRaidFeed(kord, server)
                             updateVBloodKillFeed(kord, server)
 
                             try {
