@@ -81,8 +81,12 @@ class RaidFeedService(
                 try {
                     val attackersString = raid.attackers.map { it.name }.toReadableString()
                     val defendersString = raid.defenders.map { it.name }.toReadableString()
+                    val verb = when (raid.attackers.size) {
+                        1 -> "is"
+                        else -> "are"
+                    }
                     raidFeedChannel.createMessage(
-                        "<t:${raid.occurred.epochSecond}>: $attackersString are raiding $defendersString."
+                        "<t:${raid.occurred.epochSecond}>: $attackersString $verb raiding $defendersString."
                     )
                 } catch (e: Exception) {
                     logger.warn("Could not post raid feed message for server '${raidFeed.getServer().id}'.", e)
