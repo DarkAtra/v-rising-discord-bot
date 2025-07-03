@@ -142,11 +142,12 @@ Requires at least bot companion version `0.8.0`.
 Use this command to configure the raid feed for a given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter    | Description                                                                          | Required | Default value |
-|--------------|--------------------------------------------------------------------------------------|----------|---------------|
-| `server-id`  | The id of the server to configure the raid feed for.                                 | `true`   | `null`        |
-| `channel-id` | The id of the channel to post the raid feed in.                                      | `true`   | `null`        |
-| `status`     | Determines if the raid feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+| Parameter                   | Description                                                                          | Required | Default value |
+|-----------------------------|--------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`                 | The id of the server to configure the raid feed for.                                 | `true`   | `null`        |
+| `channel-id`                | The id of the channel to post the raid feed in.                                      | `true`   | `null`        |
+| `status`                    | Determines if the raid feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+| `display-player-gear-level` | Whether to display each player's gear level in the raid feed.                        | `false`  | `false`       |
 
 ### `/get-raid-feed-details`
 

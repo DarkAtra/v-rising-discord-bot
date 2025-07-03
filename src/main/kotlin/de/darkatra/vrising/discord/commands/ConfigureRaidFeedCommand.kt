@@ -2,9 +2,11 @@ package de.darkatra.vrising.discord.commands
 
 import de.darkatra.vrising.discord.commands.parameters.ChannelIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.addDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addStatusParameter
 import de.darkatra.vrising.discord.commands.parameters.getChannelIdParameter
+import de.darkatra.vrising.discord.commands.parameters.getDisplayPlayerGearLevelParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getStatusParameter
 import de.darkatra.vrising.discord.persistence.ServerRepository
@@ -44,6 +46,8 @@ class ConfigureRaidFeedCommand(
 
             addChannelIdParameter(required = false)
             addStatusParameter(required = false)
+
+            addDisplayPlayerGearLevelParameter(required = false)
         }
     }
 
@@ -53,6 +57,8 @@ class ConfigureRaidFeedCommand(
 
         val channelId = interaction.getChannelIdParameter()
         val status = interaction.getStatusParameter()
+
+        val displayPlayerGearLevel = interaction.getDisplayPlayerGearLevelParameter()
 
         val server = when (interaction) {
             is GuildChatInputCommandInteraction -> serverRepository.getServer(serverId, interaction.guildId.toString())
@@ -79,7 +85,8 @@ class ConfigureRaidFeedCommand(
             server.raidFeed = RaidFeed(
                 status = status ?: Status.ACTIVE,
                 discordChannelId = channelId,
-                lastUpdated = server.lastUpdated
+                lastUpdated = server.lastUpdated,
+                displayPlayerGearLevel = displayPlayerGearLevel ?: false
             )
 
             serverRepository.updateServer(server)

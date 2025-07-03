@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.InvalidDiscordChannelException
 import de.darkatra.vrising.discord.clients.botcompanion.BotCompanionClient
 import de.darkatra.vrising.discord.clients.botcompanion.model.Raid
+import de.darkatra.vrising.discord.clients.botcompanion.model.Raid.Player
 import de.darkatra.vrising.discord.commands.ConfigureRaidFeedCommand
 import de.darkatra.vrising.discord.getDiscordChannel
 import de.darkatra.vrising.discord.persistence.model.RaidFeed
@@ -81,7 +82,7 @@ class RaidFeedService(
             .sortedWith(Comparator.comparing(Raid::updated))
             .forEach { raid ->
                 try {
-                    postRaidFeedMessage(raid, raidFeedChannel, raidFeed.lastUpdated)
+                    postRaidFeedMessage(raid, raidFeedChannel, raidFeed)
                 } catch (e: Exception) {
                     logger.warn("Could not post raid feed message for server '${raidFeed.getServer().id}'.", e)
                 }
@@ -92,15 +93,15 @@ class RaidFeedService(
         logger.debug("Successfully updated the raid feed for server '${raidFeed.getServer().id}'.")
     }
 
-    private suspend fun postRaidFeedMessage(raid: Raid, raidFeedChannel: MessageChannelBehavior, lastUpdated: Instant) {
+    private suspend fun postRaidFeedMessage(raid: Raid, raidFeedChannel: MessageChannelBehavior, raidFeed: RaidFeed) {
 
         requireNotNull(raid.updated)
 
-        val defendersString = raid.defenders.map { it.name }.toReadableString()
+        val defendersString = raid.defenders.map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }.toReadableString()
 
         // new raid
         if (raid.occurred == raid.updated) {
-            val attackersString = raid.attackers.map { it.name }.toReadableString()
+            val attackersString = raid.attackers.map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }.toReadableString()
             val verb = when (raid.attackers.size) {
                 1 -> "is"
                 else -> "are"
@@ -113,12 +114,19 @@ class RaidFeedService(
 
         // players joined an ongoing raid
         val newAttackersString = raid.attackers
-            .filter { player -> player.joinedAt!!.isAfter(lastUpdated) }
-            .map { it.name }
+            .filter { player -> player.joinedAt!!.isAfter(raidFeed.lastUpdated) }
+            .map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }
             .toReadableString()
         raidFeedChannel.createMessage(
             "<t:${raid.updated.epochSecond}>: $newAttackersString joined the raid against $defendersString."
         )
+    }
+
+    private fun mapToPlayerString(player: Player, displayPlayerGearLevel: Boolean): String {
+        return when {
+            displayPlayerGearLevel -> "${player.name} (${player.gearLevel})"
+            else -> player.name
+        }
     }
 
     private suspend fun disableRaidFeedIfNecessary(raidFeed: RaidFeed, block: suspend () -> Unit = {}) {

@@ -178,6 +178,19 @@ class DatabaseMigrationService(
                         oldCollection.drop()
                     }
                 }
+            ),
+            DatabaseMigration(
+                description = "Set default value for 'raidFeeds.displayPlayerGearLevel'.",
+                isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 14) },
+                documentCollectionName = "de.darkatra.vrising.discord.persistence.model.Server",
+                documentAction = { document ->
+                    val raidFeeds = document["raidFeeds"]
+                    if (raidFeeds is List<*>) {
+                        raidFeeds.filterIsInstance<Document>().forEach { raidFeed ->
+                            raidFeed.put("displayPlayerGearLevel", false)
+                        }
+                    }
+                }
             )
         )
 
