@@ -11,6 +11,7 @@ import de.darkatra.vrising.discord.persistence.model.Status
 import de.darkatra.vrising.discord.toReadableString
 import de.darkatra.vrising.discord.tryCreateMessage
 import dev.kord.core.Kord
+import dev.kord.core.behavior.channel.MessageChannelBehavior
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -74,20 +75,13 @@ class RaidFeedService(
         raidFeed.currentFailedAttempts = 0
 
         raids
-            .filter { raid -> raid.occurred.isAfter(raidFeed.lastUpdated) }
+            .filter { raid -> raid.updated != null }
+            .filter { raid -> raid.updated!!.isAfter(raidFeed.lastUpdated) }
             .filter { raid -> raid.attackers.isNotEmpty() && raid.defenders.isNotEmpty() }
-            .sortedWith(Comparator.comparing(Raid::occurred))
+            .sortedWith(Comparator.comparing(Raid::updated))
             .forEach { raid ->
                 try {
-                    val attackersString = raid.attackers.map { it.name }.toReadableString()
-                    val defendersString = raid.defenders.map { it.name }.toReadableString()
-                    val verb = when (raid.attackers.size) {
-                        1 -> "is"
-                        else -> "are"
-                    }
-                    raidFeedChannel.createMessage(
-                        "<t:${raid.occurred.epochSecond}>: $attackersString $verb raiding $defendersString."
-                    )
+                    postRaidFeedMessage(raid, raidFeedChannel, raidFeed.lastUpdated)
                 } catch (e: Exception) {
                     logger.warn("Could not post raid feed message for server '${raidFeed.getServer().id}'.", e)
                 }
@@ -96,6 +90,35 @@ class RaidFeedService(
         raidFeed.lastUpdated = Instant.now()
 
         logger.debug("Successfully updated the raid feed for server '${raidFeed.getServer().id}'.")
+    }
+
+    private suspend fun postRaidFeedMessage(raid: Raid, raidFeedChannel: MessageChannelBehavior, lastUpdated: Instant) {
+
+        requireNotNull(raid.updated)
+
+        val defendersString = raid.defenders.map { it.name }.toReadableString()
+
+        // new raid
+        if (raid.occurred == raid.updated) {
+            val attackersString = raid.attackers.map { it.name }.toReadableString()
+            val verb = when (raid.attackers.size) {
+                1 -> "is"
+                else -> "are"
+            }
+            raidFeedChannel.createMessage(
+                "<t:${raid.updated.epochSecond}>: $attackersString $verb raiding $defendersString."
+            )
+            return
+        }
+
+        // players joined an ongoing raid
+        val newAttackersString = raid.attackers
+            .filter { player -> player.joinedAt!!.isAfter(lastUpdated) }
+            .map { it.name }
+            .toReadableString()
+        raidFeedChannel.createMessage(
+            "<t:${raid.updated.epochSecond}>: $newAttackersString joined the raid against $defendersString."
+        )
     }
 
     private suspend fun disableRaidFeedIfNecessary(raidFeed: RaidFeed, block: suspend () -> Unit = {}) {
