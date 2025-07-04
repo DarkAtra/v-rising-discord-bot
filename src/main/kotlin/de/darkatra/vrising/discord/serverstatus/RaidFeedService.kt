@@ -97,11 +97,17 @@ class RaidFeedService(
 
         requireNotNull(raid.updated)
 
-        val defendersString = raid.defenders.map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }.toReadableString()
+        val defendersString = formatPlayers(
+            players = raid.defenders,
+            displayPlayerGearLevel = raidFeed.displayPlayerGearLevel
+        )
 
         // new raid
         if (raid.occurred == raid.updated) {
-            val attackersString = raid.attackers.map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }.toReadableString()
+            val attackersString = formatPlayers(
+                players = raid.attackers,
+                displayPlayerGearLevel = raidFeed.displayPlayerGearLevel
+            )
             val verb = when (raid.attackers.size) {
                 1 -> "is"
                 else -> "are"
@@ -113,20 +119,26 @@ class RaidFeedService(
         }
 
         // players joined an ongoing raid
-        val newAttackersString = raid.attackers
-            .filter { player -> player.joinedAt!!.isAfter(raidFeed.lastUpdated) }
-            .map { mapToPlayerString(it, raidFeed.displayPlayerGearLevel) }
-            .toReadableString()
+        val newAttackersString = formatPlayers(
+            players = raid.attackers.filter { player -> player.joinedAt!!.isAfter(raidFeed.lastUpdated) },
+            displayPlayerGearLevel = raidFeed.displayPlayerGearLevel
+        )
+        val verb = when (raid.attackers.size) {
+            1 -> "has"
+            else -> "have"
+        }
         raidFeedChannel.createMessage(
-            "<t:${raid.updated.epochSecond}>: $newAttackersString joined the raid against $defendersString."
+            "<t:${raid.updated.epochSecond}>: $newAttackersString $verb joined the raid against $defendersString."
         )
     }
 
-    private fun mapToPlayerString(player: Player, displayPlayerGearLevel: Boolean): String {
-        return when {
-            displayPlayerGearLevel -> "${player.name} (${player.gearLevel})"
-            else -> player.name
-        }
+    private fun formatPlayers(players: List<Player>, displayPlayerGearLevel: Boolean): String {
+        return players.map { player ->
+            when {
+                displayPlayerGearLevel -> "${player.name} (${player.gearLevel})"
+                else -> player.name
+            }
+        }.toReadableString()
     }
 
     private suspend fun disableRaidFeedIfNecessary(raidFeed: RaidFeed, block: suspend () -> Unit = {}) {
