@@ -26,6 +26,8 @@ data class Server(
     var apiUsername: String? = null,
     var apiPassword: String? = null,
 
+    var useSecureTransport: Boolean,
+
     var playerActivityFeed: PlayerActivityFeed? = null,
     var pvpKillFeed: PvpKillFeed? = null,
     var raidFeed: RaidFeed? = null,

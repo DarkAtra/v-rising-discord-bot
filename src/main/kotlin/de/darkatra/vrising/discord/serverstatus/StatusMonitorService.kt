@@ -93,7 +93,8 @@ class StatusMonitorService(
                 statusMonitor.getServer().apiHostname!!,
                 statusMonitor.getServer().apiPort!!,
                 statusMonitor.getServer().apiUsername,
-                statusMonitor.getServer().apiPassword
+                statusMonitor.getServer().apiPassword,
+                statusMonitor.getServer().useSecureTransport
             ).getOrElse { e ->
 
                 logger.warn("Could not resolve characters for status monitor for server '${statusMonitor.getServer().id}'.", e)

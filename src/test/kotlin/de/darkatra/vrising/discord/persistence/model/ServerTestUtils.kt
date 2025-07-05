@@ -28,7 +28,8 @@ object ServerTestUtils {
             apiHostname = API_HOST_NAME,
             apiPort = API_PORT,
             apiUsername = API_USERNAME,
-            apiPassword = API_PASSWORD
+            apiPassword = API_PASSWORD,
+            useSecureTransport = false
         )
     }
 }

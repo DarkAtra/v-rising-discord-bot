@@ -5,12 +5,14 @@ import java.time.Instant
 data class Raid(
     val attackers: List<Player>,
     val defenders: List<Player>,
-    val occurred: Instant
+    val occurred: Instant,
+    val updated: Instant? = null // nullable since it was introduced in bot-companion v0.8.4
 ) {
 
     data class Player(
         val name: String,
         val gearLevel: Int,
-        val clan: String?
+        val clan: String?,
+        val joinedAt: Instant? = null // nullable since it was introduced in bot-companion v0.8.4
     )
 }

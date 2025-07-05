@@ -52,7 +52,8 @@ class PvpKillFeedService(
             pvpKillFeed.getServer().apiHostname!!,
             pvpKillFeed.getServer().apiPort!!,
             pvpKillFeed.getServer().apiUsername,
-            pvpKillFeed.getServer().apiPassword
+            pvpKillFeed.getServer().apiPassword,
+            pvpKillFeed.getServer().useSecureTransport
         ).getOrElse { e ->
 
             logger.error("Exception updating the pvp kill feed for server ${pvpKillFeed.getServer().id}", e)

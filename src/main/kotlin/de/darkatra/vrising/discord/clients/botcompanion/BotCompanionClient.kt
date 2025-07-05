@@ -51,11 +51,12 @@ class BotCompanionClient(
         serverApiHostName: String,
         serverApiPort: Int,
         serverApiUsername: String? = null,
-        serverApiPassword: String? = null
+        serverApiPassword: String? = null,
+        useSecureTransport: Boolean
     ): Result<List<Character>> {
 
         val response = try {
-            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/characters", serverApiUsername, serverApiPassword)
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort, useSecureTransport), "/characters", serverApiUsername, serverApiPassword)
         } catch (e: Exception) {
             return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getCharacters.name} request.", e))
         }
@@ -70,11 +71,12 @@ class BotCompanionClient(
         serverApiHostName: String,
         serverApiPort: Int,
         serverApiUsername: String? = null,
-        serverApiPassword: String? = null
+        serverApiPassword: String? = null,
+        useSecureTransport: Boolean
     ): Result<List<PlayerActivity>> {
 
         val response = try {
-            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/player-activities", serverApiUsername, serverApiPassword)
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort, useSecureTransport), "/player-activities", serverApiUsername, serverApiPassword)
         } catch (e: Exception) {
             return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getPlayerActivities.name} request.", e))
         }
@@ -89,11 +91,12 @@ class BotCompanionClient(
         serverApiHostName: String,
         serverApiPort: Int,
         serverApiUsername: String? = null,
-        serverApiPassword: String? = null
+        serverApiPassword: String? = null,
+        useSecureTransport: Boolean
     ): Result<List<PvpKill>> {
 
         val response = try {
-            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/pvp-kills", serverApiUsername, serverApiPassword)
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort, useSecureTransport), "/pvp-kills", serverApiUsername, serverApiPassword)
         } catch (e: Exception) {
             return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getPvpKills.name} request.", e))
         }
@@ -108,11 +111,12 @@ class BotCompanionClient(
         serverApiHostName: String,
         serverApiPort: Int,
         serverApiUsername: String? = null,
-        serverApiPassword: String? = null
+        serverApiPassword: String? = null,
+        useSecureTransport: Boolean
     ): Result<List<Raid>> {
 
         val response = try {
-            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/raids", serverApiUsername, serverApiPassword)
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort, useSecureTransport), "/raids", serverApiUsername, serverApiPassword)
         } catch (e: Exception) {
             return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getRaids.name} request.", e))
         }
@@ -127,11 +131,12 @@ class BotCompanionClient(
         serverApiHostName: String,
         serverApiPort: Int,
         serverApiUsername: String? = null,
-        serverApiPassword: String? = null
+        serverApiPassword: String? = null,
+        useSecureTransport: Boolean
     ): Result<List<VBloodKill>> {
 
         val response = try {
-            performRequest(getRequestUrl(serverApiHostName, serverApiPort), "/vblood-kills", serverApiUsername, serverApiPassword)
+            performRequest(getRequestUrl(serverApiHostName, serverApiPort, useSecureTransport), "/vblood-kills", serverApiUsername, serverApiPassword)
         } catch (e: Exception) {
             return Result.failure(BotCompanionClientException("Unexpected exception performing ${this::getVBloodKills.name} request.", e))
         }
@@ -157,9 +162,13 @@ class BotCompanionClient(
         }
     }
 
-    private fun getRequestUrl(serverApiHostName: String, serverApiPort: Int): URL {
+    private fun getRequestUrl(serverApiHostName: String, serverApiPort: Int, useSecureTransport: Boolean): URL {
         val address = InetSocketAddress(serverApiHostName, serverApiPort)
-        return URL("http://${address.hostString}:${address.port}/v-rising-discord-bot")
+        val protocol = when {
+            useSecureTransport -> "https"
+            else -> "http"
+        }
+        return URL("$protocol://${address.hostString}:${address.port}/v-rising-discord-bot")
     }
 
     override fun destroy() {

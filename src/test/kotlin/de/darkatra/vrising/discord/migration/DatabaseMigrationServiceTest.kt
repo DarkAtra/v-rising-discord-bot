@@ -51,11 +51,12 @@ class DatabaseMigrationServiceTest {
                 repository.insert(Schema(appVersion = "V2.10.0"))
                 repository.insert(Schema(appVersion = "V2.10.2"))
                 repository.insert(Schema(appVersion = "V2.11.0"))
+                repository.insert(Schema(appVersion = "V2.15.0"))
             }
 
             val databaseMigrationService = DatabaseMigrationService(
                 database = database,
-                appVersionFromPom = "2.11.0"
+                appVersionFromPom = "2.15.0"
             )
 
             assertThat(databaseMigrationService.migrateToLatestVersion()).isFalse()
@@ -63,7 +64,7 @@ class DatabaseMigrationServiceTest {
             val schemas = database.getRepository(Schema::class.java).use { repository ->
                 repository.find().toList()
             }
-            assertThat(schemas).hasSize(10)
+            assertThat(schemas).hasSize(11)
         }
     }
 
@@ -110,7 +111,7 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
-    fun `should migrate schema from 1_2_x to 2_11_0`() {
+    fun `should migrate schema from 1_2_x`() {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V1_2_x).use { database ->
 
@@ -164,7 +165,7 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
-    fun `should migrate schema from 2_10_5 to 2_11_0`() {
+    fun `should migrate schema from 2_10_5`() {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V2_10_5).use { database ->
 
@@ -232,7 +233,7 @@ class DatabaseMigrationServiceTest {
     }
 
     @Test
-    fun `should migrate schema of password secured database from 2_10_5 to 2_11_0`(capturedOutput: CapturedOutput) {
+    fun `should migrate schema of password secured database from 2_10_5`(capturedOutput: CapturedOutput) {
 
         DatabaseConfigurationTestUtils.getTestDatabase(DatabaseConfigurationTestUtils.DATABASE_FILE_V2_10_5_WITH_PASSWORD, "test", "test").use { database ->
 

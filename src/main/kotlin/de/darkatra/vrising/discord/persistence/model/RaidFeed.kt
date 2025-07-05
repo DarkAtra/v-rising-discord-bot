@@ -7,6 +7,8 @@ data class RaidFeed(
     var discordChannelId: String,
     var lastUpdated: Instant,
 
+    var displayPlayerGearLevel: Boolean,
+
     var currentFailedAttempts: Int = 0,
 
     override var recentErrors: List<Error> = emptyList()

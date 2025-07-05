@@ -35,6 +35,7 @@ class GetRaidFeedDetailsCommand(
         }
     }
 
+    @Suppress("DuplicatedCode")
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val server = interaction.getServer(serverRepository)
@@ -67,6 +68,12 @@ class GetRaidFeedDetailsCommand(
                 field {
                     name = "Discord Channel Id"
                     value = raidFeed.discordChannelId
+                    inline = true
+                }
+
+                field {
+                    name = "Display Player Gear Level"
+                    value = "${raidFeed.displayPlayerGearLevel}"
                     inline = true
                 }
 

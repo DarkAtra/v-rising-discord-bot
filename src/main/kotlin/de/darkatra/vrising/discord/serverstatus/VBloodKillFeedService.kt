@@ -53,7 +53,8 @@ class VBloodKillFeedService(
             vBloodKillFeed.getServer().apiHostname!!,
             vBloodKillFeed.getServer().apiPort!!,
             vBloodKillFeed.getServer().apiUsername,
-            vBloodKillFeed.getServer().apiPassword
+            vBloodKillFeed.getServer().apiPassword,
+            vBloodKillFeed.getServer().useSecureTransport
         ).getOrElse { e ->
 
             logger.error("Exception updating the vblood kill feed for server ${vBloodKillFeed.getServer().id}", e)

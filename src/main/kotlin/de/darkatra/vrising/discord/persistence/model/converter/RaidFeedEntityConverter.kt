@@ -17,6 +17,7 @@ class RaidFeedEntityConverter : EntityConverter<RaidFeed> {
             status = Status.valueOf(document.get(RaidFeed::status.name, String::class.java)),
             discordChannelId = document.get(RaidFeed::discordChannelId.name, String::class.java),
             lastUpdated = document.get(RaidFeed::lastUpdated.name, String::class.java).let(Instant::parse),
+            displayPlayerGearLevel = document.get(RaidFeed::displayPlayerGearLevel.name) as Boolean,
             currentFailedAttempts = document.get(RaidFeed::currentFailedAttempts.name) as Int,
             recentErrors = (document.get(RaidFeed::recentErrors.name) as List<*>).map { error ->
                 nitriteMapper.tryConvert(error, Error::class.java) as Error
@@ -29,6 +30,7 @@ class RaidFeedEntityConverter : EntityConverter<RaidFeed> {
             put(RaidFeed::status.name, raidFeed.status.name)
             put(RaidFeed::discordChannelId.name, raidFeed.discordChannelId)
             put(RaidFeed::lastUpdated.name, raidFeed.lastUpdated.toString())
+            put(RaidFeed::displayPlayerGearLevel.name, raidFeed.displayPlayerGearLevel)
             put(RaidFeed::currentFailedAttempts.name, raidFeed.currentFailedAttempts)
             put(RaidFeed::recentErrors.name, raidFeed.recentErrors.map { error ->
                 nitriteMapper.tryConvert(error, Document::class.java)

@@ -46,6 +46,7 @@ class EntityConverterTest {
             apiPort = 8082,
             apiUsername = "api-username",
             apiPassword = "api-password",
+            useSecureTransport = false,
             playerActivityFeed = PlayerActivityFeed(
                 status = Status.ACTIVE,
                 discordChannelId = "player-activity-feed-discord-channel-id",

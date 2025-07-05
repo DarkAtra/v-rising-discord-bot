@@ -22,14 +22,15 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 
 Use this command to add a server. This is required in order to use any feature of the bot.
 
-| Parameter             | Description                                                                                                                                                            | Required | Default value |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| `server-hostname`     | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
-| `server-query-port`   | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
-| `server-api-hostname` | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
-| `server-api-port`     | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
-| `server-api-username` | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
-| `server-api-password` | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| Parameter              | Description                                                                                                                                                            | Required | Default value |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-hostname`      | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
+| `server-query-port`    | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
+| `server-api-hostname`  | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
+| `server-api-port`      | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
+| `server-api-username`  | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `server-api-password`  | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `use-secure-transport` | Whether api requests should use https or not.                                                                                                                          | `false`  | `false`       |
 
 ### `/update-server`
 
@@ -37,15 +38,16 @@ Use this command to update the given server.
 Only parameters specified are updated, all other parameters remain unchanged.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter             | Description                                                                                                                                                            | Required | Default value |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| `server-id`           | The id of the server to update.                                                                                                                                        | `true`   | `null`        |
-| `server-hostname`     | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
-| `server-query-port`   | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
-| `server-api-hostname` | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
-| `server-api-port`     | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
-| `server-api-username` | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
-| `server-api-password` | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| Parameter              | Description                                                                                                                                                            | Required | Default value |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`            | The id of the server to update.                                                                                                                                        | `true`   | `null`        |
+| `server-hostname`      | The hostname of the server to add.                                                                                                                                     | `true`   | `null`        |
+| `server-query-port`    | The query port of the server to add.                                                                                                                                   | `true`   | `null`        |
+| `server-api-hostname`  | The hostname to use when querying the server's api. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).         | `false`  | `null`        |
+| `server-api-port`      | The api port of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md).                                 | `false`  | `null`        |
+| `server-api-username`  | The username used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `server-api-password`  | The password used to authenticate to the api of the server. Only required if you're planing to use features of the [v-rising-discord-bot-companion](bot-companion.md). | `false`  | `null`        |
+| `use-secure-transport` | Whether api requests should use https or not.                                                                                                                          | `false`  | `false`       |
 
 ### `/remove-server`
 
@@ -142,11 +144,12 @@ Requires at least bot companion version `0.8.0`.
 Use this command to configure the raid feed for a given server.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter    | Description                                                                          | Required | Default value |
-|--------------|--------------------------------------------------------------------------------------|----------|---------------|
-| `server-id`  | The id of the server to configure the raid feed for.                                 | `true`   | `null`        |
-| `channel-id` | The id of the channel to post the raid feed in.                                      | `true`   | `null`        |
-| `status`     | Determines if the raid feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+| Parameter                   | Description                                                                          | Required | Default value |
+|-----------------------------|--------------------------------------------------------------------------------------|----------|---------------|
+| `server-id`                 | The id of the server to configure the raid feed for.                                 | `true`   | `null`        |
+| `channel-id`                | The id of the channel to post the raid feed in.                                      | `true`   | `null`        |
+| `status`                    | Determines if the raid feed should be updated or not. Either `ACTIVE` or `INACTIVE`. | `false`  | `ACTIVE`      |
+| `display-player-gear-level` | Whether to display each player's gear level in the raid feed.                        | `false`  | `false`       |
 
 ### `/get-raid-feed-details`
 

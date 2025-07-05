@@ -40,7 +40,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isFailure).isTrue()
 
@@ -79,7 +83,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
             charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -130,7 +138,13 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, username, password)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                serverApiUsername = username,
+                serverApiPassword = password,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
             charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -169,7 +183,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isFailure).isTrue()
     }
@@ -205,7 +223,11 @@ class BotCompanionClientTest {
         )
 
         val playerActivitiesResult = runBlocking {
-            botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getPlayerActivities(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(playerActivitiesResult.isSuccess).withFailMessage {
             playerActivitiesResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -252,7 +274,11 @@ class BotCompanionClientTest {
         )
 
         val pvpKillsResult = runBlocking {
-            botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getPvpKills(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(pvpKillsResult.isSuccess).withFailMessage {
             pvpKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -288,6 +314,74 @@ class BotCompanionClientTest {
                                 "attackers": [
                                   {
                                     "name": "Socium",
+                                    "gearLevel": 91,
+                                    "joinedAt": "2023-01-01T00:00:00Z"
+                                  }
+                                ],
+                                "defenders": [
+                                  {
+                                    "name": "Atra",
+                                    "gearLevel": 87,
+                                    "clan": "Test",
+                                    "joinedAt": "2023-01-02T00:00:00Z"
+                                  }
+                                ],
+                                "occurred": "2023-01-01T00:00:00Z",
+                                "updated": "2023-01-02T00:00:00Z"
+                              }
+                            ]""".trimIndent()
+                        )
+                )
+        )
+
+        val raidsResult = runBlocking {
+            botCompanionClient.getRaids(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
+        }
+        assertThat(raidsResult.isSuccess).withFailMessage {
+            raidsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
+        }.isTrue()
+
+        val raids = raidsResult.getOrThrow()
+        assertThat(raids).isNotEmpty()
+
+        val character = raids.first()
+        assertThat(character.attackers).hasSize(1)
+        assertThat(character.attackers.first().name).isEqualTo("Socium")
+        assertThat(character.attackers.first().gearLevel).isEqualTo(91)
+        assertThat(character.attackers.first().clan).isNull()
+        assertThat(character.attackers.first().joinedAt).isEqualTo("2023-01-01T00:00:00Z")
+        assertThat(character.defenders).hasSize(1)
+        assertThat(character.defenders.first().name).isEqualTo("Atra")
+        assertThat(character.defenders.first().gearLevel).isEqualTo(87)
+        assertThat(character.defenders.first().clan).isEqualTo("Test")
+        assertThat(character.defenders.first().joinedAt).isEqualTo("2023-01-02T00:00:00Z")
+        assertThat(character.occurred.toString()).isEqualTo("2023-01-01T00:00:00Z")
+        assertThat(character.updated.toString()).isEqualTo("2023-01-02T00:00:00Z")
+    }
+
+    @Test
+    fun `should get raids from older bot companion versions`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
+
+        wireMockRuntimeInfo.wireMock.register(
+            WireMock.get("/v-rising-discord-bot/raids")
+                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(
+                            // language=json
+                            """
+                            [
+                              {
+                                "attackers": [
+                                  {
+                                    "name": "Socium",
                                     "gearLevel": 91
                                   }
                                 ],
@@ -305,7 +399,11 @@ class BotCompanionClientTest {
         )
 
         val raidsResult = runBlocking {
-            botCompanionClient.getRaids("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getRaids(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(raidsResult.isSuccess).withFailMessage {
             raidsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -318,10 +416,15 @@ class BotCompanionClientTest {
         assertThat(character.attackers).hasSize(1)
         assertThat(character.attackers.first().name).isEqualTo("Socium")
         assertThat(character.attackers.first().gearLevel).isEqualTo(91)
+        assertThat(character.attackers.first().clan).isNull()
+        assertThat(character.attackers.first().joinedAt).isNull()
         assertThat(character.defenders).hasSize(1)
         assertThat(character.defenders.first().name).isEqualTo("Atra")
         assertThat(character.defenders.first().gearLevel).isEqualTo(87)
+        assertThat(character.defenders.first().clan).isNull()
+        assertThat(character.defenders.first().joinedAt).isNull()
         assertThat(character.occurred.toString()).isEqualTo("2023-01-01T00:00:00Z")
+        assertThat(character.updated).isNull()
     }
 
     @Test
@@ -359,7 +462,11 @@ class BotCompanionClientTest {
         )
 
         val vBloodKillsResult = runBlocking {
-            botCompanionClient.getVBloodKills("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getVBloodKills(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(vBloodKillsResult.isSuccess).withFailMessage {
             vBloodKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
