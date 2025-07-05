@@ -10,6 +10,7 @@ import de.darkatra.vrising.discord.commands.parameters.addServerApiUsernameParam
 import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerIdParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addUseSecureTransportParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
@@ -17,6 +18,7 @@ import de.darkatra.vrising.discord.commands.parameters.getServerApiUsernameParam
 import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerIdParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getUseSecureTransportParameter
 import de.darkatra.vrising.discord.persistence.ServerRepository
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
@@ -57,6 +59,8 @@ class UpdateServerCommand(
             addServerApiPortParameter(required = false)
             addServerApiUsernameParameter(required = false)
             addServerApiPasswordParameter(required = false)
+
+            addUseSecureTransportParameter(required = false)
         }
     }
 
@@ -73,6 +77,8 @@ class UpdateServerCommand(
         val apiPort = interaction.getServerApiPortParameter()
         val apiUsername = interaction.getServerApiUsernameParameter()
         val apiPassword = interaction.getServerApiPasswordParameter()
+
+        val useSecureTransport = interaction.getUseSecureTransportParameter()
 
         if (hostname != null) {
             ServerHostnameParameter.validate(hostname, botProperties.allowLocalAddressRanges)
@@ -94,6 +100,9 @@ class UpdateServerCommand(
         }
         if (apiPassword != null) {
             server.apiPassword = determineValueOfNullableStringParameter(apiPassword)
+        }
+        if (useSecureTransport != null) {
+            server.useSecureTransport = useSecureTransport
         }
 
         serverRepository.updateServer(server)

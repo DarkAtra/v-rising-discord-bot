@@ -33,6 +33,7 @@ class GetServerDetailsCommand(
         }
     }
 
+    @Suppress("DuplicatedCode")
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val server = interaction.getServer(serverRepository)
@@ -75,6 +76,12 @@ class GetServerDetailsCommand(
                         server.apiPort != null -> "${server.apiPort}"
                         else -> "-"
                     }
+                    inline = true
+                }
+
+                field {
+                    name = "Secure Transport"
+                    value = "${server.useSecureTransport}"
                     inline = true
                 }
 

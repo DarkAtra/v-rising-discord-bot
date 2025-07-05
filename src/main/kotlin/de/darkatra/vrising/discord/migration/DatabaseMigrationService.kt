@@ -189,6 +189,14 @@ class DatabaseMigrationService(
                         raidFeed.put("displayPlayerGearLevel", false)
                     }
                 }
+            ),
+            DatabaseMigration(
+                description = "Set default value for 'useSecureTransport'.",
+                isApplicable = { currentSchemaVersion -> currentSchemaVersion.major < 2 || (currentSchemaVersion.major == 2 && currentSchemaVersion.minor <= 14) },
+                documentCollectionName = "de.darkatra.vrising.discord.persistence.model.Server",
+                documentAction = { document ->
+                    document.put("useSecureTransport", false)
+                }
             )
         )
 

@@ -47,6 +47,7 @@ class ConfigurePvpKillFeedCommand(
         }
     }
 
+    @Suppress("DuplicatedCode")
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val serverId = interaction.getServerIdParameter()

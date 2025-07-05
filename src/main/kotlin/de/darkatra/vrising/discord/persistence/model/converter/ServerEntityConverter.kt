@@ -32,6 +32,7 @@ class ServerEntityConverter : EntityConverter<Server> {
             apiPort = document.get(Server::apiPort.name) as Int?,
             apiUsername = document.get(Server::apiUsername.name, String::class.java),
             apiPassword = document.get(Server::apiPassword.name, String::class.java),
+            useSecureTransport = document.get(Server::useSecureTransport.name) as Boolean,
             playerActivityFeed = document.get(Server::playerActivityFeed.name)?.let { playerActivityFeed ->
                 nitriteMapper.tryConvert(playerActivityFeed, PlayerActivityFeed::class.java) as PlayerActivityFeed
             },
@@ -74,6 +75,7 @@ class ServerEntityConverter : EntityConverter<Server> {
             put(Server::apiPort.name, server.apiPort)
             put(Server::apiUsername.name, server.apiUsername)
             put(Server::apiPassword.name, server.apiPassword)
+            put(Server::useSecureTransport.name, server.useSecureTransport)
             put(Server::playerActivityFeed.name, server.playerActivityFeed?.let { nitriteMapper.tryConvert(it, Document::class.java) })
             put(Server::pvpKillFeed.name, server.pvpKillFeed?.let { nitriteMapper.tryConvert(it, Document::class.java) })
             put(Server::raidFeed.name, server.raidFeed?.let { nitriteMapper.tryConvert(it, Document::class.java) })
