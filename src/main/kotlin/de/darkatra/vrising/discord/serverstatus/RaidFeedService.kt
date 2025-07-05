@@ -55,7 +55,8 @@ class RaidFeedService(
             raidFeed.getServer().apiHostname!!,
             raidFeed.getServer().apiPort!!,
             raidFeed.getServer().apiUsername,
-            raidFeed.getServer().apiPassword
+            raidFeed.getServer().apiPassword,
+            raidFeed.getServer().useSecureTransport
         ).getOrElse { e ->
 
             logger.error("Exception updating the raid feed for server ${raidFeed.getServer().id}", e)

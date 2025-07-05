@@ -10,12 +10,14 @@ import de.darkatra.vrising.discord.commands.parameters.addServerApiPortParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.addUseSecureTransportParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPasswordParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiPortParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerApiUsernameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerHostnameParameter
 import de.darkatra.vrising.discord.commands.parameters.getServerQueryPortParameter
+import de.darkatra.vrising.discord.commands.parameters.getUseSecureTransportParameter
 import de.darkatra.vrising.discord.persistence.ServerRepository
 import de.darkatra.vrising.discord.persistence.model.Server
 import dev.kord.core.Kord
@@ -58,6 +60,8 @@ class AddServerCommand(
             addServerApiPortParameter(required = false)
             addServerApiUsernameParameter(required = false)
             addServerApiPasswordParameter(required = false)
+
+            addUseSecureTransportParameter(required = false)
         }
     }
 
@@ -78,6 +82,8 @@ class AddServerCommand(
         val apiUsername = interaction.getServerApiUsernameParameter()
         val apiPassword = interaction.getServerApiPasswordParameter()
 
+        val useSecureTransport = interaction.getUseSecureTransportParameter() ?: false
+
         val discordServerId = (interaction as GuildChatInputCommandInteraction).guildId
 
         ServerHostnameParameter.validate(hostname, botProperties.allowLocalAddressRanges)
@@ -94,6 +100,7 @@ class AddServerCommand(
                 apiPort = apiPort,
                 apiUsername = apiUsername,
                 apiPassword = apiPassword,
+                useSecureTransport = useSecureTransport
             )
         )
 

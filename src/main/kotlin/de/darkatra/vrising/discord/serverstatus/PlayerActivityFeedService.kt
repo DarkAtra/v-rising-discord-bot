@@ -52,7 +52,8 @@ class PlayerActivityFeedService(
             playerActivityFeed.getServer().apiHostname!!,
             playerActivityFeed.getServer().apiPort!!,
             playerActivityFeed.getServer().apiUsername,
-            playerActivityFeed.getServer().apiPassword
+            playerActivityFeed.getServer().apiPassword,
+            playerActivityFeed.getServer().useSecureTransport
         ).getOrElse { e ->
 
             logger.error("Exception updating the player activity feed for server '${playerActivityFeed.getServer().id}'", e)

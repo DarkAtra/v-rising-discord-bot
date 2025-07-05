@@ -35,6 +35,7 @@ class GetVBloodKillFeedDetailsCommand(
         }
     }
 
+    @Suppress("DuplicatedCode")
     override suspend fun handle(interaction: ChatInputCommandInteraction) {
 
         val server = interaction.getServer(serverRepository)

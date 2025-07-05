@@ -40,7 +40,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isFailure).isTrue()
 
@@ -79,7 +83,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
             charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -130,7 +138,13 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort, username, password)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                serverApiUsername = username,
+                serverApiPassword = password,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isSuccess).withFailMessage {
             charactersResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -169,7 +183,11 @@ class BotCompanionClientTest {
         )
 
         val charactersResult = runBlocking {
-            botCompanionClient.getCharacters("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getCharacters(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(charactersResult.isFailure).isTrue()
     }
@@ -205,7 +223,11 @@ class BotCompanionClientTest {
         )
 
         val playerActivitiesResult = runBlocking {
-            botCompanionClient.getPlayerActivities("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getPlayerActivities(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(playerActivitiesResult.isSuccess).withFailMessage {
             playerActivitiesResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -252,7 +274,11 @@ class BotCompanionClientTest {
         )
 
         val pvpKillsResult = runBlocking {
-            botCompanionClient.getPvpKills("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getPvpKills(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(pvpKillsResult.isSuccess).withFailMessage {
             pvpKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -309,7 +335,11 @@ class BotCompanionClientTest {
         )
 
         val raidsResult = runBlocking {
-            botCompanionClient.getRaids("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getRaids(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(raidsResult.isSuccess).withFailMessage {
             raidsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -369,7 +399,11 @@ class BotCompanionClientTest {
         )
 
         val raidsResult = runBlocking {
-            botCompanionClient.getRaids("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getRaids(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(raidsResult.isSuccess).withFailMessage {
             raidsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
@@ -428,7 +462,11 @@ class BotCompanionClientTest {
         )
 
         val vBloodKillsResult = runBlocking {
-            botCompanionClient.getVBloodKills("localhost", wireMockRuntimeInfo.httpPort)
+            botCompanionClient.getVBloodKills(
+                serverApiHostName = "localhost",
+                serverApiPort = wireMockRuntimeInfo.httpPort,
+                useSecureTransport = false
+            )
         }
         assertThat(vBloodKillsResult.isSuccess).withFailMessage {
             vBloodKillsResult.exceptionOrNull()?.let { "${it.message}: ${it.stackTraceToString()}" }
