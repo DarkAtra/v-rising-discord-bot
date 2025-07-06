@@ -86,8 +86,8 @@ class ConfigureRaidFeedCommand(
             server.raidFeed = RaidFeed(
                 status = status ?: Status.ACTIVE,
                 discordChannelId = channelId,
-                lastUpdated = server.lastUpdated,
-                displayPlayerGearLevel = displayPlayerGearLevel ?: false
+                displayPlayerGearLevel = displayPlayerGearLevel ?: false,
+                lastUpdated = server.lastUpdated
             )
 
             serverRepository.updateServer(server)
@@ -105,6 +105,9 @@ class ConfigureRaidFeedCommand(
         }
         if (status != null) {
             raidFeed.status = status
+        }
+        if (displayPlayerGearLevel != null) {
+            raidFeed.displayPlayerGearLevel = displayPlayerGearLevel
         }
 
         serverRepository.updateServer(server)
