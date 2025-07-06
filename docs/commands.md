@@ -137,7 +137,7 @@ Admins can use this command in DMs, see [Configuration Properties](configuration
 
 ## Raid Feed
 
-Requires at least bot companion version `0.8.0`.
+Requires at least bot companion version `0.9.0`.
 
 ### `/configure-raid-feed`
 
