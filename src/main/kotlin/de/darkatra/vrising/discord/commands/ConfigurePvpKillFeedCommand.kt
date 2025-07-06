@@ -29,6 +29,7 @@ class ConfigurePvpKillFeedCommand(
     private val description: String = "Configures the pvp kill feed for a given server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 3
 
     override suspend fun register(kord: Kord) {
 

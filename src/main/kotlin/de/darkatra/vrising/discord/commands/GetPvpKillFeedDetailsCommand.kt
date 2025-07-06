@@ -21,6 +21,7 @@ class GetPvpKillFeedDetailsCommand(
     private val description: String = "Gets all details of the pvp kill feed for the specified server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 1
 
     override suspend fun register(kord: Kord) {
 

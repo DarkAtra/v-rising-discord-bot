@@ -21,6 +21,7 @@ class GetPlayerActivityFeedDetailsCommand(
     private val description: String = "Gets all details of the player activity feed for the specified server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 1
 
     override suspend fun register(kord: Kord) {
 

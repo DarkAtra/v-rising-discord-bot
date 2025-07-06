@@ -26,6 +26,7 @@ class ListServersCommand(
     private val description: String = "Lists all servers."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 1
 
     override suspend fun register(kord: Kord) {
 

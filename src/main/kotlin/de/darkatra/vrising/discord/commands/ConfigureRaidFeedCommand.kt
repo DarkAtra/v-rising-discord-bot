@@ -31,6 +31,7 @@ class ConfigureRaidFeedCommand(
     private val description: String = "Configures the raid feed for a given server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 4
 
     override suspend fun register(kord: Kord) {
 

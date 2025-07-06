@@ -9,6 +9,8 @@ interface Command {
 
     fun getCommandName(): String
 
+    fun getArgumentCount(): Int
+
     suspend fun register(kord: Kord)
 
     fun isSupported(interaction: ChatInputCommandInteraction, adminUserIds: Set<String>): Boolean {

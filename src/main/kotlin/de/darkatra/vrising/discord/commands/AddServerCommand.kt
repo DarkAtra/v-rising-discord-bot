@@ -42,6 +42,7 @@ class AddServerCommand(
     private val description: String = "Adds a server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 7
 
     override suspend fun register(kord: Kord) {
 

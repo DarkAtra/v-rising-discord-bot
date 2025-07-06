@@ -19,6 +19,7 @@ class GetServerDetailsCommand(
     private val description: String = "Gets all the configuration details for the specified server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 1
 
     override suspend fun register(kord: Kord) {
 

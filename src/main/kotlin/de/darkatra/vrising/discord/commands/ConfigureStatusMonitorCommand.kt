@@ -33,6 +33,7 @@ class ConfigureStatusMonitorCommand(
     private val description: String = "Configures the status monitor for a given server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 5
 
     override suspend fun register(kord: Kord) {
 

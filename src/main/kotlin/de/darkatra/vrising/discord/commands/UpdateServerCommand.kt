@@ -40,6 +40,7 @@ class UpdateServerCommand(
     private val description: String = "Updates the given server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 8
 
     override suspend fun register(kord: Kord) {
 

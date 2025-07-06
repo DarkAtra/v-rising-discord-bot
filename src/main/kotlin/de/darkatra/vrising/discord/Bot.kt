@@ -4,6 +4,7 @@ import de.darkatra.vrising.discord.commands.Command
 import de.darkatra.vrising.discord.migration.DatabaseMigrationService
 import de.darkatra.vrising.discord.persistence.DatabaseBackupService
 import de.darkatra.vrising.discord.serverstatus.ServerService
+import dev.kord.common.entity.optional.orEmpty
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
@@ -111,7 +112,12 @@ class Bot(
 
             // register commands that aren't registered yet
             commands
-                .filterNot { command -> currentGlobalApplicationCommands.any { applicationCommand -> command.getCommandName() == applicationCommand.name } }
+                .filterNot { command ->
+                    // FIXME: there should be a better way of doing this
+                    currentGlobalApplicationCommands.any { applicationCommand ->
+                        command.getCommandName() == applicationCommand.name && command.getArgumentCount() == applicationCommand.data.options.orEmpty().size
+                    }
+                }
                 .forEach { command ->
                     command.register(kord)
                     logger.info("Successfully registered '${command.getCommandName()}' command.")

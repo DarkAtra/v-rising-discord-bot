@@ -21,6 +21,7 @@ class GetVBloodKillFeedDetailsCommand(
     private val description: String = "Gets all details of the vblood kill feed for the specified server."
 
     override fun getCommandName(): String = name
+    override fun getArgumentCount(): Int = 1
 
     override suspend fun register(kord: Kord) {
 
