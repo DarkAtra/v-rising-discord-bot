@@ -104,7 +104,12 @@ class Bot(
 
             // delete obsolete commands
             currentGlobalApplicationCommands
-                .filterNot { applicationCommand -> commands.any { command -> command.getCommandName() == applicationCommand.name } }
+                .filterNot { applicationCommand ->
+                    // FIXME: there should be a better way of doing this
+                    commands.any { command ->
+                        command.getCommandName() == applicationCommand.name && command.getArgumentCount() == applicationCommand.data.options.orEmpty().size
+                    }
+                }
                 .forEach { applicationCommand ->
                     applicationCommand.delete()
                     logger.info("Successfully deleted obsolete '${applicationCommand.name}' command.")
