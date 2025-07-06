@@ -71,6 +71,12 @@ class GetRaidFeedDetailsCommand(
                 }
 
                 field {
+                    name = "Display Player Gear Level"
+                    value = "${raidFeed.displayPlayerGearLevel}"
+                    inline = true
+                }
+
+                field {
                     name = "Current Failed Attempts"
                     value = "${raidFeed.currentFailedAttempts}"
                     inline = true
