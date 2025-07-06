@@ -9,6 +9,7 @@ import de.darkatra.vrising.discord.persistence.model.filterActive
 import de.darkatra.vrising.discord.persistence.model.filterInactive
 import dev.kord.core.Kord
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
