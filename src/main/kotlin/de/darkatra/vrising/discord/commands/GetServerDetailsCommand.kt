@@ -80,6 +80,12 @@ class GetServerDetailsCommand(
                 }
 
                 field {
+                    name = "Secure Transport"
+                    value = "${server.useSecureTransport}"
+                    inline = true
+                }
+
+                field {
                     name = "Last Update Attempt"
                     value = "<t:${server.lastUpdated.epochSecond}:R>"
                     inline = true
