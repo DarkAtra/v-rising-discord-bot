@@ -9,6 +9,8 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.gateway.ReadyEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import dev.kord.gateway.DefaultGateway
+import dev.kord.gateway.ratelimit.IdentifyRateLimiter
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
@@ -53,7 +55,23 @@ class Bot(
 
         kord = Kord(
             token = botProperties.discordBotToken
-        )
+        ) {
+            gateways { resources, shards ->
+                // shared between all shards
+                val rateLimiter = IdentifyRateLimiter(resources.maxConcurrency, defaultDispatcher)
+                shards.map {
+                    DefaultGateway {
+                        client = resources.httpClient
+                        identifyRateLimiter = rateLimiter
+                        reconnectRetry = UnlimitedExponentialRetry(
+                            initialInterval = Duration.ofSeconds(2),
+                            maxInterval = Duration.ofMinutes(1),
+                            multiplier = 2.0
+                        )
+                    }
+                }
+            }
+        }
 
         kord.on<ChatInputCommandInteractionCreateEvent> {
 
