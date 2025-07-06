@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -35,7 +36,9 @@ class BotCompanionClient(
 ) : DisposableBean {
 
     private val objectMapper by lazy {
-        jacksonObjectMapper().registerModule(JavaTimeModule())
+        jacksonObjectMapper()
+            .registerModule(JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }
     private val httpClient by lazy {
         HttpClient(OkHttp) {

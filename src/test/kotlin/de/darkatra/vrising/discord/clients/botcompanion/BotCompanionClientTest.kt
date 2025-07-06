@@ -323,7 +323,8 @@ class BotCompanionClientTest {
                                     "name": "Atra",
                                     "gearLevel": 87,
                                     "clan": "Test",
-                                    "joinedAt": "2023-01-02T00:00:00Z"
+                                    "joinedAt": "2023-01-02T00:00:00Z",
+                                    "test": "should-be-ignoredfix"
                                   }
                                 ],
                                 "occurred": "2023-01-01T00:00:00Z",
