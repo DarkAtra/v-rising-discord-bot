@@ -39,9 +39,9 @@
         <agql-source-query.version>1.2.2</agql-source-query.version>
         <java-uuid-generator.version>5.1.0</java-uuid-generator.version>
         <potassium-nitrite.version>4.3.1-SNAPSHOT</potassium-nitrite.version>
-        <commons-validator.version>1.9.0</commons-validator.version>
+        <commons-validator.version>1.10.0</commons-validator.version>
 
-        <ktor.version>3.2.1</ktor.version>
+        <ktor.version>3.2.2</ktor.version>
         <kotlin-coroutines.version>1.9.0</kotlin-coroutines.version>
 
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
