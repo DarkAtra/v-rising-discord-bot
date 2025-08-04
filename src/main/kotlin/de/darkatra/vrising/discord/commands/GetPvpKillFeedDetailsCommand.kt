@@ -1,8 +1,11 @@
 package de.darkatra.vrising.discord.commands
 
 import de.darkatra.vrising.discord.BotProperties
+import de.darkatra.vrising.discord.commands.parameters.ServerApiHostnameParameter
+import de.darkatra.vrising.discord.commands.parameters.ServerApiPortParameter
 import de.darkatra.vrising.discord.commands.parameters.addServerIdParameter
 import de.darkatra.vrising.discord.persistence.ServerRepository
+import de.darkatra.vrising.discord.persistence.model.Status
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
@@ -53,7 +56,10 @@ class GetPvpKillFeedDetailsCommand(
         interaction.deferEphemeralResponse().respond {
             embed {
                 title = "Pvp Kill Feed Details for ${server.id}"
-
+                description = when {
+                    !server.apiEnabled && pvpKillFeed.status == Status.ACTIVE -> "This feature is currently disabled since no ${ServerApiHostnameParameter.NAME} and/or ${ServerApiPortParameter.NAME} is set for this server."
+                    else -> null
+                }
                 field {
                     name = "Status"
                     value = pvpKillFeed.status.name

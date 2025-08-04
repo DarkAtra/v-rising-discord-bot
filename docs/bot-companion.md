@@ -184,16 +184,19 @@ Content-Type: application/json
     "attackers": [
       {
         "name": "Socium",
-        "gearLevel": 91
+        "gearLevel": 91,
+        "joinedAt": "2023-01-01T00:00:00Z"
       }
     ],
     "defenders": [
       {
         "name": "Atra",
-        "gearLevel": 87
+        "gearLevel": 87,
+        "joinedAt": "2023-01-01T00:00:00Z"
       }
     ],
-    "occurred": "2023-01-01T00:00:00Z"
+    "occurred": "2023-01-01T00:00:00Z",
+    "updated": "2023-01-01T00:00:00Z"
   }
 ]
 ```
