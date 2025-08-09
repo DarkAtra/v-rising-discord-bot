@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.4</version>
         <relativePath/>
     </parent>
 
@@ -41,7 +41,7 @@
         <potassium-nitrite.version>4.3.1-SNAPSHOT</potassium-nitrite.version>
         <commons-validator.version>1.10.0</commons-validator.version>
 
-        <ktor.version>3.2.2</ktor.version>
+        <ktor.version>3.2.3</ktor.version>
         <kotlin-coroutines.version>1.9.0</kotlin-coroutines.version>
 
         <mockito-kotlin.version>6.0.0</mockito-kotlin.version>
