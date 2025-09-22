@@ -213,7 +213,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.45</builder>
+                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.64</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION> <!-- required so that GraalVM 21 is used -->
@@ -306,17 +306,4 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>snapshots-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
