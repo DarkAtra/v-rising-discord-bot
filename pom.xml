@@ -197,6 +197,7 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                         <arg>-Xemit-jvm-type-annotations</arg>
+                        <arg>-Xjdk-release=${java.version}</arg>
                     </args>
                 </configuration>
                 <dependencies>
