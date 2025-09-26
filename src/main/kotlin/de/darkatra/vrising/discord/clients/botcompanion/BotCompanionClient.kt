@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.net.InetSocketAddress
+import java.net.URI
 import java.net.URL
 import java.time.Duration
 
@@ -171,7 +172,7 @@ class BotCompanionClient(
             useSecureTransport -> "https"
             else -> "http"
         }
-        return URL("$protocol://${address.hostString}:${address.port}/v-rising-discord-bot")
+        return URI.create("$protocol://${address.hostString}:${address.port}/v-rising-discord-bot").toURL()
     }
 
     override fun destroy() {
