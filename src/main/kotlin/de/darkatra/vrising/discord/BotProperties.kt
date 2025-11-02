@@ -69,4 +69,13 @@ class BotProperties {
     @field:Min(1)
     @field:NotNull
     var databaseBackupMaxFiles: Int = 10
+
+    @field:DurationMin(seconds = 1)
+    var companionConnectTimeout: Duration = Duration.ofSeconds(2)
+
+    @field:DurationMin(seconds = 1)
+    var companionRequestTimeout: Duration = Duration.ofSeconds(10)
+
+    @field:DurationMin(seconds = 1)
+    var companionSocketTimeout: Duration = Duration.ofSeconds(5)
 }

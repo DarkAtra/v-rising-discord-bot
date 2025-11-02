@@ -4,8 +4,10 @@ import jakarta.validation.Validation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import java.time.Duration
+import java.util.stream.Stream
 
 class BotPropertiesTest {
 
@@ -240,10 +242,60 @@ class BotPropertiesTest {
         assertThat(result).hasSize(1)
     }
 
+    @ParameterizedTest
+    @MethodSource("invalidDurations")
+    fun `should be invalid if companionConnectTimeout is less than 1s`(invalidDuration: Duration) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.companionConnectTimeout = invalidDuration
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDurations")
+    fun `should be invalid if companionRequestTimeout is less than 1s`(invalidDuration: Duration) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.companionRequestTimeout = invalidDuration
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDurations")
+    fun `should be invalid if companionSocketTimeout is less than 1s`(invalidDuration: Duration) {
+
+        val botProperties = getValidBotProperties().apply {
+            this.companionSocketTimeout = invalidDuration
+        }
+
+        val result = validator.validate(botProperties)
+
+        assertThat(result).hasSize(1)
+    }
+
     private fun getValidBotProperties(): BotProperties {
         return BotProperties().apply {
             discordBotToken = "discord-token"
             databasePassword = "password"
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        private fun invalidDurations(): Stream<Duration> {
+            return Stream.of(
+                Duration.ofMillis(999),
+                Duration.ofSeconds(0),
+                Duration.ofSeconds(-1)
+            )
         }
     }
 }

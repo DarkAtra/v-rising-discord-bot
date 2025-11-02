@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.PvpKill
@@ -29,11 +30,11 @@ import org.springframework.stereotype.Service
 import java.net.InetSocketAddress
 import java.net.URI
 import java.net.URL
-import java.time.Duration
 
 @Service
 class BotCompanionClient(
-    private val applicationContext: ApplicationContext
+    private val applicationContext: ApplicationContext,
+    private val botProperties: BotProperties
 ) : DisposableBean {
 
     private val objectMapper by lazy {
@@ -44,9 +45,9 @@ class BotCompanionClient(
     private val httpClient by lazy {
         HttpClient(OkHttp) {
             install(HttpTimeout) {
-                connectTimeoutMillis = Duration.ofSeconds(1).toMillis()
-                requestTimeoutMillis = Duration.ofSeconds(5).toMillis()
-                socketTimeoutMillis = Duration.ofSeconds(5).toMillis()
+                connectTimeoutMillis = botProperties.companionConnectTimeout.toMillis()
+                requestTimeoutMillis = botProperties.companionRequestTimeout.toMillis()
+                socketTimeoutMillis = botProperties.companionSocketTimeout.toMillis()
             }
         }
     }

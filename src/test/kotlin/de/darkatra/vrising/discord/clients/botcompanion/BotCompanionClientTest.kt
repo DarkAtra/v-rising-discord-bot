@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
+import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
 import kotlinx.coroutines.runBlocking
@@ -14,6 +15,7 @@ import org.springframework.context.support.StaticApplicationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import java.time.Duration
 
 @WireMockTest
 @DisabledInNativeImage
@@ -22,6 +24,9 @@ class BotCompanionClientTest {
     private val botCompanionClient = BotCompanionClient(
         StaticApplicationContext().apply {
             id = "test"
+        },
+        botProperties = BotProperties().apply {
+            companionSocketTimeout = Duration.ofSeconds(2)
         }
     )
 

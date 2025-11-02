@@ -147,3 +147,27 @@ The maximum amount of recent backups to keep.
 
 * **Type**: `Int`
 * **Default Value**: `10`
+
+### `bot.companion-connect-timeout`
+
+The connection timeout is the time period in which a client should establish a connection with a server.
+Only applies to bot companion requests.
+
+* **Type**: `Duration`
+* **Default Value**: `2s`
+
+### `bot.companion-request-timeout`
+
+The request timeout is the time period required to process an HTTP call: from sending a request to receiving a response.#
+Only applies to bot companion requests.
+
+* **Type**: `Duration`
+* **Default Value**: `10s`
+
+### `bot.companion-socket-timeout`
+
+The socket timeout is the maximum time of inactivity between two data packets when exchanging data with a server.
+Only applies to bot companion requests.
+
+* **Type**: `Duration`
+* **Default Value**: `5s`
