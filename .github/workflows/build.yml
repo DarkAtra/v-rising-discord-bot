@@ -83,7 +83,7 @@ jobs:
           cache: maven
 
       - name: Create new Release
-        uses: cycjimmy/semantic-release-action@v5.0.2
+        uses: cycjimmy/semantic-release-action@v6.0.0
         with:
           extra_plugins: |
             @semantic-release/git
