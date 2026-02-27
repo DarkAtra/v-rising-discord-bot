@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.8</version>
+        <version>3.5.11</version>
         <relativePath/>
     </parent>
 
@@ -32,19 +32,19 @@
         <image.name>ghcr.io/darkatra/${project.artifactId}:${project.version}</image.name>
 
         <java.version>17</java.version>
-        <kotlin.version>2.2.21</kotlin.version>
+        <kotlin.version>2.3.10</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.15.0</kord.version>
+        <kord.version>0.17.0</kord.version>
         <agql-source-query.version>1.2.2</agql-source-query.version>
         <java-uuid-generator.version>5.2.0</java-uuid-generator.version>
         <potassium-nitrite.version>4.3.2</potassium-nitrite.version>
         <commons-validator.version>1.10.1</commons-validator.version>
 
-        <ktor.version>3.3.3</ktor.version>
+        <ktor.version>3.4.0</ktor.version>
         <kotlin-coroutines.version>1.9.0</kotlin-coroutines.version>
 
-        <mockito-kotlin.version>6.1.0</mockito-kotlin.version>
+        <mockito-kotlin.version>6.2.3</mockito-kotlin.version>
         <wiremock.version>3.13.2</wiremock.version>
     </properties>
 
@@ -214,7 +214,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.87</builder>
+                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.108</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION> <!-- required so that GraalVM 21 is used -->
