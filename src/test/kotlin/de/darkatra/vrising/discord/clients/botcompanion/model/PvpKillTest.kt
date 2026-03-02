@@ -1,16 +1,15 @@
 package de.darkatra.vrising.discord.clients.botcompanion.model
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class PvpKillTest {
 
     @Test
     fun `should deserialize pvp kill`() {
 
-        val objectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+        val objectMapper = jacksonObjectMapper()
 
         val pvpKill = objectMapper.readValue(
             // language=json

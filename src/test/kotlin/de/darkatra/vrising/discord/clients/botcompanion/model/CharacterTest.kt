@@ -1,16 +1,15 @@
 package de.darkatra.vrising.discord.clients.botcompanion.model
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class CharacterTest {
 
     @Test
     fun `should deserialize character`() {
 
-        val objectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+        val objectMapper = jacksonObjectMapper()
 
         val character = objectMapper.readValue(
             // language=json

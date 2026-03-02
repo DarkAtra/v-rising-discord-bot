@@ -43,6 +43,7 @@ import org.springframework.aot.hint.MemberCategory
 import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.aot.hint.TypeReference
+import org.springframework.aot.hint.registerType
 
 class BotRuntimeHints : RuntimeHintsRegistrar {
 
@@ -66,18 +67,19 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             VBloodKill.Player::class.java,
         )
         hints.reflection()
-            .registerType(Error::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(Leaderboard::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(PlayerActivityFeed::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(PvpKillFeed::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(RaidFeed::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(Server::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(Status::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(StatusMonitor::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(VBloodKillFeed::class.java, MemberCategory.DECLARED_FIELDS)
-            .registerType(Version::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType<Error>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<Leaderboard>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<PlayerActivityFeed>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<PvpKillFeed>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<RaidFeed>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<Server>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<Status>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<StatusMonitor>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<VBloodKillFeed>(MemberCategory.ACCESS_DECLARED_FIELDS)
+            .registerType<Version>(MemberCategory.ACCESS_DECLARED_FIELDS)
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
         hints.serialization()
-            .registerType(java.lang.Boolean::class.java)
+            .registerType<java.lang.Boolean>()
             .registerType(TypeReference.of("kotlin.collections.EmptyList"))
 
         // required by jackson
@@ -105,18 +107,18 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             WebhookData::class.java,
         )
         hints.reflection()
-            .registerType(GuildApplicationCommandPermissionsData::class.java)
-            .registerType(StickerPackData::class.java)
-            .registerType(Optional.Missing.Companion::class.java)
-            .registerType(Optional.Null.Companion::class.java)
+            .registerType<GuildApplicationCommandPermissionsData>()
+            .registerType<StickerPackData>()
+            .registerType<Optional.Missing.Companion>()
+            .registerType<Optional.Null.Companion>()
 
         // required by ktor (dependency of kord)
         hints.reflection()
-            .registerType(DefaultPool::class.java, MemberCategory.DECLARED_FIELDS)
+            .registerType(DefaultPool::class.java, MemberCategory.ACCESS_DECLARED_FIELDS)
 
         // required for kotlinx serialization (dependency of kord)
         hints.reflection()
-            .registerType(JsonArray.Companion::class.java)
-            .registerType(JsonObject.Companion::class.java)
+            .registerType<JsonArray.Companion>()
+            .registerType<JsonObject.Companion>()
     }
 }

@@ -11,7 +11,7 @@ import java.time.Instant
 @Service
 class DatabaseMigrationService(
     private val database: Nitrite,
-    @Value("\${version}")
+    @Value($$"${version}")
     appVersionFromPom: String,
 ) {
 

@@ -1,8 +1,8 @@
 package de.darkatra.vrising.discord.persistence.model
 
 import dev.kord.common.entity.Snowflake
-import kotlinx.datetime.toKotlinInstant
 import java.time.Instant
+import kotlin.time.toKotlinInstant
 
 object ServerTestUtils {
 
