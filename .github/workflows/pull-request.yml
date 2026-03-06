@@ -46,7 +46,7 @@ jobs:
       - name: Setup GraalVM
         uses: graalvm/setup-graalvm@v1.4.5
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: 'graalvm-community'
 
       - name: Run Tests
