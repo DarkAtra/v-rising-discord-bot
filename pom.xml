@@ -220,7 +220,7 @@
                         <builder>paketobuildpacks/builder-noble-java-tiny:0.0.109</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
-                            <BP_JVM_VERSION>25</BP_JVM_VERSION> <!-- required so that GraalVM 25 is used -->
+                            <BP_JVM_VERSION>25</BP_JVM_VERSION> <!-- Spring Boot 4.x requires GraalVM 25 -->
                         </env>
                     </image>
                 </configuration>
@@ -288,6 +288,17 @@
                                 </env>
                             </image>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
