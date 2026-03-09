@@ -1,9 +1,5 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.Character
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
@@ -25,8 +21,11 @@ import io.ktor.http.headers
 import io.ktor.http.userAgent
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.ApplicationContext
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.module.kotlin.jacksonTypeRef
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.net.InetSocketAddress
 import java.net.URI
 import java.net.URL
@@ -38,9 +37,10 @@ class BotCompanionClient(
 ) : DisposableBean {
 
     private val objectMapper by lazy {
-        jacksonObjectMapper()
-            .registerModule(JavaTimeModule())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        jsonMapper {
+            addModule(kotlinModule())
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        }
     }
     private val httpClient by lazy {
         HttpClient(OkHttp) {
@@ -158,8 +158,8 @@ class BotCompanionClient(
                 appendPathSegments(path)
             }
             headers {
-                accept(ContentType.parse(MediaType.APPLICATION_JSON_VALUE))
-                applicationContext.id?.let { userAgent(it) }
+                accept(ContentType.Application.Json)
+                userAgent(applicationContext.id)
                 if (serverApiUsername != null && serverApiPassword != null) {
                     basicAuth(serverApiUsername, serverApiPassword)
                 }

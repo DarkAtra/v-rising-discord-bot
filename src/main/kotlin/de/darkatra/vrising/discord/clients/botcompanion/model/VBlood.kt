@@ -1,5 +1,6 @@
 package de.darkatra.vrising.discord.clients.botcompanion.model
 
+@Suppress("unused") // used by jackson during deserialization
 enum class VBlood(
     val displayName: String
 ) {

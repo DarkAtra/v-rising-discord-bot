@@ -3,10 +3,10 @@ package de.darkatra.vrising.discord.serverstatus
 import de.darkatra.vrising.discord.serverstatus.model.ServerInfoTestUtils
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
-import kotlinx.datetime.toJavaInstant
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import kotlin.time.toJavaInstant
 
 class ServerStatusEmbedTest {
 

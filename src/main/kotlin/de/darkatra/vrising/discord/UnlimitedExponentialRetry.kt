@@ -20,13 +20,13 @@ class UnlimitedExponentialRetry(
     internal var currentIntervalInMillis: AtomicLong = AtomicLong(initialInterval.toMillis())
 
     init {
-        require(initialInterval.isPositive()) {
+        require(initialInterval.isPositive) {
             "initialInterval needs to be positive but was ${initialInterval.toMillis()}ms"
         }
-        require(maxInterval.isPositive()) {
+        require(maxInterval.isPositive) {
             "maxInterval needs to be positive but was ${maxInterval.toMillis()}ms"
         }
-        require(maxInterval.minus(initialInterval).isPositive()) {
+        require(maxInterval.minus(initialInterval).isPositive) {
             "maxInterval ${maxInterval.toMillis()}ms needs to be bigger than initialInterval ${initialInterval.toMillis()}ms"
         }
         require(multiplier > 0) {

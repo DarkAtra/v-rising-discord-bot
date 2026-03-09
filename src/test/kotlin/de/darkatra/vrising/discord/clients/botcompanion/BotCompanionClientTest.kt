@@ -1,20 +1,21 @@
 package de.darkatra.vrising.discord.clients.botcompanion
 
-import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import de.darkatra.vrising.discord.BotProperties
 import de.darkatra.vrising.discord.clients.botcompanion.model.PlayerActivity
 import de.darkatra.vrising.discord.clients.botcompanion.model.VBlood
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.springframework.context.support.StaticApplicationContext
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import java.time.Duration
 
 @WireMockTest
@@ -34,13 +35,13 @@ class BotCompanionClientTest {
     fun `should handle timeouts correctly`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/characters")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
+                    aResponse()
                         .withFixedDelay(10_000)
-                        .withStatus(HttpStatus.OK.value())
+                        .withStatus(HttpStatusCode.OK.value)
                 )
         )
 
@@ -61,13 +62,13 @@ class BotCompanionClientTest {
     fun `should get characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/characters")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -115,14 +116,14 @@ class BotCompanionClientTest {
         val password = "password"
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/characters")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .withBasicAuth(username, password)
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -169,13 +170,13 @@ class BotCompanionClientTest {
     fun `should handle errors getting characters`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/characters")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/characters")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.InternalServerError.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -201,13 +202,13 @@ class BotCompanionClientTest {
     fun `should get player activities`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/player-activities")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/player-activities")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -251,13 +252,13 @@ class BotCompanionClientTest {
     fun `should get pvp kills`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/pvp-kills")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/pvp-kills")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -304,13 +305,13 @@ class BotCompanionClientTest {
     fun `should get raids`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/raids")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/raids")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -373,13 +374,13 @@ class BotCompanionClientTest {
     fun `should get raids from older bot companion versions`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/raids")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/raids")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
@@ -437,13 +438,13 @@ class BotCompanionClientTest {
     fun `should get vblood kills`(wireMockRuntimeInfo: WireMockRuntimeInfo) {
 
         wireMockRuntimeInfo.wireMock.register(
-            WireMock.get("/v-rising-discord-bot/vblood-kills")
-                .withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON_VALUE))
-                .withHeader(HttpHeaders.USER_AGENT, equalTo("test"))
+            get("/v-rising-discord-bot/vblood-kills")
+                .withHeader(HttpHeaders.Accept, equalTo(ContentType.Application.Json.toString()))
+                .withHeader(HttpHeaders.UserAgent, equalTo("test"))
                 .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    aResponse()
+                        .withStatus(HttpStatusCode.OK.value)
+                        .withHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         .withBody(
                             // language=json
                             """
