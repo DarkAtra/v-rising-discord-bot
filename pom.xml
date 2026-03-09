@@ -35,13 +35,13 @@
         <kotlin.version>2.3.10</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <kord.version>0.17.0</kord.version>
+        <kord.version>0.18.0</kord.version>
         <agql-source-query.version>1.2.2</agql-source-query.version>
         <java-uuid-generator.version>5.2.0</java-uuid-generator.version>
         <potassium-nitrite.version>4.3.2</potassium-nitrite.version>
         <commons-validator.version>1.10.1</commons-validator.version>
 
-        <ktor.version>3.4.0</ktor.version>
+        <ktor.version>3.4.1</ktor.version>
         <kotlin-coroutines.version>1.9.0</kotlin-coroutines.version>
 
         <mockito-kotlin.version>6.2.3</mockito-kotlin.version>
@@ -217,7 +217,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.109</builder>
+                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.112</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>25</BP_JVM_VERSION> <!-- Spring Boot 4.x requires GraalVM 25 -->
