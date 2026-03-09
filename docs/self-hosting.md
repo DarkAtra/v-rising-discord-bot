@@ -47,7 +47,7 @@ services:
 
 ## Hosting the bot without docker
 
-1. Install a Java Virtual Machine. You'll need at least Java 17.
+1. Install a Java Virtual Machine. You'll need at least Java 21.
 2. Find the latest jar [here](https://github.com/DarkAtra/v-rising-discord-bot/releases) or build the application yourself using `mvn clean verify`
 3. Copy the jar file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
    ```yaml
