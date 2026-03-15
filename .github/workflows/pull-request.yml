@@ -44,7 +44,7 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Setup GraalVM
-        uses: graalvm/setup-graalvm@v1.4.5
+        uses: graalvm/setup-graalvm@v1.5.0
         with:
           java-version: '25'
           distribution: 'graalvm-community'
