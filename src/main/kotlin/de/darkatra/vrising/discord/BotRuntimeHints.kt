@@ -17,25 +17,10 @@ import de.darkatra.vrising.discord.persistence.model.StatusMonitor
 import de.darkatra.vrising.discord.persistence.model.VBloodKillFeed
 import de.darkatra.vrising.discord.persistence.model.Version
 import dev.kord.common.entity.optional.Optional
-import dev.kord.core.cache.data.ApplicationCommandData
-import dev.kord.core.cache.data.AutoModerationRuleData
-import dev.kord.core.cache.data.ChannelData
-import dev.kord.core.cache.data.EmojiData
-import dev.kord.core.cache.data.EntitlementData
 import dev.kord.core.cache.data.GuildApplicationCommandPermissionsData
-import dev.kord.core.cache.data.GuildData
-import dev.kord.core.cache.data.MemberData
-import dev.kord.core.cache.data.MessageData
-import dev.kord.core.cache.data.PresenceData
-import dev.kord.core.cache.data.RoleData
-import dev.kord.core.cache.data.StickerData
 import dev.kord.core.cache.data.StickerPackData
-import dev.kord.core.cache.data.SubscriptionData
-import dev.kord.core.cache.data.ThreadMemberData
-import dev.kord.core.cache.data.UserData
-import dev.kord.core.cache.data.VoiceStateData
-import dev.kord.core.cache.data.WebhookData
 import io.ktor.utils.io.pool.DefaultPool
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import org.springframework.aot.hint.BindingReflectionHintsRegistrar
@@ -44,6 +29,9 @@ import org.springframework.aot.hint.RuntimeHints
 import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.aot.hint.TypeReference
 import org.springframework.aot.hint.registerType
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
+import org.springframework.core.io.DefaultResourceLoader
+import org.springframework.core.type.filter.AnnotationTypeFilter
 
 class BotRuntimeHints : RuntimeHintsRegistrar {
 
@@ -89,22 +77,7 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         // required for kord (remove once https://github.com/kordlib/kord/issues/786 is merged)
         bindingReflectionHintsRegistrar.registerReflectionHints(
             hints.reflection(),
-            ApplicationCommandData::class.java,
-            AutoModerationRuleData::class.java,
-            ChannelData::class.java,
-            EntitlementData::class.java,
-            EmojiData::class.java,
-            GuildData::class.java,
-            MemberData::class.java,
-            MessageData::class.java,
-            PresenceData::class.java,
-            RoleData::class.java,
-            StickerData::class.java,
-            SubscriptionData::class.java,
-            ThreadMemberData::class.java,
-            UserData::class.java,
-            VoiceStateData::class.java,
-            WebhookData::class.java,
+            *getKordSerializableTypes(classLoader ?: javaClass.classLoader).toTypedArray(),
         )
         hints.reflection()
             .registerType<GuildApplicationCommandPermissionsData>()
@@ -120,5 +93,20 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
         hints.reflection()
             .registerType<JsonArray.Companion>()
             .registerType<JsonObject.Companion>()
+    }
+
+    private fun getKordSerializableTypes(classLoader: ClassLoader): List<Class<*>> {
+
+        val componentProvider = ClassPathScanningCandidateComponentProvider(false).apply {
+            resourceLoader = DefaultResourceLoader(classLoader)
+            addIncludeFilter(AnnotationTypeFilter(Serializable::class.java))
+        }
+
+        return componentProvider.findCandidateComponents("dev.kord").asSequence()
+            .mapNotNull { it.beanClassName }
+            .distinct()
+            .map { Class.forName(it, false, classLoader) }
+            .sortedBy(Class<*>::getName)
+            .toList()
     }
 }
