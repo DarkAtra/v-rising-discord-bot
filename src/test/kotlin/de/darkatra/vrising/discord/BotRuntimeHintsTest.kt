@@ -2,8 +2,10 @@ package de.darkatra.vrising.discord
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.springframework.aot.hint.RuntimeHints
 
+@DisabledInNativeImage // RuntimeHints are collected during build
 class BotRuntimeHintsTest {
 
     private val botRuntimeHints = BotRuntimeHints()
