@@ -14,7 +14,7 @@ I generally recommend running it as a docker container as it reduces the mainten
 ## Hosting the bot using docker-compose
 
 Find the latest docker image [here](https://github.com/DarkAtra/v-rising-discord-bot/pkgs/container/v-rising-discord-bot).
-You can also build it from scratch by cloning the repository and then running `mvn clean package spring-boot:build-image`.
+You can also build it from scratch by cloning the repository and then running `./mvnw clean package spring-boot:build-image`.
 
 {: .note }
 > There are two docker images available. The docker image with the `-native` suffix is a highly optimized version of the bot that runs with a lower
@@ -42,13 +42,13 @@ services:
 
 {: .note }
 > The container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this
-> case `/opt/v-rising-discord-bot`. Also, if you're on windows, please replace `/opt/v-rising-discord-bot` in the
+> case `/opt/v-rising-discord-bot`. Also, if you're on Windows, please replace `/opt/v-rising-discord-bot` in the
 > example above with any valid window path, e.g. `/C/Users/<username>/Desktop/v-rising-discord-bot`.
 
 ## Hosting the bot without docker
 
 1. Install a Java Virtual Machine. You'll need at least Java 21.
-2. Find the latest jar [here](https://github.com/DarkAtra/v-rising-discord-bot/releases) or build the application yourself using `mvn clean verify`
+2. Find the latest jar [here](https://github.com/DarkAtra/v-rising-discord-bot/releases) or build the application yourself using: `./mvnw clean package verify`
 3. Copy the jar file to any directory of you choice and create a file `application.yml` with the following content in the same directory:
    ```yaml
    bot:

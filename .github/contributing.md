@@ -23,6 +23,6 @@ They can also be added after the original pull request but before a merge.
   Please refer to the documentation to learn how to properly configure it in your IDE.
   In addition, some rules are enforced via the [.editorconfig](../.editorconfig).
 * A few unit tests would help a lot as well -- someone has to do it.
-* Verification tasks, including tests, can be executed by running `mvn clean verify` from the project root.
+* Verification tasks, including tests, can be executed by running `./mvnw clean verify` from the project root.
 * If no-one else is using your branch, please rebase it against the current `main` branch.
 * When writing a commit message please follow [these conventions](https://www.conventionalcommits.org).

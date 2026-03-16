@@ -1,9 +1,9 @@
 ---
-title: Configuration Properties
+title: Configuration
 nav_order: 6
 ---
 
-# Configuration Properties
+# Configuration
 
 All properties listed in the following section can be set via environment variables, as command-line arguments or in properties files.
 For example, the `bot.discord-bot-token` property can be set using:
@@ -11,6 +11,8 @@ For example, the `bot.discord-bot-token` property can be set using:
 * Environment: `BOT_DISCORD_BOT_TOKEN=example`
 * Command-line argument: `--bot.discord-bot-token=example`
 * In `application.yml`: `bot.discord-bot-token: example`
+
+## Configuration Properties
 
 ### `bot.discord-bot-token`
 
