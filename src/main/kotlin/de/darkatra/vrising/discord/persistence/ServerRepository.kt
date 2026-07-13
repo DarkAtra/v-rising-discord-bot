@@ -55,12 +55,6 @@ class ServerRepository(
 
     fun getServer(id: String, discordServerId: String? = null): Server? {
 
-        val filter = Server::id eq id
-
-        if (discordServerId != null) {
-            filter.and(Server::discordServerId eq discordServerId)
-        }
-
         val server = repository.getById(id) ?: return null
         if (discordServerId != null && server.discordServerId != discordServerId) {
             return null
