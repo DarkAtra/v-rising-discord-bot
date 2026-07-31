@@ -65,10 +65,12 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType<StatusMonitor>(MemberCategory.ACCESS_DECLARED_FIELDS)
             .registerType<VBloodKillFeed>(MemberCategory.ACCESS_DECLARED_FIELDS)
             .registerType<Version>(MemberCategory.ACCESS_DECLARED_FIELDS)
+
+        // serialization
         @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-        hints.serialization()
-            .registerType<java.lang.Boolean>()
-            .registerType(TypeReference.of("kotlin.collections.EmptyList"))
+        hints.reflection()
+            .registerType<java.lang.Boolean>(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS)
+            .registerType(TypeReference.of("kotlin.collections.EmptyList"), MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS)
 
         // required by jackson
         hints.reflection()
