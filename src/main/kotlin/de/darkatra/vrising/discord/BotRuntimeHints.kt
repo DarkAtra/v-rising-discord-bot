@@ -67,10 +67,9 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .registerType<Version>(MemberCategory.ACCESS_DECLARED_FIELDS)
 
         // serialization
-        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
         hints.reflection()
-            .registerType<java.lang.Boolean>(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS)
-            .registerType(TypeReference.of("kotlin.collections.EmptyList"), MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS)
+            .registerType(TypeReference.of("java.lang.Boolean")) { typeHint -> typeHint.withJavaSerialization(true) }
+            .registerType(TypeReference.of("kotlin.collections.EmptyList")) { typeHint -> typeHint.withJavaSerialization(true) }
 
         // required by jackson
         hints.reflection()
