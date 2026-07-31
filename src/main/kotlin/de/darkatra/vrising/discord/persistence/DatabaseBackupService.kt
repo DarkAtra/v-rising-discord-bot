@@ -11,6 +11,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.copyTo
+import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteExisting
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
@@ -38,7 +39,7 @@ class DatabaseBackupService(
 
         val databaseBackupDirectory = botProperties.databaseBackupDirectory
         if (databaseBackupDirectory.notExists()) {
-            databaseBackupDirectory.toFile().mkdirs()
+            databaseBackupDirectory.createDirectories()
         }
 
         if (!databaseBackupDirectory.isDirectory()) {
