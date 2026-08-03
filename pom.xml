@@ -41,8 +41,8 @@
         <potassium-nitrite.version>4.4.3</potassium-nitrite.version>
         <commons-validator.version>1.11.0</commons-validator.version>
 
-        <ktor.version>3.4.3</ktor.version>
-        <kotlin-coroutines.version>1.10.2</kotlin-coroutines.version>
+        <ktor.version>3.5.2</ktor.version>
+        <kotlin-coroutines.version>1.11.0</kotlin-coroutines.version>
 
         <mockito-kotlin.version>6.3.0</mockito-kotlin.version>
         <wiremock.version>3.13.2</wiremock.version>
