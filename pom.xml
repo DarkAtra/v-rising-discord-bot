@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
         <relativePath/>
     </parent>
 
@@ -38,10 +38,10 @@
         <kord.version>0.18.1</kord.version>
         <agql-source-query.version>1.2.2</agql-source-query.version>
         <java-uuid-generator.version>5.2.0</java-uuid-generator.version>
-        <potassium-nitrite.version>4.4.3</potassium-nitrite.version>
+        <potassium-nitrite.version>4.5.0</potassium-nitrite.version>
         <commons-validator.version>1.11.0</commons-validator.version>
 
-        <ktor.version>3.4.3</ktor.version>
+        <ktor.version>3.5.2</ktor.version>
         <kotlin-coroutines.version>1.10.2</kotlin-coroutines.version>
 
         <mockito-kotlin.version>6.3.0</mockito-kotlin.version>
@@ -217,7 +217,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.165</builder>
+                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.174</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>25</BP_JVM_VERSION> <!-- Spring Boot 4.x requires GraalVM 25 -->
