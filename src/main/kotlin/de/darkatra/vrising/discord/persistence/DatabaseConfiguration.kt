@@ -38,7 +38,7 @@ class DatabaseConfiguration(
 
     companion object {
 
-        private const val ENCRYPTED_MARKER = "H2encrypt"
+        private val ENCRYPTED_MARKER = "H2encrypt".toByteArray(StandardCharsets.UTF_8)
         private val logger by lazy { LoggerFactory.getLogger(DatabaseConfiguration::class.java) }
 
         fun buildNitriteDatabase(databaseFile: Path, username: String? = null, password: String? = null): Nitrite {
@@ -46,8 +46,11 @@ class DatabaseConfiguration(
             // version 2.12.0 introduced database encryption at rest. the following code attempts to perform the migration if necessary
             if (databaseFile.exists()) {
 
-                val firstFewBytes = databaseFile.inputStream().readNBytes(ENCRYPTED_MARKER.length).toString(StandardCharsets.UTF_8)
-                if (firstFewBytes != ENCRYPTED_MARKER) {
+                val isEncrypted = databaseFile.inputStream().use {
+                    it.readNBytes(ENCRYPTED_MARKER.size).contentEquals(ENCRYPTED_MARKER)
+                }
+
+                if (!isEncrypted) {
 
                     // if the automated migration was aborted while writing the files to disc, restore the backup
                     val unencryptedDatabaseBackupFile = Path.of(System.getProperty("java.io.tmpdir")).resolve("v-rising-bot.db.unencrypted")
