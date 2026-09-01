@@ -8,7 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 @DisabledInNativeImage
-class KordExtensionsKtTest {
+class KordExtensionsTest {
 
     @Test
     fun `should extract channel id from string`() {

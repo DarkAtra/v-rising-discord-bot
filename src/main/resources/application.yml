@@ -9,7 +9,7 @@ logging:
   level:
     root: info
     com.ibasco.agql: warn
-    # nitrite is logging some of the exceptions before throwing - disable all nitrite logs since we already log all exceptions
+    # nitrite is logging some exceptions before throwing - disable all nitrite logs since we already log all exceptions
     nitrite: off
     nitrite-mvstore: off
   pattern:

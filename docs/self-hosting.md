@@ -8,7 +8,7 @@ nav_order: 3
 {: .warning }
 > I only recommend self-hosting the bot if you are experienced in running and maintaining software.
 
-You have two options for running the bot, the first uses docker and the second is running it on bare metal.
+You have two options for running the bot, the first uses docker, and the second is running it on bare metal.
 I generally recommend running it as a docker container as it reduces the maintenance effort and simplifies the configuration on your end.
 
 ## Hosting the bot using docker-compose
@@ -25,10 +25,11 @@ You can also build it from scratch by cloning the repository and then running `.
 ```yaml
 services:
   v-rising-discord-bot:
-    image: ghcr.io/darkatra/v-rising-discord-bot:2.12.3-native # find the latest version here: https://github.com/DarkAtra/v-rising-discord-bot/releases
+    image: ghcr.io/darkatra/v-rising-discord-bot:3.1.0-native # find the latest version here: https://github.com/DarkAtra/v-rising-discord-bot/releases
     command: -Dagql.nativeTransport=false
     mem_reservation: 128M
     mem_limit: 256M
+    stop_grace_period: 60s
     user: "1000:1000"
     volumes:
       - /opt/v-rising-discord-bot:/data/v-rising-discord-bot
@@ -58,8 +59,8 @@ services:
 4. Run the application using `java -jar v-rising-discord-bot-<version>.jar`
 
 If you run the application in a Linux environment, make sure to use a separate user.
-This user only needs read and write permissions for the `bot.db` database file and read
-permissions for the `application.yml`, both of which are located in the applications
+This user only needs read and write permissions for the `bot.db` database file and read permissions for the `application.yml`, both of which are located in the
+application's
 working directory by default.
 
 You can change the location of the database file by modifying the `application.yml` slightly:
@@ -75,7 +76,7 @@ bot:
 
 ## Discord Commands
 
-Refer to [the commands documentation](commands.md) for a list of all available discord commands.
+Refer to [the command's documentation](commands.md) for a list of all available discord commands.
 
 ## Required Discord Permissions
 

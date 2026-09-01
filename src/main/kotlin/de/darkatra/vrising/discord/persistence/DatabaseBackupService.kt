@@ -67,7 +67,7 @@ class DatabaseBackupService(
                 .mapNotNull { file ->
                     try {
                         Pair(file, Instant.from(dateTimeFormatter.parse(file.name)))
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         null
                     }
                 }

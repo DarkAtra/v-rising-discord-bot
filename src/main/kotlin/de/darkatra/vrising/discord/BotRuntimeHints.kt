@@ -39,6 +39,8 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
+        registerHibernateRuntimeHints(hints)
+
         // required by the bot
         bindingReflectionHintsRegistrar.registerReflectionHints(
             hints.reflection(),
@@ -109,5 +111,17 @@ class BotRuntimeHints : RuntimeHintsRegistrar {
             .map { Class.forName(it, false, classLoader) }
             .sortedBy(Class<*>::getName)
             .toList()
+    }
+
+    // FIXME: remove this once https://github.com/spring-projects/spring-boot/issues/50221 is fixed
+    private fun registerHibernateRuntimeHints(hints: RuntimeHints) {
+
+        hints.reflection().registerType(TypeReference.of($$"org.hibernate.validator.internal.util.logging.Log_$logger")) { builder ->
+            builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS)
+        }
+
+        hints.reflection().registerType(TypeReference.of($$"org.hibernate.validator.internal.util.logging.Messages_$bundle")) { builder ->
+            builder.withMembers(MemberCategory.INVOKE_DECLARED_METHODS).withField("INSTANCE")
+        }
     }
 }
