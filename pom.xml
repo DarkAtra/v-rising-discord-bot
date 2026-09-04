@@ -218,7 +218,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.180</builder>
+                        <builder>paketobuildpacks/builder-noble-java-tiny:0.0.184</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>25</BP_JVM_VERSION> <!-- Spring Boot 4.x requires GraalVM 25 -->
