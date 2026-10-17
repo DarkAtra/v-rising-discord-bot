@@ -28,7 +28,7 @@ class ListServersCommand(
     private val description: String = "Lists all servers."
 
     override fun getCommandName(): String = name
-    override fun getArgumentCount(): Int = 1
+    override fun getArgumentCount(): Int = 2
 
     override fun isSupported(interaction: ChatInputCommandInteraction, adminUserIds: Set<String>): Boolean {
 
