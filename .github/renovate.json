@@ -12,17 +12,32 @@
     ],
     "packageRules": [
         {
+            "description": "Don't suggest Pre-Release Versions",
             "allowedVersions": "!/-.+\\.[0-9]+$/",
             "matchPackageNames": [
                 "*"
             ]
         },
         {
+            "description": "Group GitHub Action Updates",
             "groupName": "all github actions dependencies",
             "groupSlug": "all-github-actions-dependencies",
             "matchManagers": [
                 "github-actions"
             ]
+        },
+        {
+            "description": "Disable Major Updates for the JDK",
+            "matchDatasources": [
+                "java-version"
+            ],
+            "matchPackageNames": [
+                "java-jdk"
+            ],
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "enabled": false
         }
     ]
 }
