@@ -8,7 +8,8 @@
         ":semanticCommits",
         ":labels(dependencies)",
         "group:allNonMajor",
-        "schedule:weekly"
+        "schedule:weekly",
+        "helpers:pinGitHubActionDigests"
     ],
     "packageRules": [
         {
