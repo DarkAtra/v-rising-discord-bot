@@ -12,19 +12,7 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "mvn -B -ntp clean versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version}",
-                "publishCmd": "./publish.sh"
-            }
-        ],
-        [
-            "@semantic-release/git",
-            {
-                "assets": [
-                    [
-                        "**/pom.xml",
-                        "!**/target/**/*"
-                    ]
-                ]
+                "publishCmd": "mvn -B -ntp clean versions:set -DgenerateBackupPoms=false -DnewVersion=${nextRelease.version} && ./publish.sh"
             }
         ],
         [
@@ -38,8 +26,7 @@
                 ],
                 "successComment": false,
                 "releasedLabels": false,
-                "failComment": false,
-                "failTitle": false
+                "failCommentCondition": false
             }
         ]
     ]
