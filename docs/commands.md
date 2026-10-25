@@ -14,9 +14,10 @@ Please note that all commands are [guild](https://discord.com/developers/docs/re
 Use this command to list all servers that you have previously added using the `/add-server` command.
 Admins can use this command in DMs, see [Configuration Properties](configuration-properties.md) for details.
 
-| Parameter | Description                        | Required | Default value |
-|-----------|------------------------------------|----------|---------------|
-| `page`    | The page to request. Zero indexed. | `false`  | `0`           |
+| Parameter           | Description                                    | Required | Default value |
+|---------------------|------------------------------------------------|----------|---------------|
+| `discord-server-id` | The id of the discord server. Only for admins. | `false`  | `null`        |
+| `page`              | The page to request. Zero indexed.             | `false`  | `0`           |
 
 ### `/add-server`
 
