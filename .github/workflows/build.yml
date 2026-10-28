@@ -19,7 +19,7 @@ permissions:
 jobs:
   verify:
     name: Verify
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -61,7 +61,7 @@ jobs:
 
   release:
     name: Build and Release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       # required by semantic release
       contents: write
@@ -82,7 +82,7 @@ jobs:
           cache: maven
 
       - name: Create new Release
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
+        uses: cycjimmy/semantic-release-action@ad51787758d9654d5a75150a89a6fa9b3ccef95e # v8.1.4
         with:
           extra_plugins: |
             @semantic-release/exec
